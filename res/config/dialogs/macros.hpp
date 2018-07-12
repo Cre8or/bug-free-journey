@@ -5,13 +5,13 @@
         //#define COLOUR_SCHEME
 
         #ifdef COLOUR_SCHEME
-                #define MACRO_COLOUR_BACKGROUND                                 {0.11,0.095,0.06,0.8}
-                #define MACRO_COLOUR_ELEMENT_INACTIVE                           {0.6,0.54,0.4,0.15}
-                #define MACRO_COLOUR_ELEMENT_ACTIVE                             {0.6,0.54,0.4,0.6}
+                #define MACRO_COLOUR_BACKGROUND                                 0.11, 0.095, 0.06, 0.8
+                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.8, 0.72, 0.55, 0.15
+                #define MACRO_COLOUR_ELEMENT_ACTIVE                             0.8, 0.72, 0.55, 0.6
         #else
-                #define MACRO_COLOUR_BACKGROUND                                 {0.1,0.1,0.1,0.8}
-                #define MACRO_COLOUR_ELEMENT_INACTIVE                           {0.5,0.5,0.5,0.15}
-                #define MACRO_COLOUR_ELEMENT_ACTIVE                             {0.5,0.5,0.5,0.6}
+                #define MACRO_COLOUR_BACKGROUND                                 0.1, 0.1, 0.1, 0.8
+                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.7, 0.7, 0.7, 0.15
+                #define MACRO_COLOUR_ELEMENT_ACTIVE                             0.7, 0.7, 0.7, 0.6
         #endif
 
 
@@ -24,9 +24,9 @@
 
         // NVGs, binoculars, headgear and goggles
         #define MACRO_PICTURE_NVGS                                      "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_nvg_gs.paa"
-        #define MACRO_PICTURE_BINOCULARS                                "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_binocular_gs.paa"
         #define MACRO_PICTURE_HEADGEAR                                  "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_helmet_gs.paa"
         #define MACRO_PICTURE_GOGGLES                                   "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_glasses_gs.paa"
+        #define MACRO_PICTURE_BINOCULARS                                "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_binocular_gs.paa"
 
         // Weapons
         #define MACRO_PICTURE_PRIMARYWEAPON                             "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_primary_gs.paa"
@@ -54,19 +54,26 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
         // NVGs, binoculars, headgear and goggles
-        #define MACRO_IDC_NVGS_ICON                                     101
-        #define MACRO_IDC_BINOCULARS_ICON                               102
-        #define MACRO_IDC_HEADGEAR_ICON                                 103
-        #define MACRO_IDC_GOGGLES_ICON                                  104
+        #define MACRO_IDC_NVGS_FRAME                                    101
+        #define MACRO_IDC_NVGS_ICON                                     102
+        #define MACRO_IDC_HEADGEAR_FRAME                                103
+        #define MACRO_IDC_HEADGEAR_ICON                                 104
+        #define MACRO_IDC_GOGGLES_FRAME                                 105
+        #define MACRO_IDC_GOGGLES_ICON                                  106
+        #define MACRO_IDC_BINOCULARS_FRAME                              107
+        #define MACRO_IDC_BINOCULARS_ICON                               108
 
         // Primary Weapon
-        #define MACRO_IDC_PRIMARYWEAPON_ICON                            201
+        #define MACRO_IDC_PRIMARYWEAPON_FRAME                           201
+        #define MACRO_IDC_PRIMARYWEAPON_ICON                            202
 
         // Secondary Weapon
-        #define MACRO_IDC_SECONDARYWEAPON_ICON                          202
+        #define MACRO_IDC_SECONDARYWEAPON_FRAME                         203
+        #define MACRO_IDC_SECONDARYWEAPON_ICON                          204
 
         // Handgun Weapon
-        #define MACRO_IDC_HANDGUNWEAPON_ICON                            203
+        #define MACRO_IDC_HANDGUNWEAPON_FRAME                           205
+        #define MACRO_IDC_HANDGUNWEAPON_ICON                            206
 
         // Assigned slots
         #define MACRO_IDC_MAP_ICON                                      301
@@ -79,3 +86,5 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 //      MACRO FUNCTIONS
 // ------------------------------------------------------------------------------------------------------------------------------------------------
+        #define CURLY(DATA) {##DATA##}
+        #define SQUARE(DATA) [##DATA##]

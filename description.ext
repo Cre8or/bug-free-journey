@@ -6,6 +6,12 @@
 
 class CfgFunctions {
         class cre {
+                class AI {
+                        file = "scripts\AI";
+
+                        class civ_idleAnim {};
+                };
+
                 class inventory {
                         file = "scripts\inventory";
 
@@ -17,10 +23,10 @@ class CfgFunctions {
                         class inventory {};
                 };
 
-                class AI {
-                        file = "scripts\AI";
+                class UI {
+                        file = "scripts\UI";
 
-                        class civ_idleAnim {};
+                        class getClassIcon {};
                 };
         };
 };

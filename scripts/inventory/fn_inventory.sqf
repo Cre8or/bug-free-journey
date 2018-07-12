@@ -42,25 +42,38 @@ switch (_event) do {
                 private _ctrlSecondaryWeapon = _inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_ICON;
                 private _ctrlHandgunWeapon = _inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_ICON;
 
-                private _types = [
+                private _classes = [
+                        hmd player,
+                        headgear player,
+                        goggles player,
+                        binocular player,
                         primaryWeapon player,
                         secondaryWeapon player,
                         handgunWeapon player
+
                 ];
 
                 // Determine the icon paths for the items and weapons that we have
                 {
-                        private _type = _types select _forEachIndex;
+                        private _class = _classes select _forEachIndex;
 
-                        if (_type != "") then {
-                                private _icon = [configfile >> "CfgWeapons" >> _type, "picture", ""] call BIS_fnc_returnConfigEntry;
+                        if (_class != "") then {
+                                private _frame = _x select 0;
+                                private _icon = _x select 1;
+                                private _iconPath = [_class] call cre_fnc_getClassIcon;
 
-                                _x ctrlSetText _icon;
+                                _icon ctrlSetText _iconPath;
+                                _frame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+                                _Frame ctrlCommit 0;
                         };
                 } forEach [
-                        _ctrlPrimaryWeapon,
-                        _ctrlSecondaryWeapon,
-                        _ctrlHandgunWeapon
+                        [_inventory displayCtrl MACRO_IDC_NVGS_FRAME, _inventory displayCtrl MACRO_IDC_NVGS_ICON],
+                        [_inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME, _inventory displayCtrl MACRO_IDC_HEADGEAR_ICON],
+                        [_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME, _inventory displayCtrl MACRO_IDC_GOGGLES_ICON],
+                        [_inventory displayCtrl MACRO_IDC_BINOCULARS_FRAME, _inventory displayCtrl MACRO_IDC_BINOCULARS_ICON],
+                        [_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME, _ctrlPrimaryWeapon],
+                        [_inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_FRAME, _ctrlSecondaryWeapon],
+                        [_inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_FRAME, _ctrlHandgunWeapon]
                 ];
         };
 

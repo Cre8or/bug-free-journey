@@ -23,24 +23,24 @@ class Rsc_Cre8ive_Inventory {
 
         class controls {
 
-                class Ground_Background : RscBox {
+                class Ground_Frame : RscBox {
                         idc = -1;
                         x = "_safeZoneX";
                         y = "_safeZoneY";
                         w = "_safeZoneW * (0.35 - 0.002)";
                         h = "_safeZoneH";
-                        colorBackground[] = MACRO_COLOUR_BACKGROUND;
+                        colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
                 };
 
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // Character
-                class Character_Background : RscBox {
+                class Character_Frame : RscBox {
                         idc = -1;
                         x = "_safeZoneX + _safeZoneW * (0.35 + 0.002)";
                         y = "_safeZoneY";
                         w = "_safeZoneW * (0.3 - 0.004)";
                         h = "_safeZoneH";
-                        colorBackground[] = MACRO_COLOUR_BACKGROUND;
+                        colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
                 };
 
                 class Character_Outline : RscPicture {
@@ -55,60 +55,15 @@ class Rsc_Cre8ive_Inventory {
                 };
 
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
-                // WEAPONS
-                        // Primary Weapon
-                        class PrimaryWeapon_Background : RscBox {
-                                idc = -1;
-                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
-                                y = "_safeZoneY + _safeZoneH * 0.28";
-                                w = "_safeZoneW * (0.3 - 0.004 * 3)";
-                                h = "_safeZoneH * 0.175";
-                                colorBackground[] = MACRO_COLOUR_ELEMENT_INACTIVE;
-                        };
-
-                        class PrimaryWeapon_Picture : RscPicture {
-                                idc = MACRO_IDC_PRIMARYWEAPON_ICON;
-                                text = MACRO_PICTURE_PRIMARYWEAPON;
-                                style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
-                                y = "_safeZoneY + _safeZoneH * 0.28";
-                                w = "_safeZoneW * (0.3 - 0.004 * 3)";
-                                h = "_safeZoneH * 0.175";
-                        };
-
-                        // Secondary weapon
-                        class SecondaryWeapon_Background : PrimaryWeapon_Background {
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
-                                colorBackground[] = MACRO_COLOUR_ELEMENT_ACTIVE;
-                        };
-
-                        class SecondaryWeapon_Picture : PrimaryWeapon_Picture {
-                                idc = MACRO_IDC_SECONDARYWEAPON_ICON;
-                                text = MACRO_PICTURE_SECONDARYWEAPON;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
-                        };
-
-                        // Handgun weapon
-                        class HandgunWeapon_Background : PrimaryWeapon_Background {
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
-                        };
-
-                        class HandgunWeapon_Picture : PrimaryWeapon_Picture {
-                                idc = MACRO_IDC_HANDGUNWEAPON_ICON;
-                                text = MACRO_PICTURE_HANDGUNWEAPON;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
-                        };
-
-                // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // TOP SLOTS
                         // NVGs
-                        class NVGs_Background : RscBox {
-                                idc = -1;
+                        class NVGs_Frame : RscBox {
+                                idc = MACRO_IDC_NVGS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * (0.08 + 0.005)";
                                 w = "_safeZoneW * 0.0705";
                                 h = "_safeZoneH * 0.105";
-                                colorBackground[] = MACRO_COLOUR_ELEMENT_INACTIVE;
+                                colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
                         };
 
                         class NVGs_Picture : RscPicture {
@@ -122,7 +77,8 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Headgear
-                        class Headgear_Background : NVGs_Background {
+                        class Headgear_Frame : NVGs_Frame {
+                                idc = MACRO_IDC_HEADGEAR_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.0705 * 1)";
                         };
 
@@ -133,7 +89,8 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Goggles
-                        class Goggles_Background : NVGs_Background {
+                        class Goggles_Frame : NVGs_Frame {
+                                idc = MACRO_IDC_GOGGLES_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 5 + 0.0705 * 2)";
                         };
 
@@ -144,7 +101,8 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Binoculars
-                        class Binoculars_Background : NVGs_Background {
+                        class Binoculars_Frame : NVGs_Frame {
+                                idc = MACRO_IDC_BINOCULARS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 6 + 0.0705 * 3)";
                         };
 
@@ -155,15 +113,61 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
+                // WEAPONS
+                        // Primary Weapon
+                        class PrimaryWeapon_Frame : RscBox {
+                                idc = MACRO_IDC_PRIMARYWEAPON_FRAME;
+                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
+                                y = "_safeZoneY + _safeZoneH * 0.28";
+                                w = "_safeZoneW * (0.3 - 0.004 * 3)";
+                                h = "_safeZoneH * 0.175";
+                                colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
+                        };
+
+                        class PrimaryWeapon_Picture : RscPicture {
+                                idc = MACRO_IDC_PRIMARYWEAPON_ICON;
+                                text = MACRO_PICTURE_PRIMARYWEAPON;
+                                style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
+                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
+                                y = "_safeZoneY + _safeZoneH * 0.28";
+                                w = "_safeZoneW * (0.3 - 0.004 * 3)";
+                                h = "_safeZoneH * 0.175";
+                        };
+
+                        // Secondary weapon
+                        class SecondaryWeapon_Frame : PrimaryWeapon_Frame {
+                                idc = MACRO_IDC_SECONDARYWEAPON_FRAME;
+                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
+                        };
+
+                        class SecondaryWeapon_Picture : PrimaryWeapon_Picture {
+                                idc = MACRO_IDC_SECONDARYWEAPON_ICON;
+                                text = MACRO_PICTURE_SECONDARYWEAPON;
+                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
+                        };
+
+                        // Handgun weapon
+                        class HandgunWeapon_Frame : PrimaryWeapon_Frame {
+                                idc = MACRO_IDC_HANDGUNWEAPON_FRAME;
+                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
+                        };
+
+                        class HandgunWeapon_Picture : PrimaryWeapon_Picture {
+                                idc = MACRO_IDC_HANDGUNWEAPON_ICON;
+                                text = MACRO_PICTURE_HANDGUNWEAPON;
+                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
+                        };
+
+                // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // BOTTOM SLOTS
                         // Map
-                        class Map_Background : RscBox {
+                        class Map_Frame : RscBox {
                                 idc = -1;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * 0.91)";
                                 w = "_safeZoneW * 0.056";
                                 h = "_safeZoneH * 0.085";
-                                colorBackground[] = MACRO_COLOUR_ELEMENT_INACTIVE;
+                                colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
                         };
 
                         class Map_Picture : RscPicture {
@@ -177,7 +181,7 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // GPS
-                        class GPS_Background : Map_Background {
+                        class GPS_Frame : Map_Frame {
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.056 * 1)";
                         };
 
@@ -188,7 +192,7 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Radio
-                        class Radio_Background : Map_Background {
+                        class Radio_Frame : Map_Frame {
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 5 + 0.056 * 2)";
                         };
 
@@ -199,7 +203,7 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Compass
-                        class Compass_Background : Map_Background {
+                        class Compass_Frame : Map_Frame {
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 6 + 0.056 * 3)";
                         };
 
@@ -210,7 +214,7 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Watch
-                        class Watch_Background : Map_Background {
+                        class Watch_Frame : Map_Frame {
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 7 + 0.056 * 4)";
                         };
 
