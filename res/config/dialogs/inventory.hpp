@@ -134,27 +134,27 @@ class Rsc_Cre8ive_Inventory {
                                 h = "_safeZoneH * 0.175";
                         };
 
-                        // Secondary weapon
-                        class SecondaryWeapon_Frame : PrimaryWeapon_Frame {
-                                idc = MACRO_IDC_SECONDARYWEAPON_FRAME;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
-                        };
-
-                        class SecondaryWeapon_Picture : PrimaryWeapon_Picture {
-                                idc = MACRO_IDC_SECONDARYWEAPON_ICON;
-                                text = MACRO_PICTURE_SECONDARYWEAPON;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
-                        };
-
                         // Handgun weapon
                         class HandgunWeapon_Frame : PrimaryWeapon_Frame {
                                 idc = MACRO_IDC_HANDGUNWEAPON_FRAME;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
+                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
                         };
 
                         class HandgunWeapon_Picture : PrimaryWeapon_Picture {
                                 idc = MACRO_IDC_HANDGUNWEAPON_ICON;
                                 text = MACRO_PICTURE_HANDGUNWEAPON;
+                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
+                        };
+
+                        // Secondary weapon
+                        class SecondaryWeapon_Frame : PrimaryWeapon_Frame {
+                                idc = MACRO_IDC_SECONDARYWEAPON_FRAME;
+                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
+                        };
+
+                        class SecondaryWeapon_Picture : PrimaryWeapon_Picture {
+                                idc = MACRO_IDC_SECONDARYWEAPON_ICON;
+                                text = MACRO_PICTURE_SECONDARYWEAPON;
                                 y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
                         };
 
@@ -162,7 +162,7 @@ class Rsc_Cre8ive_Inventory {
                 // BOTTOM SLOTS
                         // Map
                         class Map_Frame : RscBox {
-                                idc = -1;
+                                idc = MACRO_IDC_MAP_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * 0.91)";
                                 w = "_safeZoneW * 0.056";
@@ -182,6 +182,7 @@ class Rsc_Cre8ive_Inventory {
 
                         // GPS
                         class GPS_Frame : Map_Frame {
+                                idc = MACRO_IDC_GPS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.056 * 1)";
                         };
 
@@ -193,6 +194,7 @@ class Rsc_Cre8ive_Inventory {
 
                         // Radio
                         class Radio_Frame : Map_Frame {
+                                idc = MACRO_IDC_RADIO_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 5 + 0.056 * 2)";
                         };
 
@@ -204,6 +206,7 @@ class Rsc_Cre8ive_Inventory {
 
                         // Compass
                         class Compass_Frame : Map_Frame {
+                                idc = MACRO_IDC_COMPASS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 6 + 0.056 * 3)";
                         };
 
@@ -215,6 +218,7 @@ class Rsc_Cre8ive_Inventory {
 
                         // Watch
                         class Watch_Frame : Map_Frame {
+                                idc = MACRO_IDC_WATCH_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 7 + 0.056 * 4)";
                         };
 

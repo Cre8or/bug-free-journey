@@ -76,11 +76,16 @@
         #define MACRO_IDC_HANDGUNWEAPON_ICON                            206
 
         // Assigned slots
-        #define MACRO_IDC_MAP_ICON                                      301
-        #define MACRO_IDC_GPS_ICON                                      302
-        #define MACRO_IDC_RADIO_ICON                                    303
-        #define MACRO_IDC_COMPASS_ICON                                  304
-        #define MACRO_IDC_WATCH_ICON                                    305
+        #define MACRO_IDC_MAP_FRAME                                     301
+        #define MACRO_IDC_MAP_ICON                                      302
+        #define MACRO_IDC_GPS_FRAME                                     303
+        #define MACRO_IDC_GPS_ICON                                      304
+        #define MACRO_IDC_RADIO_FRAME                                   305
+        #define MACRO_IDC_RADIO_ICON                                    306
+        #define MACRO_IDC_COMPASS_FRAME                                 307
+        #define MACRO_IDC_COMPASS_ICON                                  308
+        #define MACRO_IDC_WATCH_FRAME                                   309
+        #define MACRO_IDC_WATCH_ICON                                    310
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------
