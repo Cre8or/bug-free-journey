@@ -1,0 +1,31 @@
+﻿enableDebugConsole = 2;
+
+
+
+
+
+class CfgFunctions {
+        class cre {
+                class inventory {
+                        file = "scripts\inventory";
+
+                        class addWeaponWithItems {};
+                        class generateUID {};
+        		class interceptInventory {
+                                postInit = 1;
+        		};
+                };
+
+                class AI {
+                        file = "scripts\AI";
+
+                        class civ_idleAnim {};
+                };
+        };
+};
+
+
+#include "defines.hpp"
+
+// Dialogs
+#include "res\config\dialogs\inventory.hpp"
