@@ -11,7 +11,7 @@ player addEventHandler ["InventoryOpened", {
                 ["_container", objNull, [objNull]]
         ];
 
-        [] spawn {(findDisplay 46) createDisplay "Rsc_Cre8ive_Inventory"};
+        ["init"] call fnc_cre_inventory
         true;
 }];
 */

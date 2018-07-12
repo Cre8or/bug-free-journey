@@ -14,6 +14,7 @@ class CfgFunctions {
         		class interceptInventory {
                                 postInit = 1;
         		};
+                        class inventory {};
                 };
 
                 class AI {
