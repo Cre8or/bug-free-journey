@@ -32,9 +32,7 @@ class Rsc_Cre8ive_Inventory {
                         colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
                 };
 
-                // ------------------------------------------------------------------------------------------------------------------------------------------------
-                // Character
-                class Character_Frame : RscBox {
+                class Weapons_Frame : RscBox {
                         idc = -1;
                         x = "_safeZoneX + _safeZoneW * (0.35 + 0.002)";
                         y = "_safeZoneY";
@@ -43,15 +41,66 @@ class Rsc_Cre8ive_Inventory {
                         colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
                 };
 
-                class Character_Outline : RscPicture {
+                class Storage_Frame : RscBox {
                         idc = -1;
-                        text = "res\ui\inventory\character.paa";
+                        x = "_safeZoneX + _safeZoneW * (0.65 + 0.002)";
+                        y = "_safeZoneY";
+                        w = "_safeZoneW * (0.35 - 0.002)";
+                        h = "_safeZoneH";
+                        colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
+                };
+
+                // ------------------------------------------------------------------------------------------------------------------------------------------------
+                // Player Info
+                class Player_Name_Frame : RscBox {
+                        idc = -1;
+                        x = "_safeZoneX + _safeZoneW * (0.35 + 0.002)";
+                        y = "_safeZoneY";
+                        w = "_safeZoneW * (0.3 - 0.004)";
+                        h = "_safeZoneH * 0.04";
+                        colorBackground[] = CURLY(MACRO_COLOUR_SEPARATOR);
+                };
+
+                class Player_Name : RscText {
+                        idc = MACRO_IDC_PLAYER_NAME;
+                        font = "PuristaLight";
+                        text = "";
+                        sizeEx = "_safeZoneW * 0.03";
+                        style = ST_LEFT;
+                        x = "_safeZoneX + _safeZoneW * (0.35 + 0.002)";
+                        y = "_safeZoneY";
+                        w = "_safeZoneW * (0.27 - 0.002)";
+                        h = "_safeZoneH * 0.04";
+                        colorBackground[] = {0,0,0,0};
+                };
+
+                class Exit_Button_Picture : RscPicture {
+                        idc = -1;
+                        text = MACRO_PICTURE_EXIT_BUTTON;
                         style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-                        x = "_safeZoneX";
-                        y = "_safeZoneY + _safeZoneH * 0.1";
-                        w = "_safeZoneW";
-                        h = "_safeZoneH * 0.5";
-                        colorText[] = {1,1,1,0};
+                        x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 + 0.27)";
+                        y = "_safeZoneY";
+                        w = "_safeZoneW * (0.03 - 0.004)";
+                        h = "_safeZoneH * 0.04";
+                };
+
+                class Exit_Button : RscButton {
+                        idc = MACRO_IDC_WEAPONS_BUTTON;
+                        period = 0;
+                        offsetX = 0;
+                        offsetY = 0;
+                        offsetPressedX = 0;
+                        offsetPressedY = 0;
+                        shadow = 0;
+                        x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 + 0.27)";
+                        y = "_safeZoneY";
+                        w = "_safeZoneW * (0.03 - 0.004)";
+                        h = "_safeZoneH * 0.04";
+                        colorBackground[] = {0,0,0,0};
+                        colorBackgroundActive[] = {1,0,0,0.2};
+                        colorShadow[] = {0,0,0,0};
+                        colorText[] = {1,1,1,1};
+                        action = "(uiNamespace getVariable ['cre8ive_dialog_inventory', displayNull]) closeDisplay 0";
                 };
 
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,7 +109,7 @@ class Rsc_Cre8ive_Inventory {
                         class NVGs_Frame : RscBox {
                                 idc = MACRO_IDC_NVGS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
-                                y = "_safeZoneY + _safeZoneH * (0.08 + 0.005)";
+                                y = "_safeZoneY + _safeZoneH * (0.12 + 0.005)";
                                 w = "_safeZoneW * 0.0705";
                                 h = "_safeZoneH * 0.105";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
@@ -71,7 +120,7 @@ class Rsc_Cre8ive_Inventory {
                                 text = MACRO_PICTURE_NVGS;
                                 style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
-                                y = "_safeZoneY + _safeZoneH * (0.08 + 0.005)";
+                                y = "_safeZoneY + _safeZoneH * (0.12 + 0.005)";
                                 w = "_safeZoneW * 0.0705";
                                 h = "_safeZoneH * 0.105";
                         };
@@ -118,7 +167,7 @@ class Rsc_Cre8ive_Inventory {
                         class PrimaryWeapon_Frame : RscBox {
                                 idc = MACRO_IDC_PRIMARYWEAPON_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
-                                y = "_safeZoneY + _safeZoneH * 0.28";
+                                y = "_safeZoneY + _safeZoneH * 0.3";
                                 w = "_safeZoneW * (0.3 - 0.004 * 3)";
                                 h = "_safeZoneH * 0.175";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
@@ -129,7 +178,7 @@ class Rsc_Cre8ive_Inventory {
                                 text = MACRO_PICTURE_PRIMARYWEAPON;
                                 style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
-                                y = "_safeZoneY + _safeZoneH * 0.28";
+                                y = "_safeZoneY + _safeZoneH * 0.3";
                                 w = "_safeZoneW * (0.3 - 0.004 * 3)";
                                 h = "_safeZoneH * 0.175";
                         };
@@ -137,25 +186,25 @@ class Rsc_Cre8ive_Inventory {
                         // Handgun weapon
                         class HandgunWeapon_Frame : PrimaryWeapon_Frame {
                                 idc = MACRO_IDC_HANDGUNWEAPON_FRAME;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
+                                y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 1)";
                         };
 
                         class HandgunWeapon_Picture : PrimaryWeapon_Picture {
                                 idc = MACRO_IDC_HANDGUNWEAPON_ICON;
                                 text = MACRO_PICTURE_HANDGUNWEAPON;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 1)";
+                                y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 1)";
                         };
 
                         // Secondary weapon
                         class SecondaryWeapon_Frame : PrimaryWeapon_Frame {
                                 idc = MACRO_IDC_SECONDARYWEAPON_FRAME;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
+                                y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 2)";
                         };
 
                         class SecondaryWeapon_Picture : PrimaryWeapon_Picture {
                                 idc = MACRO_IDC_SECONDARYWEAPON_ICON;
                                 text = MACRO_PICTURE_SECONDARYWEAPON;
-                                y = "_safeZoneY + _safeZoneH * (0.28 + 0.18 * 2)";
+                                y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 2)";
                         };
 
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -226,6 +275,67 @@ class Rsc_Cre8ive_Inventory {
                                 idc = MACRO_IDC_WATCH_ICON;
                                 text = MACRO_PICTURE_WATCH;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 7 + 0.056 * 4)";
+                        };
+
+                // ------------------------------------------------------------------------------------------------------------------------------------------------
+                // Character
+                class Character_Outline : RscPicture {
+                        idc = MACRO_IDC_CHARACTER_ICON;
+                        text = MACRO_PICTURE_CHARACTER_OUTLINE;
+                        style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
+                        x = "_safeZoneX";
+                        y = "_safeZoneY + _safeZoneH * 0.1";
+                        w = "_safeZoneW";
+                        h = "_safeZoneH * 0.9";
+                        colorText[] = {1,1,1,0.5};
+                };
+
+                // ------------------------------------------------------------------------------------------------------------------------------------------------
+                // Weapons / Medical buttons
+                        // Weapons
+                        class Weapons_Button_Frame : RscBox {
+                                idc = MACRO_IDC_WEAPONS_BUTTON_FRAME;
+                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
+                                y = "_safeZoneY + _safeZoneH * (0.04 + 0.005)";
+                                w = "_safeZoneW * 0.143";
+                                h = "_safeZoneH * 0.075";
+                                colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_ACTIVE);
+                        };
+
+                        class Weapons_Button : RscButton {
+                                idc = MACRO_IDC_WEAPONS_BUTTON;
+                                font = "PuristaMedium";
+                                period = 0;
+                                offsetX = 0;
+                                offsetY = 0;
+                                offsetPressedX = "_safeZoneW * 0.001";
+                                offsetPressedY = "_safeZoneH * 0.002";
+                                shadow = 0;
+                                sizeEx = "_safeZoneW * 0.03";
+                                text = "WEAPONS";
+                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
+                                y = "_safeZoneY + _safeZoneH * (0.04 + 0.005)";
+                                w = "_safeZoneW * 0.143";
+                                h = "_safeZoneH * 0.075";
+                                colorBackground[] = {0,0,0,0};
+                                colorBackgroundActive[] = {0,0,0,0};
+                                colorShadow[] = {0,0,0,0};
+                                colorText[] = {1,1,1,1};
+                                action = "['menu_weapons'] call cre_fnc_inventory";
+                        };
+
+                        // Medical
+                        class Medical_Button_Frame : Weapons_Button_Frame {
+                                idc = MACRO_IDC_MEDICAL_BUTTON_FRAME;
+                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.143)";
+                                colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
+                        };
+
+                        class Medical_Button : Weapons_Button {
+                                idc = MACRO_IDC_MEDICAL_BUTTON;
+                                text = "MEDICAL";
+                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.143)";
+                                action = "['menu_medical'] call cre_fnc_inventory";
                         };
 
         };
