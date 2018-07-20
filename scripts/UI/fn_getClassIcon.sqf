@@ -1,5 +1,6 @@
 params [
-        ["_class", "", [""]]
+        ["_class", "", [""]],
+	["_default", "", [""]]
 ];
 
 // If no class was provided, exit
@@ -32,9 +33,13 @@ if (_iconPath == "") then {
 };
 
 if (_iconPath == "") then {
-        private _str = format ["ERROR [cre_fnc_getClassIcon]: Could not find icon for '%1'!", _class];
-        systemChat _str;
-        hint _str;
+	if (_default == "") then {
+	        private _str = format ["ERROR [cre_fnc_getClassIcon]: Could not find icon for '%1', and no default path was provided!", _class];
+	        systemChat _str;
+	        hint _str;
+	} else {
+		_iconPath = _default;
+	};
 };
 
 

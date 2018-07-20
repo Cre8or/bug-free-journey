@@ -16,13 +16,10 @@ __EXEC(_safeZoneY = safeZoneY / _safeZoneMul)
 
 class Rsc_Cre8ive_Inventory {
         idd = 888801;
-        enableSimulation = 1;
-        movingEnable = 0;
         name = "Rsc_Cre8ive_Inventory";
         onLoad = "uiNamespace setVariable ['cre8ive_dialog_inventory', _this select 0]";
 
-        class controls {
-
+        class Controls {
                 class Ground_Frame : RscBox {
                         idc = -1;
                         x = "_safeZoneX";
@@ -32,23 +29,14 @@ class Rsc_Cre8ive_Inventory {
                         colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
                 };
 
-                class Weapons_Frame : RscBox {
-                        idc = -1;
-                        x = "_safeZoneX + _safeZoneW * (0.35 + 0.002)";
-                        y = "_safeZoneY";
-                        w = "_safeZoneW * (0.3 - 0.004)";
-                        h = "_safeZoneH";
-                        colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
+                class Storage_Frame : Ground_Frame {
+                        x = "_safeZoneX + _safeZoneW * (0.65 + 0.002)";
                 };
 
-                class Storage_Frame : RscBox {
-                        idc = -1;
-                        x = "_safeZoneX + _safeZoneW * (0.65 + 0.002)";
-                        y = "_safeZoneY";
-                        w = "_safeZoneW * (0.35 - 0.002)";
-                        h = "_safeZoneH";
-                        colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
-                };
+                class Weapons_Frame : Ground_Frame {
+                        x = "_safeZoneX + _safeZoneW * (0.35 + 0.002)";
+                        w = "_safeZoneW * (0.3 - 0.004)";
+		};
 
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // Player Info
@@ -106,7 +94,7 @@ class Rsc_Cre8ive_Inventory {
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // TOP SLOTS
                         // NVGs
-                        class NVGs_Frame : RscBox {
+                        class NVGs_Frame : RscText {
                                 idc = MACRO_IDC_NVGS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * (0.12 + 0.005)";
@@ -164,13 +152,15 @@ class Rsc_Cre8ive_Inventory {
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // WEAPONS
                         // Primary Weapon
-                        class PrimaryWeapon_Frame : RscBox {
+                        class PrimaryWeapon_Frame : RscText {
                                 idc = MACRO_IDC_PRIMARYWEAPON_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * 0.3";
                                 w = "_safeZoneW * (0.3 - 0.004 * 3)";
                                 h = "_safeZoneH * 0.175";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
+				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
                         };
 
                         class PrimaryWeapon_Picture : RscPicture {
@@ -210,7 +200,7 @@ class Rsc_Cre8ive_Inventory {
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // BOTTOM SLOTS
                         // Map
-                        class Map_Frame : RscBox {
+                        class Map_Frame : RscText {
                                 idc = MACRO_IDC_MAP_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * 0.91)";
@@ -293,7 +283,7 @@ class Rsc_Cre8ive_Inventory {
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // Weapons / Medical buttons
                         // Weapons
-                        class Weapons_Button_Frame : RscBox {
+                        class Weapons_Button_Frame : RscText {
                                 idc = MACRO_IDC_WEAPONS_BUTTON_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * (0.04 + 0.005)";

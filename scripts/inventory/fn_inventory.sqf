@@ -1,9 +1,11 @@
 #include "..\..\res\config\dialogs\macros.hpp"
 
 params [
-        ["_event", "", [""]]
+        ["_event", "", [""]],
+	"_args"
 ];
 
+// Change the case to avoid mistakes
 _event = toLower _event;
 
 // Exit if no event was specified
@@ -11,6 +13,7 @@ if (_event == "") exitWith {systemChat "No event specified!"};
 
 // Check if the inventory is open
 disableSerialization;
+private _eventExists = false;
 private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
 if (_event != "init") then {
         if (isNull _inventory) exitWith {systemChat "Inventory isn't open!"};
@@ -24,11 +27,13 @@ switch (_event) do {
 
         // Initialisation
         case "init": {
+		_eventExists = true;
                 [] spawn {
 
                         (findDisplay 46) createDisplay "Rsc_Cre8ive_Inventory";
+			//createDialog "Rsc_Cre8ive_Inventory";
 
-                        private _timeOut = time + 1;
+			private _timeOut = time + 1;
                         waitUntil {!isNull (uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull]) or {time > _timeOut}};
 
                         if (time > _timeOut) then {
@@ -40,14 +45,15 @@ switch (_event) do {
                                 // Write down the player's name
                                 (_inventory displayCtrl MACRO_IDC_PLAYER_NAME) ctrlSetText name player;
 
-                                // Load the weapons menu (default)
-                                ["menu_weapons"] call cre_fnc_inventory;
+				// Load the weapons menu (default)
+				["menu_weapons"] call cre_fnc_inventory;
                         };
                 };
         };
 
         // Show weapons menu
         case "menu_weapons": {
+		_eventExists = true;
                 // Show the weapons controls
                 {
                         (_inventory displayCtrl _x) ctrlShow true;
@@ -99,6 +105,7 @@ switch (_event) do {
 
         // Show medical menu
         case "menu_medical": {
+		_eventExists = true;
                 // Hide the weapons controls
                 {
                         (_inventory displayCtrl _x) ctrlShow false;
@@ -150,6 +157,7 @@ switch (_event) do {
 
         // Update weapons menu
         case "update_weapons": {
+		_eventExists = true;
                 // Grab some of our inventory controls
                 private _ctrlPrimaryWeapon = _inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_ICON;
                 private _ctrlSecondaryWeapon = _inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_ICON;
@@ -195,25 +203,76 @@ switch (_event) do {
                         if (_class != "") then {
                                 private _frame = _x select 0;
                                 private _icon = _x select 1;
-                                private _iconPath = [_class] call cre_fnc_getClassIcon;
+				private _default = _x select 2;
+                                private _iconPath = [_class, _default] call cre_fnc_getClassIcon;
 
                                 _icon ctrlSetText _iconPath;
                                 _frame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
                                 _Frame ctrlCommit 0;
                         };
                 } forEach [
-                        [_inventory displayCtrl MACRO_IDC_NVGS_FRAME, _inventory displayCtrl MACRO_IDC_NVGS_ICON],
-                        [_inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME, _inventory displayCtrl MACRO_IDC_HEADGEAR_ICON],
-                        [_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME, _inventory displayCtrl MACRO_IDC_GOGGLES_ICON],
-                        [_inventory displayCtrl MACRO_IDC_BINOCULARS_FRAME, _inventory displayCtrl MACRO_IDC_BINOCULARS_ICON],
-                        [_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME, _ctrlPrimaryWeapon],
-                        [_inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_FRAME, _ctrlSecondaryWeapon],
-                        [_inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_FRAME, _ctrlHandgunWeapon],
-                        [_inventory displayCtrl MACRO_IDC_MAP_FRAME, _inventory displayCtrl MACRO_IDC_MAP_ICON],
-                        [_inventory displayCtrl MACRO_IDC_GPS_FRAME, _inventory displayCtrl MACRO_IDC_GPS_ICON],
-                        [_inventory displayCtrl MACRO_IDC_RADIO_FRAME, _inventory displayCtrl MACRO_IDC_RADIO_ICON],
-                        [_inventory displayCtrl MACRO_IDC_COMPASS_FRAME, _inventory displayCtrl MACRO_IDC_COMPASS_ICON],
-                        [_inventory displayCtrl MACRO_IDC_WATCH_FRAME, _inventory displayCtrl MACRO_IDC_WATCH_ICON]
+                        [_inventory displayCtrl MACRO_IDC_NVGS_FRAME,			_inventory displayCtrl MACRO_IDC_NVGS_ICON,		MACRO_PICTURE_NVGS],
+                        [_inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME,		_inventory displayCtrl MACRO_IDC_HEADGEAR_ICON,		MACRO_PICTURE_HEADGEAR],
+                        [_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME,		_inventory displayCtrl MACRO_IDC_GOGGLES_ICON,		MACRO_PICTURE_GOGGLES],
+                        [_inventory displayCtrl MACRO_IDC_BINOCULARS_FRAME, 		_inventory displayCtrl MACRO_IDC_BINOCULARS_ICON,	MACRO_PICTURE_BINOCULARS],
+                        [_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME, 		_ctrlPrimaryWeapon,					MACRO_PICTURE_PRIMARYWEAPON],
+                        [_inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_FRAME,	_ctrlSecondaryWeapon,					MACRO_PICTURE_SECONDARYWEAPON],
+                        [_inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_FRAME, 		_ctrlHandgunWeapon,					MACRO_PICTURE_HANDGUNWEAPON],
+                        [_inventory displayCtrl MACRO_IDC_MAP_FRAME, 			_inventory displayCtrl MACRO_IDC_MAP_ICON,		MACRO_PICTURE_MAP],
+                        [_inventory displayCtrl MACRO_IDC_GPS_FRAME, 			_inventory displayCtrl MACRO_IDC_GPS_ICON,		MACRO_PICTURE_GPS],
+                        [_inventory displayCtrl MACRO_IDC_RADIO_FRAME, 			_inventory displayCtrl MACRO_IDC_RADIO_ICON,		MACRO_PICTURE_RADIO],
+                        [_inventory displayCtrl MACRO_IDC_COMPASS_FRAME, 		_inventory displayCtrl MACRO_IDC_COMPASS_ICON,		MACRO_PICTURE_COMPASS],
+                        [_inventory displayCtrl MACRO_IDC_WATCH_FRAME,	 		_inventory displayCtrl MACRO_IDC_WATCH_ICON,		MACRO_PICTURE_WATCH]
                 ];
         };
+
+	// Update weapons menu
+	case "update_medical": {
+		_eventExists = true;
+	};
+
+	// Start dragging
+	case "dragging_start": {
+		_eventExists = true;
+		private _ctrl = _args param [0, controlNull];
+
+		systemChat format ["Dragging %1", _ctrl];
+
+		if (!isNull _ctrl) then {
+			_ctrl ctrlAddEventHandler ["MouseMoving", {
+				params ["_ctrl", "_x", "_y"];
+				private _pos = ctrlPosition _ctrl;
+
+				// Update the position
+				_pos set [0, _x - (_pos param [2, 0]) / 2];
+				_pos set [1, _y - (_pos param [3, 0]) / 2];
+
+				// Move the control
+				_ctrl ctrlSetPosition _pos;
+				_ctrl ctrlCommit 0;
+			}];
+		};
+	};
+
+	// Stop dragging
+	case "dragging_stop": {
+		_eventExists = true;
+		private _ctrl = _args param [0, controlNull];
+
+		systemChat format ["Dropped %1", _ctrl];
+
+		if (!isNull _ctrl) then {
+			_ctrl ctrlRemoveAllEventHandlers "MouseMoving";
+		};
+	};
+};
+
+
+
+
+// DEBUG: Check if the event was recognised - if not, print a message
+if (!_eventExists) then {
+	private _str = format ["(%1) [INVENTORY] ERROR: Unknown event '%2' called!", time, _event];
+	systemChat _str;
+	hint _str;
 };

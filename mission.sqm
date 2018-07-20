@@ -8,14 +8,14 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=135;
+		nextID=138;
 	};
 	class Camera
 	{
-		pos[]={27167.65,71.310226,24174.395};
-		dir[]={-0.091782957,-0.64911544,-0.7551496};
-		up[]={-0.078319095,0.76068872,-0.64437509};
-		aside[]={-0.99270958,-6.0914317e-008,0.12065595};
+		pos[]={27158.285,19.284666,24112.221};
+		dir[]={-0.76277381,-0.40402225,0.50500113};
+		up[]={-0.33691472,0.9147287,0.22305933};
+		aside[]={0.55206275,-4.5122579e-007,0.83385599};
 	};
 };
 binarizationWanted=0;
@@ -35,13 +35,14 @@ addons[]=
 	"A3_Characters_F_Exp_Civil",
 	"A3_Soft_F_Gamma_Hatchback_01",
 	"A3_Structures_F_Bootcamp_VR_Blocks",
-	"A3_Characters_F_Exp"
+	"A3_Characters_F_Exp",
+	"A3_Air_F_Heli_Light_01"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=8;
+		items=9;
 		class Item0
 		{
 			className="A3_Characters_F";
@@ -98,6 +99,13 @@ class AddonsMetaData
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
+		class Item8
+		{
+			className="A3_Air_F";
+			name="Arma 3 Alpha - Aircraft";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
 	};
 };
 randomSeed=5850322;
@@ -148,7 +156,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=31;
+		items=33;
 		class Item0
 		{
 			dataType="Group";
@@ -1247,7 +1255,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={27125.109,13.049505,24161.436};
+						position[]={27170.506,13.474954,24209.287};
+						angles[]={0,0.3419264,0};
 					};
 					side="East";
 					flags=7;
@@ -1256,14 +1265,59 @@ class Mission
 					};
 					id=126;
 					type="O_helipilot_F";
-					atlOffset=-8.5830688e-005;
+					atlOffset=-9.5367432e-007;
 				};
 			};
 			class Attributes
 			{
 			};
 			id=125;
-			atlOffset=-8.5830688e-005;
+			atlOffset=-9.5367432e-007;
+		};
+		class Item31
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={27154.736,15.058528,24185.525};
+				angles[]={0.019996032,2.2697437,6.2791886};
+			};
+			side="Empty";
+			flags=4;
+			class Attributes
+			{
+			};
+			id=135;
+			type="B_Heli_Light_01_dynamicLoadout_F";
+		};
+		class Item32
+		{
+			dataType="Group";
+			side="East";
+			class Entities
+			{
+				items=1;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={27167.832,13.520499,24211.018};
+						angles[]={0,0.74812919,0};
+					};
+					side="East";
+					flags=7;
+					class Attributes
+					{
+					};
+					id=137;
+					type="O_helipilot_F";
+				};
+			};
+			class Attributes
+			{
+			};
+			id=136;
 		};
 	};
 };
