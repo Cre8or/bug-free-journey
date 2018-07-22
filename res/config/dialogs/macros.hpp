@@ -16,7 +16,7 @@
                 #define MACRO_COLOUR_SEPARATOR                                  0.05, 0.05, 0.05, 0.8
         #endif
 
-
+	#define MACRO_COLOUR_INVISIBLE						0, 0, 0, 0
 
 
 
@@ -35,8 +35,8 @@
 
         // Weapons
         #define MACRO_PICTURE_PRIMARYWEAPON                             "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_primary_gs.paa"
+	#define MACRO_PICTURE_HANDGUNWEAPON                             "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_hgun_gs.paa"
         #define MACRO_PICTURE_SECONDARYWEAPON                           "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_secondary_gs.paa"
-        #define MACRO_PICTURE_HANDGUNWEAPON                             "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_hgun_gs.paa"
 
         // Weapon Items
         #define MACRO_PICTURE_WEAPON_MUZZLE                             "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_muzzle_gs.paa"
@@ -68,38 +68,50 @@
         #define MACRO_IDC_PLAYER_NAME                                   2001
 
         // NVGs, binoculars, headgear and goggles
-        #define MACRO_IDC_NVGS_FRAME                                    2101
-        #define MACRO_IDC_NVGS_ICON                                     2102
-        #define MACRO_IDC_HEADGEAR_FRAME                                2103
-        #define MACRO_IDC_HEADGEAR_ICON                                 2104
-        #define MACRO_IDC_GOGGLES_FRAME                                 2105
-        #define MACRO_IDC_GOGGLES_ICON                                  2106
-        #define MACRO_IDC_BINOCULARS_FRAME                              2107
-        #define MACRO_IDC_BINOCULARS_ICON                               2108
+	#define MACRO_IDC_NVGS_DRAGBOX                                  2101
+	#define MACRO_IDC_NVGS_FRAME                                    2102
+        #define MACRO_IDC_NVGS_ICON                                     2103
+	#define MACRO_IDC_HEADGEAR_DRAGBOX                              2104
+	#define MACRO_IDC_HEADGEAR_FRAME                                2105
+        #define MACRO_IDC_HEADGEAR_ICON                                 2106
+	#define MACRO_IDC_GOGGLES_DRAGBOX                               2107
+	#define MACRO_IDC_GOGGLES_FRAME                                 2108
+        #define MACRO_IDC_GOGGLES_ICON                                  2109
+	#define MACRO_IDC_BINOCULARS_DRAGBOX                            2110
+	#define MACRO_IDC_BINOCULARS_FRAME                              2111
+        #define MACRO_IDC_BINOCULARS_ICON                               2112
 
         // Primary Weapon
-        #define MACRO_IDC_PRIMARYWEAPON_FRAME                           2201
-        #define MACRO_IDC_PRIMARYWEAPON_ICON                            2202
-
-        // Secondary Weapon
-        #define MACRO_IDC_SECONDARYWEAPON_FRAME                         2203
-        #define MACRO_IDC_SECONDARYWEAPON_ICON                          2204
+	#define MACRO_IDC_PRIMARYWEAPON_DRAGBOX                         2201
+        #define MACRO_IDC_PRIMARYWEAPON_FRAME                           2202
+        #define MACRO_IDC_PRIMARYWEAPON_ICON                            2203
 
         // Handgun Weapon
+	#define MACRO_IDC_HANDGUNWEAPON_DRAGBOX                         2204
         #define MACRO_IDC_HANDGUNWEAPON_FRAME                           2205
         #define MACRO_IDC_HANDGUNWEAPON_ICON                            2206
 
+        // Secondary Weapon
+	#define MACRO_IDC_SECONDARYWEAPON_DRAGBOX                       2207
+        #define MACRO_IDC_SECONDARYWEAPON_FRAME                         2208
+        #define MACRO_IDC_SECONDARYWEAPON_ICON                          2209
+
         // Assigned slots
-        #define MACRO_IDC_MAP_FRAME                                     2301
-        #define MACRO_IDC_MAP_ICON                                      2302
-        #define MACRO_IDC_GPS_FRAME                                     2303
-        #define MACRO_IDC_GPS_ICON                                      2304
-        #define MACRO_IDC_RADIO_FRAME                                   2305
-        #define MACRO_IDC_RADIO_ICON                                    2306
-        #define MACRO_IDC_COMPASS_FRAME                                 2307
-        #define MACRO_IDC_COMPASS_ICON                                  2308
-        #define MACRO_IDC_WATCH_FRAME                                   2309
-        #define MACRO_IDC_WATCH_ICON                                    2310
+	#define MACRO_IDC_MAP_DRAGBOX                                   2301
+	#define MACRO_IDC_MAP_FRAME                                     2302
+        #define MACRO_IDC_MAP_ICON                                      2303
+	#define MACRO_IDC_GPS_DRAGBOX                                   2304
+	#define MACRO_IDC_GPS_FRAME                                     2305
+        #define MACRO_IDC_GPS_ICON                                      2306
+	#define MACRO_IDC_RADIO_DRAGBOX                                 2307
+	#define MACRO_IDC_RADIO_FRAME                                   2308
+        #define MACRO_IDC_RADIO_ICON                                    2309
+	#define MACRO_IDC_COMPASS_DRAGBOX                               2310
+	#define MACRO_IDC_COMPASS_FRAME                                 2311
+        #define MACRO_IDC_COMPASS_ICON                                  2312
+	#define MACRO_IDC_WATCH_DRAGBOX                                 2313
+	#define MACRO_IDC_WATCH_FRAME                                   2314
+        #define MACRO_IDC_WATCH_ICON                                    2315
 
         // Character
         #define MACRO_IDC_CHARACTER_ICON                                2401
@@ -117,5 +129,26 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 //      MACRO FUNCTIONS
 // ------------------------------------------------------------------------------------------------------------------------------------------------
+
         #define CURLY(DATA) {##DATA##}
         #define SQUARE(DATA) [##DATA##]
+	#define STR(DATA) #DATA
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//      OTHERS / EXTRAS
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+	// Name of the UI
+	#define MACRO_GUI_NAME Rsc_Cre8ive_Inventory
+
+	// Determine which config file the UI is defined in (mission or addon format)
+	#define MACRO_CONFIG_FILE_SWITCH
+
+	#ifdef MACRO_CONFIG_FILE_SWITCH
+		#define MACRO_CONFIG_FILE missionConfigFile
+	#else
+		#define MACRO_CONFIG_FILE configFile
+	#endif

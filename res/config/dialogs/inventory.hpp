@@ -14,9 +14,9 @@ __EXEC(_safeZoneY = safeZoneY / _safeZoneMul)
 
 
 
-class Rsc_Cre8ive_Inventory {
+class MACRO_GUI_NAME {
         idd = 888801;
-        name = "Rsc_Cre8ive_Inventory";
+        name = STR(MACRO_GUI_NAME);
         onLoad = "uiNamespace setVariable ['cre8ive_dialog_inventory', _this select 0]";
 
         class Controls {
@@ -59,7 +59,7 @@ class Rsc_Cre8ive_Inventory {
                         y = "_safeZoneY";
                         w = "_safeZoneW * (0.27 - 0.002)";
                         h = "_safeZoneH * 0.04";
-                        colorBackground[] = {0,0,0,0};
+                        colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
                 };
 
                 class Exit_Button_Picture : RscPicture {
@@ -84,9 +84,9 @@ class Rsc_Cre8ive_Inventory {
                         y = "_safeZoneY";
                         w = "_safeZoneW * (0.03 - 0.004)";
                         h = "_safeZoneH * 0.04";
-                        colorBackground[] = {0,0,0,0};
+                        colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
                         colorBackgroundActive[] = {1,0,0,0.2};
-                        colorShadow[] = {0,0,0,0};
+                        colorShadow[] = CURLY(MACRO_COLOUR_INVISIBLE);
                         colorText[] = {1,1,1,1};
                         action = "(uiNamespace getVariable ['cre8ive_dialog_inventory', displayNull]) closeDisplay 0";
                 };
@@ -94,7 +94,19 @@ class Rsc_Cre8ive_Inventory {
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // TOP SLOTS
                         // NVGs
-                        class NVGs_Frame : RscText {
+			class NVGs_Dragbox : RscText {
+                                idc = MACRO_IDC_NVGS_DRAGBOX;
+                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
+                                y = "_safeZoneY + _safeZoneH * (0.12 + 0.005)";
+                                w = "_safeZoneW * 0.0705";
+                                h = "_safeZoneH * 0.105";
+				childFrame = MACRO_IDC_NVGS_FRAME;
+				childPicture = MACRO_IDC_NVGS_ICON;
+				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
+			};
+
+                        class NVGs_Frame : RscBox {
                                 idc = MACRO_IDC_NVGS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * (0.12 + 0.005)";
@@ -114,7 +126,14 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Headgear
-                        class Headgear_Frame : NVGs_Frame {
+			class Headgear_Dragbox : NVGs_Dragbox {
+                                idc = MACRO_IDC_HEADGEAR_DRAGBOX;
+				x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.0705 * 1)";
+				childFrame = MACRO_IDC_HEADGEAR_FRAME;
+				childPicture = MACRO_IDC_HEADGEAR_ICON;
+			};
+
+			class Headgear_Frame : NVGs_Frame {
                                 idc = MACRO_IDC_HEADGEAR_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.0705 * 1)";
                         };
@@ -126,6 +145,13 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Goggles
+			class Goggles_Dragbox : NVGs_Dragbox {
+                                idc = MACRO_IDC_GOGGLES_DRAGBOX;
+				x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 5 + 0.0705 * 2)";
+				childFrame = MACRO_IDC_GOGGLES_FRAME;
+				childPicture = MACRO_IDC_GOGGLES_ICON;
+			};
+
                         class Goggles_Frame : NVGs_Frame {
                                 idc = MACRO_IDC_GOGGLES_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 5 + 0.0705 * 2)";
@@ -138,6 +164,13 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Binoculars
+			class Binoculars_Dragbox : NVGs_Dragbox {
+                                idc = MACRO_IDC_BINOCULARS_DRAGBOX;
+				x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 6 + 0.0705 * 3)";
+				childFrame = MACRO_IDC_BINOCULARS_FRAME;
+				childPicture = MACRO_IDC_BINOCULARS_ICON;
+			};
+
                         class Binoculars_Frame : NVGs_Frame {
                                 idc = MACRO_IDC_BINOCULARS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 6 + 0.0705 * 3)";
@@ -152,15 +185,25 @@ class Rsc_Cre8ive_Inventory {
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // WEAPONS
                         // Primary Weapon
-                        class PrimaryWeapon_Frame : RscText {
+			class PrimaryWeapon_Dragbox : RscText {
+				idc = MACRO_IDC_PRIMARYWEAPON_DRAGBOX;
+				x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
+                                y = "_safeZoneY + _safeZoneH * 0.3";
+                                w = "_safeZoneW * (0.3 - 0.004 * 3)";
+                                h = "_safeZoneH * 0.175";
+				childFrame = MACRO_IDC_PRIMARYWEAPON_FRAME;
+				childPicture = MACRO_IDC_PRIMARYWEAPON_ICON;
+				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
+			};
+
+                        class PrimaryWeapon_Frame : RscBox {
                                 idc = MACRO_IDC_PRIMARYWEAPON_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * 0.3";
                                 w = "_safeZoneW * (0.3 - 0.004 * 3)";
                                 h = "_safeZoneH * 0.175";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
-				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
                         };
 
                         class PrimaryWeapon_Picture : RscPicture {
@@ -174,6 +217,13 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Handgun weapon
+			class HandgunWeapon_Dragbox : PrimaryWeapon_Dragbox {
+				idc = MACRO_IDC_HANDGUNWEAPON_DRAGBOX;
+				y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 1)";
+				childFrame = MACRO_IDC_HANDGUNWEAPON_FRAME;
+				childPicture = MACRO_IDC_HANDGUNWEAPON_ICON;
+			};
+
                         class HandgunWeapon_Frame : PrimaryWeapon_Frame {
                                 idc = MACRO_IDC_HANDGUNWEAPON_FRAME;
                                 y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 1)";
@@ -186,6 +236,13 @@ class Rsc_Cre8ive_Inventory {
                         };
 
                         // Secondary weapon
+			class SecondaryWeapon_Dragbox : PrimaryWeapon_Dragbox {
+				idc = MACRO_IDC_SECONDARYWEAPON_DRAGBOX;
+				y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 2)";
+				childFrame = MACRO_IDC_SECONDARYWEAPON_FRAME;
+				childPicture = MACRO_IDC_SECONDARYWEAPON_ICON;
+			};
+
                         class SecondaryWeapon_Frame : PrimaryWeapon_Frame {
                                 idc = MACRO_IDC_SECONDARYWEAPON_FRAME;
                                 y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 2)";
@@ -307,9 +364,9 @@ class Rsc_Cre8ive_Inventory {
                                 y = "_safeZoneY + _safeZoneH * (0.04 + 0.005)";
                                 w = "_safeZoneW * 0.143";
                                 h = "_safeZoneH * 0.075";
-                                colorBackground[] = {0,0,0,0};
-                                colorBackgroundActive[] = {0,0,0,0};
-                                colorShadow[] = {0,0,0,0};
+                                colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
+                                colorBackgroundActive[] = CURLY(MACRO_COLOUR_INVISIBLE);
+                                colorShadow[] = CURLY(MACRO_COLOUR_INVISIBLE);
                                 colorText[] = {1,1,1,1};
                                 action = "['menu_weapons'] call cre_fnc_inventory";
                         };
