@@ -66,6 +66,8 @@
 
         // PLayer info
         #define MACRO_IDC_PLAYER_NAME                                   2001
+	#define MACRO_IDC_SCRIPTEDFRAME					2002
+	#define MACRO_IDC_SCRIPTEDPICTURE				2003
 
         // NVGs, binoculars, headgear and goggles
 	#define MACRO_IDC_NVGS_DRAGBOX                                  2101

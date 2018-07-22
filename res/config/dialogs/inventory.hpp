@@ -94,25 +94,16 @@ class MACRO_GUI_NAME {
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // TOP SLOTS
                         // NVGs
-			class NVGs_Dragbox : RscText {
-                                idc = MACRO_IDC_NVGS_DRAGBOX;
-                                x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
-                                y = "_safeZoneY + _safeZoneH * (0.12 + 0.005)";
-                                w = "_safeZoneW * 0.0705";
-                                h = "_safeZoneH * 0.105";
-				childFrame = MACRO_IDC_NVGS_FRAME;
-				childPicture = MACRO_IDC_NVGS_ICON;
-				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
-				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
-			};
-
-                        class NVGs_Frame : RscBox {
+                        class NVGs_Frame : RscText {
                                 idc = MACRO_IDC_NVGS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * (0.12 + 0.005)";
                                 w = "_safeZoneW * 0.0705";
                                 h = "_safeZoneH * 0.105";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
+				childPicture = MACRO_IDC_NVGS_ICON;
+				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
                         };
 
                         class NVGs_Picture : RscPicture {
@@ -126,16 +117,10 @@ class MACRO_GUI_NAME {
                         };
 
                         // Headgear
-			class Headgear_Dragbox : NVGs_Dragbox {
-                                idc = MACRO_IDC_HEADGEAR_DRAGBOX;
-				x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.0705 * 1)";
-				childFrame = MACRO_IDC_HEADGEAR_FRAME;
-				childPicture = MACRO_IDC_HEADGEAR_ICON;
-			};
-
 			class Headgear_Frame : NVGs_Frame {
                                 idc = MACRO_IDC_HEADGEAR_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.0705 * 1)";
+				childPicture = MACRO_IDC_HEADGEAR_ICON;
                         };
 
                         class Headgear_Picture : NVGs_Picture {
@@ -145,16 +130,10 @@ class MACRO_GUI_NAME {
                         };
 
                         // Goggles
-			class Goggles_Dragbox : NVGs_Dragbox {
-                                idc = MACRO_IDC_GOGGLES_DRAGBOX;
-				x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 5 + 0.0705 * 2)";
-				childFrame = MACRO_IDC_GOGGLES_FRAME;
-				childPicture = MACRO_IDC_GOGGLES_ICON;
-			};
-
                         class Goggles_Frame : NVGs_Frame {
                                 idc = MACRO_IDC_GOGGLES_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 5 + 0.0705 * 2)";
+				childPicture = MACRO_IDC_GOGGLES_ICON;
                         };
 
                         class Goggles_Picture : NVGs_Picture {
@@ -164,16 +143,10 @@ class MACRO_GUI_NAME {
                         };
 
                         // Binoculars
-			class Binoculars_Dragbox : NVGs_Dragbox {
-                                idc = MACRO_IDC_BINOCULARS_DRAGBOX;
-				x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 6 + 0.0705 * 3)";
-				childFrame = MACRO_IDC_BINOCULARS_FRAME;
-				childPicture = MACRO_IDC_BINOCULARS_ICON;
-			};
-
                         class Binoculars_Frame : NVGs_Frame {
                                 idc = MACRO_IDC_BINOCULARS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 6 + 0.0705 * 3)";
+				childPicture = MACRO_IDC_BINOCULARS_ICON;
                         };
 
                         class Binoculars_Picture : NVGs_Picture {
@@ -185,25 +158,16 @@ class MACRO_GUI_NAME {
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // WEAPONS
                         // Primary Weapon
-			class PrimaryWeapon_Dragbox : RscText {
-				idc = MACRO_IDC_PRIMARYWEAPON_DRAGBOX;
-				x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
-                                y = "_safeZoneY + _safeZoneH * 0.3";
-                                w = "_safeZoneW * (0.3 - 0.004 * 3)";
-                                h = "_safeZoneH * 0.175";
-				childFrame = MACRO_IDC_PRIMARYWEAPON_FRAME;
-				childPicture = MACRO_IDC_PRIMARYWEAPON_ICON;
-				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
-				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
-			};
-
-                        class PrimaryWeapon_Frame : RscBox {
+                        class PrimaryWeapon_Frame : RscText {
                                 idc = MACRO_IDC_PRIMARYWEAPON_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 3)";
                                 y = "_safeZoneY + _safeZoneH * 0.3";
                                 w = "_safeZoneW * (0.3 - 0.004 * 3)";
                                 h = "_safeZoneH * 0.175";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
+				childPicture = MACRO_IDC_PRIMARYWEAPON_ICON;
+				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
                         };
 
                         class PrimaryWeapon_Picture : RscPicture {
@@ -217,16 +181,10 @@ class MACRO_GUI_NAME {
                         };
 
                         // Handgun weapon
-			class HandgunWeapon_Dragbox : PrimaryWeapon_Dragbox {
-				idc = MACRO_IDC_HANDGUNWEAPON_DRAGBOX;
-				y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 1)";
-				childFrame = MACRO_IDC_HANDGUNWEAPON_FRAME;
-				childPicture = MACRO_IDC_HANDGUNWEAPON_ICON;
-			};
-
                         class HandgunWeapon_Frame : PrimaryWeapon_Frame {
                                 idc = MACRO_IDC_HANDGUNWEAPON_FRAME;
                                 y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 1)";
+				childPicture = MACRO_IDC_HANDGUNWEAPON_ICON;
                         };
 
                         class HandgunWeapon_Picture : PrimaryWeapon_Picture {
@@ -236,16 +194,10 @@ class MACRO_GUI_NAME {
                         };
 
                         // Secondary weapon
-			class SecondaryWeapon_Dragbox : PrimaryWeapon_Dragbox {
-				idc = MACRO_IDC_SECONDARYWEAPON_DRAGBOX;
-				y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 2)";
-				childFrame = MACRO_IDC_SECONDARYWEAPON_FRAME;
-				childPicture = MACRO_IDC_SECONDARYWEAPON_ICON;
-			};
-
                         class SecondaryWeapon_Frame : PrimaryWeapon_Frame {
                                 idc = MACRO_IDC_SECONDARYWEAPON_FRAME;
                                 y = "_safeZoneY + _safeZoneH * (0.3 + 0.18 * 2)";
+				childPicture = MACRO_IDC_SECONDARYWEAPON_ICON;
                         };
 
                         class SecondaryWeapon_Picture : PrimaryWeapon_Picture {
@@ -264,6 +216,9 @@ class MACRO_GUI_NAME {
                                 w = "_safeZoneW * 0.056";
                                 h = "_safeZoneH * 0.085";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
+				childPicture = MACRO_IDC_MAP_ICON;
+				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
                         };
 
                         class Map_Picture : RscPicture {
@@ -280,6 +235,7 @@ class MACRO_GUI_NAME {
                         class GPS_Frame : Map_Frame {
                                 idc = MACRO_IDC_GPS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.056 * 1)";
+				childPicture = MACRO_IDC_GPS_ICON;
                         };
 
                         class GPS_Picture : Map_Picture {
@@ -292,6 +248,7 @@ class MACRO_GUI_NAME {
                         class Radio_Frame : Map_Frame {
                                 idc = MACRO_IDC_RADIO_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 5 + 0.056 * 2)";
+				childPicture = MACRO_IDC_RADIO_ICON;
                         };
 
                         class Radio_Picture : Map_Picture {
@@ -304,6 +261,7 @@ class MACRO_GUI_NAME {
                         class Compass_Frame : Map_Frame {
                                 idc = MACRO_IDC_COMPASS_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 6 + 0.056 * 3)";
+				childPicture = MACRO_IDC_COMPASS_ICON;
                         };
 
                         class Compass_Picture : Map_Picture {
@@ -316,6 +274,7 @@ class MACRO_GUI_NAME {
                         class Watch_Frame : Map_Frame {
                                 idc = MACRO_IDC_WATCH_FRAME;
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 7 + 0.056 * 4)";
+				childPicture = MACRO_IDC_WATCH_ICON;
                         };
 
                         class Watch_Picture : Map_Picture {
@@ -384,6 +343,26 @@ class MACRO_GUI_NAME {
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.143)";
                                 action = "['menu_medical'] call cre_fnc_inventory";
                         };
-
         };
+};
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+// SCRIPTED CONTROLS
+class Cre8ive_Inventory_ScriptedFrame : RscBox {
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
+};
+
+class Cre8ive_Inventory_ScriptedPicture : RscPicture {
+	style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
 };

@@ -39,14 +39,17 @@ switch (_event) do {
                         if (time > _timeOut) then {
                                 systemChat "Couldn't open inventory!";
                         } else {
-                                // Fetch the inventory
-                                private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
+				// Escape scheduled environment
+				isNil {
+	                                // Fetch the inventory
+	                                private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
 
-                                // Write down the player's name
-                                (_inventory displayCtrl MACRO_IDC_PLAYER_NAME) ctrlSetText name player;
+	                                // Write down the player's name
+	                                (_inventory displayCtrl MACRO_IDC_PLAYER_NAME) ctrlSetText name player;
 
-				// Load the weapons menu (default)
-				["menu_weapons"] call cre_fnc_inventory;
+					// Load the weapons menu (default)
+					["menu_weapons"] call cre_fnc_inventory;
+				};
                         };
                 };
         };
@@ -66,13 +69,10 @@ switch (_event) do {
                         MACRO_IDC_GOGGLES_ICON,
                         MACRO_IDC_BINOCULARS_FRAME,
                         MACRO_IDC_BINOCULARS_ICON,
-			MACRO_IDC_PRIMARYWEAPON_DRAGBOX,
                         MACRO_IDC_PRIMARYWEAPON_FRAME,
                         MACRO_IDC_PRIMARYWEAPON_ICON,
-			MACRO_IDC_HANDGUNWEAPON_DRAGBOX,
                         MACRO_IDC_HANDGUNWEAPON_FRAME,
                         MACRO_IDC_HANDGUNWEAPON_ICON,
-			MACRO_IDC_SECONDARYWEAPON_DRAGBOX,
                         MACRO_IDC_SECONDARYWEAPON_FRAME,
                         MACRO_IDC_SECONDARYWEAPON_ICON,
                         MACRO_IDC_MAP_FRAME,
@@ -103,7 +103,7 @@ switch (_event) do {
                 _buttonMedical ctrlCommit 0;
 
                 // Update the menu
-                ["update_weapons"] call cre_fnc_inventory;
+        	["update_weapons"] call cre_fnc_inventory;
         };
 
         // Show medical menu
@@ -121,13 +121,10 @@ switch (_event) do {
                         MACRO_IDC_GOGGLES_ICON,
                         MACRO_IDC_BINOCULARS_FRAME,
                         MACRO_IDC_BINOCULARS_ICON,
-			MACRO_IDC_PRIMARYWEAPON_DRAGBOX,
                         MACRO_IDC_PRIMARYWEAPON_FRAME,
                         MACRO_IDC_PRIMARYWEAPON_ICON,
-			MACRO_IDC_HANDGUNWEAPON_DRAGBOX,
                         MACRO_IDC_HANDGUNWEAPON_FRAME,
                         MACRO_IDC_HANDGUNWEAPON_ICON,
-			MACRO_IDC_SECONDARYWEAPON_DRAGBOX,
                         MACRO_IDC_SECONDARYWEAPON_FRAME,
                         MACRO_IDC_SECONDARYWEAPON_ICON,
                         MACRO_IDC_MAP_FRAME,
@@ -207,32 +204,44 @@ switch (_event) do {
                         private _class = _classes param [_forEachIndex, ""];
 
                         if (_class != "") then {
-				private _dragbox = _x select 0;
-				private _frame = _x select 1;
-                                private _icon = _x select 2;
-				private _default = _x select 3;
+				private _frame = _x select 0;
+                                private _icon = _x select 1;
+				private _default = _x select 2;
                                 private _iconPath = [_class, _default] call cre_fnc_getClassIcon;
 
                                 _icon ctrlSetText _iconPath;
                                 _frame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-                                _frame ctrlCommit 0;
 
-				_dragbox setVariable ["active", true];
+				_frame setVariable ["active", true];
+				_frame setVariable ["childPicture", _icon];
                         };
                 } forEach [
-                        [_inventory displayCtrl MACRO_IDC_NVGS_DRAGBOX,			_inventory displayCtrl MACRO_IDC_NVGS_FRAME,			_inventory displayCtrl MACRO_IDC_NVGS_ICON,		MACRO_PICTURE_NVGS],
-                        [_inventory displayCtrl MACRO_IDC_HEADGEAR_DRAGBOX,		_inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME,		_inventory displayCtrl MACRO_IDC_HEADGEAR_ICON,		MACRO_PICTURE_HEADGEAR],
-                        [_inventory displayCtrl MACRO_IDC_GOGGLES_DRAGBOX,		_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME,			_inventory displayCtrl MACRO_IDC_GOGGLES_ICON,		MACRO_PICTURE_GOGGLES],
-                        [_inventory displayCtrl MACRO_IDC_BINOCULARS_DRAGBOX,		_inventory displayCtrl MACRO_IDC_BINOCULARS_FRAME, 		_inventory displayCtrl MACRO_IDC_BINOCULARS_ICON,	MACRO_PICTURE_BINOCULARS],
-                        [_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_DRAGBOX,	_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME, 		_ctrlPrimaryWeapon,					MACRO_PICTURE_PRIMARYWEAPON],
-                        [_inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_DRAGBOX,	_inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_FRAME,		_ctrlHandgunWeapon,					MACRO_PICTURE_HANDGUNWEAPON],
-                        [_inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_DRAGBOX,	_inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_FRAME,		_ctrlSecondaryWeapon,					MACRO_PICTURE_SECONDARYWEAPON],
-                        [_inventory displayCtrl MACRO_IDC_MAP_DRAGBOX,			_inventory displayCtrl MACRO_IDC_MAP_FRAME, 			_inventory displayCtrl MACRO_IDC_MAP_ICON,		MACRO_PICTURE_MAP],
-                        [_inventory displayCtrl MACRO_IDC_GPS_DRAGBOX,			_inventory displayCtrl MACRO_IDC_GPS_FRAME, 			_inventory displayCtrl MACRO_IDC_GPS_ICON,		MACRO_PICTURE_GPS],
-                        [_inventory displayCtrl MACRO_IDC_RADIO_DRAGBOX,		_inventory displayCtrl MACRO_IDC_RADIO_FRAME, 			_inventory displayCtrl MACRO_IDC_RADIO_ICON,		MACRO_PICTURE_RADIO],
-                        [_inventory displayCtrl MACRO_IDC_COMPASS_DRAGBOX,		_inventory displayCtrl MACRO_IDC_COMPASS_FRAME, 		_inventory displayCtrl MACRO_IDC_COMPASS_ICON,		MACRO_PICTURE_COMPASS],
-                        [_inventory displayCtrl MACRO_IDC_WATCH_DRAGBOX,		_inventory displayCtrl MACRO_IDC_WATCH_FRAME,	 		_inventory displayCtrl MACRO_IDC_WATCH_ICON,		MACRO_PICTURE_WATCH]
+                        [_inventory displayCtrl MACRO_IDC_NVGS_FRAME,			_inventory displayCtrl MACRO_IDC_NVGS_ICON,		MACRO_PICTURE_NVGS],
+                        [_inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME,		_inventory displayCtrl MACRO_IDC_HEADGEAR_ICON,		MACRO_PICTURE_HEADGEAR],
+                        [_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME,		_inventory displayCtrl MACRO_IDC_GOGGLES_ICON,		MACRO_PICTURE_GOGGLES],
+                        [_inventory displayCtrl MACRO_IDC_BINOCULARS_FRAME, 		_inventory displayCtrl MACRO_IDC_BINOCULARS_ICON,	MACRO_PICTURE_BINOCULARS],
+                        [_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME, 		_ctrlPrimaryWeapon,					MACRO_PICTURE_PRIMARYWEAPON],
+                        [_inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_FRAME,		_ctrlHandgunWeapon,					MACRO_PICTURE_HANDGUNWEAPON],
+                        [_inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_FRAME,	_ctrlSecondaryWeapon,					MACRO_PICTURE_SECONDARYWEAPON],
+                        [_inventory displayCtrl MACRO_IDC_MAP_FRAME, 			_inventory displayCtrl MACRO_IDC_MAP_ICON,		MACRO_PICTURE_MAP],
+                        [_inventory displayCtrl MACRO_IDC_GPS_FRAME, 			_inventory displayCtrl MACRO_IDC_GPS_ICON,		MACRO_PICTURE_GPS],
+                        [_inventory displayCtrl MACRO_IDC_RADIO_FRAME, 			_inventory displayCtrl MACRO_IDC_RADIO_ICON,		MACRO_PICTURE_RADIO],
+                        [_inventory displayCtrl MACRO_IDC_COMPASS_FRAME, 		_inventory displayCtrl MACRO_IDC_COMPASS_ICON,		MACRO_PICTURE_COMPASS],
+                        [_inventory displayCtrl MACRO_IDC_WATCH_FRAME,	 		_inventory displayCtrl MACRO_IDC_WATCH_ICON,		MACRO_PICTURE_WATCH]
                 ];
+
+		private _maxI = 40;
+		private _maxJ = 20;
+/*
+		for "_i" from 1 to _maxI do {
+			for "_j" from 1 to _maxJ do {
+				private _ctrl = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", 3000 + _i * _maxJ + _j];
+				_ctrl ctrlSetBackgroundColor [_i / _maxI, _j / _maxJ, 0, 0.5];
+				_ctrl ctrlSetPosition [safeZoneX + (_i / _maxI) * safeZoneW, safeZoneY + (_j / _maxJ) * safeZoneH, safeZoneW / (_maxI * 1.5), safeZoneH / (_maxJ * 1.5)];
+				_ctrl ctrlCommit 0;
+			};
+		};
+*/
         };
 
 	// Update weapons menu
@@ -248,34 +257,43 @@ switch (_event) do {
 		// Move the associated frame and picture to the cursor
 		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
 
-			// Determine the children of the (dummy) control and save them onto it
-			private _children = [];
-			{
-				private _idc = [MACRO_CONFIG_FILE >> STR(MACRO_GUI_NAME) >> "Controls" >> ctrlClassName _ctrl, _x, -1] call BIS_fnc_returnConfigEntry;
+			// Hide the original picture
+			private _childPicture = _ctrl getVariable ["childPicture", controlNull];
+			 _childPicture ctrlShow false;
 
-				if (_idc >= 0) then {
-					_children pushBack (_inventory displayCtrl _idc);
-				};
-			} forEach ["childFrame", "childPicture"];
-			_ctrl setVariable ["childControls", _children];
+			 // Create a temporary frame that follows the cursor
+			 private _childFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", MACRO_IDC_SCRIPTEDFRAME];
+			 _childFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+			 _childFrameTemp ctrlSetPosition ctrlPosition _ctrl;
+			 _childFrameTemp ctrlCommit 0;
+			 _ctrl setVariable ["childFrameTemp", _childFrameTemp];
 
-			// Change the colour of the dragbox
+ 			 // Create a temporary picture that follows the cursor
+ 			 private _childPictureTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE];
+ 			 _childPictureTemp ctrlSetText ctrlText _childPicture;
+ 			 _childPictureTemp ctrlSetPosition ctrlPosition _childPicture;
+ 			 _childPictureTemp ctrlCommit 0;
+ 			 _ctrl setVariable ["childPictureTemp", _childPictureTemp];
+
+			// Change the colour of the frame
 			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 
-			// Move the children if the mouse is moving
+			// Move the temporary children controls if the mouse is moving
 			_ctrl ctrlAddEventHandler ["MouseMoving", {
 				params ["_ctrl", "_posX", "_posY"];
 
-				// Update the position
 				{
 					private _pos = ctrlPosition _x;
 					_pos set [0, _posX - (_pos param [2, 0]) / 2];
 					_pos set [1, _posY - (_pos param [3, 0]) / 2];
 
-					// Move the control
+					// Move the temporary controls
 					_x ctrlSetPosition _pos;
 					_x ctrlCommit 0;
-				} forEach (_ctrl getVariable ["childControls", []]);
+				} forEach [
+					_ctrl getVariable ["childFrameTemp", controlNull],
+					_ctrl getVariable ["childPictureTemp", controlNull]
+				];
 			}];
 		};
 	};
@@ -288,15 +306,23 @@ switch (_event) do {
 		if (!isNull _ctrl) then {
 			_ctrl ctrlRemoveAllEventHandlers "MouseMoving";
 
-			// Reset the colour of the dragbox
-			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
+			// Reset the colour of the frame
+			if (_ctrl getVariable ["active", false]) then {
+				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+			};
+
+			// Unhide the original picture
+			private _childPicture = _ctrl getVariable ["childPicture", controlNull];
+			_childPicture ctrlShow true;
 
 			// Update the position
 			private _pos = ctrlPosition _ctrl;
 			{
-				_x ctrlSetPosition _pos;
-				_x ctrlCommit 0;
-			} forEach (_ctrl getVariable ["childControls", []]);
+				ctrlDelete _x;
+			} forEach [
+				_ctrl getVariable ["childFrameTemp", controlNull],
+				_ctrl getVariable ["childPictureTemp", controlNull]
+			];
 		};
 	};
 };
