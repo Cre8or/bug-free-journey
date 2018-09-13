@@ -195,3 +195,74 @@ class RscBox
     sizeEx = 0.03;
     text = "";
 };
+
+// EXTRAS (FROM ALL-IN-ONE CONFIG)
+class ScrollBar
+{
+        color[] = {1, 1, 1, 0.6};
+        colorActive[] = {1, 1, 1, 1};
+        colorDisabled[] = {1, 1, 1, 0.3};
+        thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+        arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+        arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+        border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+        shadow = 0;
+        scrollSpeed = 0.06;
+        width = 0;
+        height = 0;
+        autoScrollEnabled = 0;
+        autoScrollSpeed = -1;
+        autoScrollDelay = 5;
+        autoScrollRewind = 0;
+};
+
+class RscControlsGroup
+{
+        deletable = 0;
+        fade = 0;
+        class VScrollbar: ScrollBar
+        {
+                color[] = {1, 1, 1, 1};
+                width = 0.021;
+                autoScrollEnabled = 1;
+        };
+        class HScrollbar: ScrollBar
+        {
+                color[] = {1, 1, 1, 1};
+                height = 0.028;
+        };
+        class Controls {};
+        type = 15;
+        idc = -1;
+        x = 0;
+        y = 0;
+        w = 1;
+        h = 1;
+        shadow = 0;
+        style = 16;
+};
+class RscControlsGroupNoScrollbars: RscControlsGroup
+{
+        class VScrollbar: VScrollbar
+        {
+                width = 0;
+        };
+        class HScrollbar: HScrollbar
+        {
+                height = 0;
+        };
+};
+class RscControlsGroupNoHScrollbars: RscControlsGroup
+{
+        class HScrollbar: HScrollbar
+        {
+                height = 0;
+        };
+};
+class RscControlsGroupNoVScrollbars: RscControlsGroup
+{
+        class VScrollbar: VScrollbar
+        {
+                width = 0;
+        };
+};

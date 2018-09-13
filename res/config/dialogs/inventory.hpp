@@ -102,8 +102,8 @@ class MACRO_GUI_NAME {
                                 h = "_safeZoneH * 0.105";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
 				childPicture = MACRO_IDC_NVGS_ICON;
-				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
-				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
+				onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
                         };
 
                         class NVGs_Picture : RscPicture {
@@ -166,8 +166,8 @@ class MACRO_GUI_NAME {
                                 h = "_safeZoneH * 0.175";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
 				childPicture = MACRO_IDC_PRIMARYWEAPON_ICON;
-				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
-				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
+				onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
                         };
 
                         class PrimaryWeapon_Picture : RscPicture {
@@ -217,8 +217,8 @@ class MACRO_GUI_NAME {
                                 h = "_safeZoneH * 0.085";
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
 				childPicture = MACRO_IDC_MAP_ICON;
-				onMouseButtonDown = "['dragging_start', _this] call cre_fnc_inventory";
-				onMouseButtonUp = "['dragging_stop', _this] call cre_fnc_inventory";
+				onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
+				onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
                         };
 
                         class Map_Picture : RscPicture {
@@ -327,7 +327,7 @@ class MACRO_GUI_NAME {
                                 colorBackgroundActive[] = CURLY(MACRO_COLOUR_INVISIBLE);
                                 colorShadow[] = CURLY(MACRO_COLOUR_INVISIBLE);
                                 colorText[] = {1,1,1,1};
-                                action = "['menu_weapons'] call cre_fnc_inventory";
+                                action = "['ui_menu_weapons'] call cre_fnc_inventory";
                         };
 
                         // Medical
@@ -341,7 +341,7 @@ class MACRO_GUI_NAME {
                                 idc = MACRO_IDC_MEDICAL_BUTTON;
                                 text = "MEDICAL";
                                 x = "_safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.143)";
-                                action = "['menu_medical'] call cre_fnc_inventory";
+                                action = "['ui_menu_medical'] call cre_fnc_inventory";
                         };
         };
 };

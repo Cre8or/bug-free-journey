@@ -15,7 +15,7 @@ if (_event == "") exitWith {systemChat "No event specified!"};
 disableSerialization;
 private _eventExists = false;
 private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
-if (_event != "init") then {
+if (_event != "ui_init") then {
         if (isNull _inventory) exitWith {systemChat "Inventory isn't open!"};
 };
 
@@ -26,7 +26,7 @@ if (_event != "init") then {
 switch (_event) do {
 
         // Initialisation
-        case "init": {
+        case "ui_init": {
 		_eventExists = true;
                 [] spawn {
 
@@ -48,14 +48,14 @@ switch (_event) do {
 	                                (_inventory displayCtrl MACRO_IDC_PLAYER_NAME) ctrlSetText name player;
 
 					// Load the weapons menu (default)
-					["menu_weapons"] call cre_fnc_inventory;
+					["ui_menu_weapons"] call cre_fnc_inventory;
 				};
                         };
                 };
         };
 
         // Show weapons menu
-        case "menu_weapons": {
+        case "ui_menu_weapons": {
 		_eventExists = true;
                 // Show the weapons controls
                 {
@@ -103,11 +103,11 @@ switch (_event) do {
                 _buttonMedical ctrlCommit 0;
 
                 // Update the menu
-        	["update_weapons"] call cre_fnc_inventory;
+        	["ui_update_weapons"] call cre_fnc_inventory;
         };
 
         // Show medical menu
-        case "menu_medical": {
+        case "ui_menu_medical": {
 		_eventExists = true;
                 // Hide the weapons controls
                 {
@@ -155,11 +155,11 @@ switch (_event) do {
                 _buttonMedical ctrlCommit 0;
 
                 // Update the menu
-                ["update_medical"] call cre_fnc_inventory;
+                ["ui_update_medical"] call cre_fnc_inventory;
         };
 
         // Update weapons menu
-        case "update_weapons": {
+        case "ui_update_weapons": {
 		_eventExists = true;
                 // Grab some of our inventory controls
                 private _ctrlPrimaryWeapon = _inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_ICON;
@@ -212,8 +212,10 @@ switch (_event) do {
                                 _icon ctrlSetText _iconPath;
                                 _frame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
+                                // Save the slot's data
 				_frame setVariable ["active", true];
 				_frame setVariable ["childPicture", _icon];
+                                _frame setVariable ["defaultIconPath", _default];
                         };
                 } forEach [
                         [_inventory displayCtrl MACRO_IDC_NVGS_FRAME,			_inventory displayCtrl MACRO_IDC_NVGS_ICON,		MACRO_PICTURE_NVGS],
@@ -245,12 +247,12 @@ switch (_event) do {
         };
 
 	// Update weapons menu
-	case "update_medical": {
+	case "ui_update_medical": {
 		_eventExists = true;
 	};
 
 	// Start dragging
-	case "dragging_start": {
+	case "ui_dragging_start": {
 		_eventExists = true;
 		private _ctrl = _args param [0, controlNull];
 
@@ -261,22 +263,36 @@ switch (_event) do {
 			private _childPicture = _ctrl getVariable ["childPicture", controlNull];
 			 _childPicture ctrlShow false;
 
-			 // Create a temporary frame that follows the cursor
-			 private _childFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", MACRO_IDC_SCRIPTEDFRAME];
-			 _childFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-			 _childFrameTemp ctrlSetPosition ctrlPosition _ctrl;
-			 _childFrameTemp ctrlCommit 0;
-			 _ctrl setVariable ["childFrameTemp", _childFrameTemp];
+                         // Create a temporary frame that stays on the slot
+                         private _childFrameSlotTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", MACRO_IDC_SCRIPTEDFRAME];
+			 _childFrameSlotTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+			 _childFrameSlotTemp ctrlSetPosition ctrlPosition _ctrl;
+			 _childFrameSlotTemp ctrlCommit 0;
+			 _ctrl setVariable ["childFrameSlotTemp", _childFrameSlotTemp];
 
- 			 // Create a temporary picture that follows the cursor
- 			 private _childPictureTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE];
- 			 _childPictureTemp ctrlSetText ctrlText _childPicture;
- 			 _childPictureTemp ctrlSetPosition ctrlPosition _childPicture;
- 			 _childPictureTemp ctrlCommit 0;
- 			 _ctrl setVariable ["childPictureTemp", _childPictureTemp];
+                         // Create a temporary picture that stays on the slot
+ 			 private _childPictureSlotTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE];
+ 			 _childPictureSlotTemp ctrlSetText (_ctrl getVariable ["defaultIconPath", ""]);
+ 			 _childPictureSlotTemp ctrlSetPosition ctrlPosition _childPicture;
+ 			 _childPictureSlotTemp ctrlCommit 0;
+ 			 _ctrl setVariable ["childPictureSlotTemp", _childPictureSlotTemp];
 
-			// Change the colour of the frame
-			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+ 			 // Create a temporary frame that follows the cursor
+ 			 private _childFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", MACRO_IDC_SCRIPTEDFRAME];
+ 			 _childFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+ 			 _childFrameTemp ctrlSetPosition ctrlPosition _ctrl;
+ 			 _childFrameTemp ctrlCommit 0;
+ 			 _ctrl setVariable ["childFrameTemp", _childFrameTemp];
+
+  			 // Create a temporary picture that follows the cursor
+  			 private _childPictureTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE];
+  			 _childPictureTemp ctrlSetText ctrlText _childPicture;
+  			 _childPictureTemp ctrlSetPosition ctrlPosition _childPicture;
+  			 _childPictureTemp ctrlCommit 0;
+  			 _ctrl setVariable ["childPictureTemp", _childPictureTemp];
+
+			// Change the colour of the frames
+			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
 
 			// Move the temporary children controls if the mouse is moving
 			_ctrl ctrlAddEventHandler ["MouseMoving", {
@@ -299,7 +315,7 @@ switch (_event) do {
 	};
 
 	// Stop dragging
-	case "dragging_stop": {
+	case "ui_dragging_stop": {
 		_eventExists = true;
 		private _ctrl = _args param [0, controlNull];
 
@@ -311,17 +327,19 @@ switch (_event) do {
 				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 			};
 
-			// Unhide the original picture
+			// Unhide the original controls
 			private _childPicture = _ctrl getVariable ["childPicture", controlNull];
-			_childPicture ctrlShow true;
+                        _childPicture ctrlShow true;
 
 			// Update the position
 			private _pos = ctrlPosition _ctrl;
 			{
 				ctrlDelete _x;
 			} forEach [
-				_ctrl getVariable ["childFrameTemp", controlNull],
-				_ctrl getVariable ["childPictureTemp", controlNull]
+                                _ctrl getVariable ["childFrameSlotTemp", controlNull],
+                                _ctrl getVariable ["childPictureSlotTemp", controlNull],
+                                _ctrl getVariable ["childFrameTemp", controlNull],
+                                _ctrl getVariable ["childPictureTemp", controlNull]
 			];
 		};
 	};
