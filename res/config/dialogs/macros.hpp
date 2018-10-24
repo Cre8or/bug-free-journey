@@ -5,10 +5,14 @@
         // #define COLOUR_SCHEME
 
         #ifdef COLOUR_SCHEME
-                #define MACRO_COLOUR_BACKGROUND                                 0.11, 0.095, 0.06, 0.8
-                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.8, 0.72, 0.55, 0.15
-                #define MACRO_COLOUR_ELEMENT_ACTIVE                             0.8, 0.72, 0.55, 0.6
-                #define MACRO_COLOUR_SEPARATOR                                  0.08, 0.07, 0.045, 0.8
+//                #define MACRO_COLOUR_BACKGROUND                                 0.11, 0.095, 0.06, 0.8
+//                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.8, 0.72, 0.55, 0.15
+//                #define MACRO_COLOUR_ELEMENT_ACTIVE                             0.8, 0.72, 0.55, 0.6
+//                #define MACRO_COLOUR_SEPARATOR                                  0.08, 0.07, 0.045, 0.8
+		#define MACRO_COLOUR_BACKGROUND                                 0.095, 0.11, 0.06, 0.8
+                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.72, 0.8, 0.55, 0.15
+                #define MACRO_COLOUR_ELEMENT_ACTIVE                             0.72, 0.8, 0.55, 0.6
+                #define MACRO_COLOUR_SEPARATOR                                  0.07, 0.08, 0.045, 0.8
         #else
                 #define MACRO_COLOUR_BACKGROUND                                 0.1, 0.1, 0.1, 0.8
                 #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.7, 0.7, 0.7, 0.15
@@ -129,12 +133,23 @@
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------
+//      UI ELEMENT SCALING
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+	#define MACRO_SLOT_SIZE_W					0.033
+	#define MACRO_SLOT_SIZE_H					0.055
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
 //      MACRO FUNCTIONS
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
         #define CURLY(DATA) {##DATA##}
         #define SQUARE(DATA) [##DATA##]
 	#define STR(DATA) #DATA
+
 
 
 

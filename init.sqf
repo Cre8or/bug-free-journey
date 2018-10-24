@@ -11,3 +11,6 @@ enableSaving [false, false];
 /*
 if (is3DEN) then {createDialog "Rsc_Cre8ive_Inventory"} else {["ui_init"] call cre_fnc_inventory}
 */
+
+
+cre_fnc_inventory = compile preprocessFileLineNumbers "scripts\inventory\fn_inventory.sqf";

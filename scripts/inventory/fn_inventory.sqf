@@ -47,12 +47,46 @@ switch (_event) do {
 	                                // Write down the player's name
 	                                (_inventory displayCtrl MACRO_IDC_PLAYER_NAME) ctrlSetText name player;
 
+					// Attach an EH to the inventory to detect when it is closed
+					_inventory displayAddEventHandler ["Unload", {
+						["ui_unload"] call cre_fnc_inventory;
+					}];
+
+					// Set up the blur post-process effect
+					private _blurFX = missionNamespace getVariable ["Cre8ive_Inventory_BlurFX", 0];
+					if (_blurFX <= 0) then {
+						private _index = 400;
+						while {
+							_blurFX = ppEffectCreate ["DynamicBlur", _index];
+							_blurFX < 0
+						} do {
+							_index = _index + 1;
+						};
+
+						_blurFX ppEffectEnable true;
+					};
+
+					// Start the post-process effect and save the handle for later use
+					_blurFX ppEffectAdjust [5];
+					_blurFX ppEffectCommit 0;
+					missionNamespace setVariable  ["Cre8ive_Inventory_blurFX", _blurFX, false];
+
 					// Load the weapons menu (default)
 					["ui_menu_weapons"] call cre_fnc_inventory;
 				};
                         };
                 };
         };
+
+	// Unloading (closing the inventory)
+	case "ui_unload": {
+		_eventExists = true;
+
+		// Stop the blur post-process effect
+		private _blurFX = missionNamespace getVariable ["Cre8ive_Inventory_BlurFX", 0];
+		_blurFX ppEffectAdjust [0];
+		_blurFX ppEffectCommit 0;
+	};
 
         // Show weapons menu
         case "ui_menu_weapons": {
@@ -86,13 +120,19 @@ switch (_event) do {
                         MACRO_IDC_WATCH_FRAME,
                         MACRO_IDC_WATCH_ICON
                 ];
-
+/*
                 // Hide the medical controls
                 {
                         (_inventory displayCtrl _x) ctrlShow false;
                 } forEach [
                         MACRO_IDC_CHARACTER_ICON
                 ];
+*/
+
+		// Slightly hide the character
+		private _character = _inventory displayCtrl MACRO_IDC_CHARACTER_ICON;
+		_character ctrlSetTextColor [1,1,1,0.1];
+		_character ctrlCommit 0;
 
                 // Change the button colours
                 private _buttonWeapons = _inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME;
@@ -138,13 +178,19 @@ switch (_event) do {
                         MACRO_IDC_WATCH_FRAME,
                         MACRO_IDC_WATCH_ICON
                 ];
-
+/*
                 // Show the medical controls
                 {
                         (_inventory displayCtrl _x) ctrlShow true;
                 } forEach [
                         MACRO_IDC_CHARACTER_ICON
                 ];
+*/
+
+		// Show the character
+		private _character = _inventory displayCtrl MACRO_IDC_CHARACTER_ICON;
+		_character ctrlSetTextColor [1,1,1,0.5];
+		_character ctrlCommit 0;
 
                 // Change the button colours
                 private _buttonWeapons = _inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME;
@@ -208,6 +254,7 @@ switch (_event) do {
                                 private _icon = _x select 1;
 				private _default = _x select 2;
                                 private _iconPath = [_class, _default] call cre_fnc_getClassIcon;
+				//private _iconPath = "res\ui\inventory\weapon_frame.paa";
 
                                 _icon ctrlSetText _iconPath;
                                 _frame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
@@ -291,7 +338,7 @@ switch (_event) do {
   			 _childPictureTemp ctrlCommit 0;
   			 _ctrl setVariable ["childPictureTemp", _childPictureTemp];
 
-			// Change the colour of the frames
+			// Change the colour of the frame
 			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
 
 			// Move the temporary children controls if the mouse is moving
@@ -303,7 +350,6 @@ switch (_event) do {
 					_pos set [0, _posX - (_pos param [2, 0]) / 2];
 					_pos set [1, _posY - (_pos param [3, 0]) / 2];
 
-					// Move the temporary controls
 					_x ctrlSetPosition _pos;
 					_x ctrlCommit 0;
 				} forEach [
