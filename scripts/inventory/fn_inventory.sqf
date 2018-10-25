@@ -73,6 +73,9 @@ switch (_event) do {
 
 					// Load the weapons menu (default)
 					["ui_menu_weapons"] call cre_fnc_inventory;
+
+					// Load the storage menu
+					["ui_menu_storage"] call cre_fnc_inventory;
 				};
                         };
                 };
@@ -88,7 +91,7 @@ switch (_event) do {
 		_blurFX ppEffectCommit 0;
 	};
 
-        // Show weapons menu
+        // Load the weapons menu
         case "ui_menu_weapons": {
 		_eventExists = true;
                 // Show the weapons controls
@@ -146,7 +149,7 @@ switch (_event) do {
         	["ui_update_weapons"] call cre_fnc_inventory;
         };
 
-        // Show medical menu
+        // Load the medical menu
         case "ui_menu_medical": {
 		_eventExists = true;
                 // Hide the weapons controls
@@ -204,7 +207,91 @@ switch (_event) do {
                 ["ui_update_medical"] call cre_fnc_inventory;
         };
 
-        // Update weapons menu
+	// Load the storage menu
+	case "ui_menu_storage": {
+		_eventExists = true;
+		// Grab some of our inventory controls
+		private _storageCtrlGrp = _inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP;
+		private _ctrlUniformFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_UNIFORM_FRAME;
+                private _ctrlUniformIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_UNIFORM_ICON;
+		private _ctrlVestFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_VEST_FRAME;
+                private _ctrlVestIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_VEST_ICON;
+		private _ctrlBackpackFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_FRAME;
+                private _ctrlBackpackIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_ICON;
+
+		// Determine our starting positions
+		(ctrlPosition _ctrlUniformFrame) params ["_startX", "_startY", "_sizeW", "_sizeY"];
+		private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
+		private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
+		private _slotSizeW = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
+		private _slotSizeH = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
+		private _offsetY = 0;
+
+                // Determine our classes array
+                private _classes = [
+                        uniform player,
+			vest player,
+			backpack player
+                ];
+
+                // Determine the icon paths for the items and weapons that we have
+                {
+			private _frame = _x select 0;
+			private _icon = _x select 1;
+                        private _class = _classes param [_forEachIndex, ""];
+			private _startYNew = _startY + _sizeY + _offsetY;
+
+                        if (_class != "") then {
+				private _default = _x select 2;
+                                private _iconPath = [_class, _default] call cre_fnc_getClassIcon;
+				//private _iconPath = "res\ui\inventory\weapon_frame.paa";
+
+                                _icon ctrlSetText _iconPath;
+                                _frame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+			};
+
+			// Move the frame and icon controls
+			{
+				(ctrlPosition _x) params ["_posX", "", "_w", "_h"];
+				_x ctrlSetPosition [
+					_posX,
+					_startY + _offsetY,
+					_w,
+					_h
+				];
+				_x ctrlCommit 0;
+			} forEach [_frame, _icon];
+
+			// Create the slots for this container
+			private _maxLoad = floor getContainerMaxLoad _class;
+			if (_maxLoad > 0) then {
+				for "_i" from 0 to (_maxLoad - 1) do {
+					private _slotFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", -1, _storageCtrlGrp];
+					_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+					_slotFrame ctrlSetPosition [
+						_startX + _slotSizeW * (_i % MACRO_SCALE_SLOT_COUNT_PER_LINE) * 1.0,
+						_startYNew + _slotSizeH * floor (_i / MACRO_SCALE_SLOT_COUNT_PER_LINE) * 1.0,
+						_slotSizeW,
+						_slotSizeH
+					];
+					_slotFrame ctrlCommit 0;
+				};
+			};
+
+			_offsetY = _offsetY + _safeZoneH * (_sizeY + MACRO_SCALE_SLOT_SIZE_H * ceil (_maxLoad / MACRO_SCALE_SLOT_COUNT_PER_LINE) + 0.005);
+
+                        // Save the slot's data
+			_frame setVariable ["active", true];
+			_frame setVariable ["childPicture", _icon];
+                        _frame setVariable ["defaultIconPath", _default];
+                } forEach [
+			[_ctrlUniformFrame,		_ctrlUniformIcon,		MACRO_PICTURE_UNIFORM],
+			[_ctrlVestFrame,		_ctrlVestIcon,			MACRO_PICTURE_VEST],
+			[_ctrlBackpackFrame,		_ctrlBackpackIcon,		MACRO_PICTURE_BACKPACK]
+                ];
+	};
+
+        // Update the weapons menu
         case "ui_update_weapons": {
 		_eventExists = true;
                 // Grab some of our inventory controls
@@ -293,7 +380,7 @@ switch (_event) do {
 */
         };
 
-	// Update weapons menu
+	// Update the weapons menu
 	case "ui_update_medical": {
 		_eventExists = true;
 	};

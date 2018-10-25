@@ -57,6 +57,11 @@
         #define MACRO_PICTURE_COMPASS                                   "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_compass_gs.paa"
         #define MACRO_PICTURE_WATCH                                     "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_watch_gs.paa"
 
+	// Uniform, vest and backpack
+	#define MACRO_PICTURE_UNIFORM                                   "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_uniform_gs.paa"
+	#define MACRO_PICTURE_VEST                                      "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_vest_gs.paa"
+	#define MACRO_PICTURE_BACKPACK                                  "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_backpack_gs.paa"
+
         // Medical menu
         #define MACRO_PICTURE_CHARACTER_OUTLINE                         "res\ui\inventory\character.paa"
 
@@ -128,6 +133,15 @@
         #define MACRO_IDC_MEDICAL_BUTTON_FRAME                          2503
         #define MACRO_IDC_MEDICAL_BUTTON                                2504
 
+	// Storage
+	#define MACRO_IDC_STORAGE_CTRLGRP                               3001
+	#define MACRO_IDC_UNIFORM_FRAME                                 3101
+	#define MACRO_IDC_UNIFORM_ICON                                  3102
+	#define MACRO_IDC_VEST_FRAME                                    3103
+	#define MACRO_IDC_VEST_ICON                                     3104
+	#define MACRO_IDC_BACKPACK_FRAME                                3105
+	#define MACRO_IDC_BACKPACK_ICON                                 3106
+
 
 
 
@@ -136,8 +150,10 @@
 //      UI ELEMENT SCALING
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
-	#define MACRO_SLOT_SIZE_W					0.033
-	#define MACRO_SLOT_SIZE_H					0.055
+	#define MACRO_SCALE_SLOT_SIZE_W					0.033
+	#define MACRO_SCALE_SLOT_SIZE_H					0.055
+	#define MACRO_SCALE_SLOT_COUNT_PER_LINE				10
+
 
 
 

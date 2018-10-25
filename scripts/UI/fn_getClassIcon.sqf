@@ -29,7 +29,7 @@ if (_iconPath == "") then {
                 if (_iconPath != "") exitWith {
                         _location setVariable [_class, _iconPath];
                 };
-        } forEach ["CfgWeapons", "CfgMagazines", "CfgGlasses"];
+        } forEach ["CfgWeapons", "CfgMagazines", "CfgVehicles", "CfgGlasses"];
 };
 
 if (_iconPath == "") then {
