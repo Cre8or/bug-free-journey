@@ -95,55 +95,16 @@ switch (_event) do {
         case "ui_menu_weapons": {
 		_eventExists = true;
                 // Show the weapons controls
-                {
-                        (_inventory displayCtrl _x) ctrlShow true;
-                } forEach [
-                        MACRO_IDC_NVGS_FRAME,
-                        MACRO_IDC_NVGS_ICON,
-                        MACRO_IDC_HEADGEAR_FRAME,
-                        MACRO_IDC_HEADGEAR_ICON,
-                        MACRO_IDC_GOGGLES_FRAME,
-                        MACRO_IDC_GOGGLES_ICON,
-                        MACRO_IDC_BINOCULARS_FRAME,
-                        MACRO_IDC_BINOCULARS_ICON,
-                        MACRO_IDC_PRIMARYWEAPON_FRAME,
-                        MACRO_IDC_PRIMARYWEAPON_ICON,
-                        MACRO_IDC_HANDGUNWEAPON_FRAME,
-                        MACRO_IDC_HANDGUNWEAPON_ICON,
-                        MACRO_IDC_SECONDARYWEAPON_FRAME,
-                        MACRO_IDC_SECONDARYWEAPON_ICON,
-                        MACRO_IDC_MAP_FRAME,
-                        MACRO_IDC_MAP_ICON,
-                        MACRO_IDC_GPS_FRAME,
-                        MACRO_IDC_GPS_ICON,
-                        MACRO_IDC_RADIO_FRAME,
-                        MACRO_IDC_RADIO_ICON,
-                        MACRO_IDC_COMPASS_FRAME,
-                        MACRO_IDC_COMPASS_ICON,
-                        MACRO_IDC_WATCH_FRAME,
-                        MACRO_IDC_WATCH_ICON
-                ];
-/*
-                // Hide the medical controls
-                {
-                        (_inventory displayCtrl _x) ctrlShow false;
-                } forEach [
-                        MACRO_IDC_CHARACTER_ICON
-                ];
-*/
+		(_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP) ctrlShow true;
+		(_inventory displayCtrl MACRO_IDC_MEDICAL_CTRLGRP) ctrlShow false;
 
-		// Slightly hide the character
-		private _character = _inventory displayCtrl MACRO_IDC_CHARACTER_ICON;
-		_character ctrlSetTextColor [1,1,1,0.1];
-		_character ctrlCommit 0;
+		// Hide the last moved frame, if there is one
+		private _ctrl = (_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP) getVariable ["lastMovedFrame", controlNull];
+		_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
 
-                // Change the button colours
-                private _buttonWeapons = _inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME;
-                private _buttonMedical = _inventory displayCtrl MACRO_IDC_MEDICAL_BUTTON_FRAME;
-                _buttonWeapons ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-                _buttonWeapons ctrlCommit 0;
-                _buttonMedical ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-                _buttonMedical ctrlCommit 0;
+		// Change the button colours
+                (_inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+                (_inventory displayCtrl MACRO_IDC_MEDICAL_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 
                 // Update the menu
         	["ui_update_weapons"] call cre_fnc_inventory;
@@ -152,56 +113,14 @@ switch (_event) do {
         // Load the medical menu
         case "ui_menu_medical": {
 		_eventExists = true;
-                // Hide the weapons controls
-                {
-                        (_inventory displayCtrl _x) ctrlShow false;
-                } forEach [
-                        MACRO_IDC_NVGS_FRAME,
-                        MACRO_IDC_NVGS_ICON,
-                        MACRO_IDC_HEADGEAR_FRAME,
-                        MACRO_IDC_HEADGEAR_ICON,
-                        MACRO_IDC_GOGGLES_FRAME,
-                        MACRO_IDC_GOGGLES_ICON,
-                        MACRO_IDC_BINOCULARS_FRAME,
-                        MACRO_IDC_BINOCULARS_ICON,
-                        MACRO_IDC_PRIMARYWEAPON_FRAME,
-                        MACRO_IDC_PRIMARYWEAPON_ICON,
-                        MACRO_IDC_HANDGUNWEAPON_FRAME,
-                        MACRO_IDC_HANDGUNWEAPON_ICON,
-                        MACRO_IDC_SECONDARYWEAPON_FRAME,
-                        MACRO_IDC_SECONDARYWEAPON_ICON,
-                        MACRO_IDC_MAP_FRAME,
-                        MACRO_IDC_MAP_ICON,
-                        MACRO_IDC_GPS_FRAME,
-                        MACRO_IDC_GPS_ICON,
-                        MACRO_IDC_RADIO_FRAME,
-                        MACRO_IDC_RADIO_ICON,
-                        MACRO_IDC_COMPASS_FRAME,
-                        MACRO_IDC_COMPASS_ICON,
-                        MACRO_IDC_WATCH_FRAME,
-                        MACRO_IDC_WATCH_ICON
-                ];
-/*
-                // Show the medical controls
-                {
-                        (_inventory displayCtrl _x) ctrlShow true;
-                } forEach [
-                        MACRO_IDC_CHARACTER_ICON
-                ];
-*/
 
-		// Show the character
-		private _character = _inventory displayCtrl MACRO_IDC_CHARACTER_ICON;
-		_character ctrlSetTextColor [1,1,1,0.5];
-		_character ctrlCommit 0;
+                // Hide the weapons controls
+		(_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP) ctrlShow false;
+		(_inventory displayCtrl MACRO_IDC_MEDICAL_CTRLGRP) ctrlShow true;
 
                 // Change the button colours
-                private _buttonWeapons = _inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME;
-                private _buttonMedical = _inventory displayCtrl MACRO_IDC_MEDICAL_BUTTON_FRAME;
-                _buttonWeapons ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-                _buttonWeapons ctrlCommit 0;
-                _buttonMedical ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-                _buttonMedical ctrlCommit 0;
+		(_inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+                (_inventory displayCtrl MACRO_IDC_MEDICAL_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
                 // Update the menu
                 ["ui_update_medical"] call cre_fnc_inventory;
@@ -217,7 +136,8 @@ switch (_event) do {
 		private _ctrlVestFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_VEST_FRAME;
                 private _ctrlVestIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_VEST_ICON;
 		private _ctrlBackpackFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_FRAME;
-                private _ctrlBackpackIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_ICON;
+		private _ctrlBackpackIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_ICON;
+		private _ctrlScrollbarDummy = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_SCROLLBAR_DUMMY;
 
 		// Determine our starting positions
 		(ctrlPosition _ctrlUniformFrame) params ["_startX", "_startY", "_sizeW", "_sizeY"];
@@ -248,6 +168,11 @@ switch (_event) do {
 
                                 _icon ctrlSetText _iconPath;
                                 _frame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+
+				// Save the slot's data
+				_frame setVariable ["active", true];
+				_frame setVariable ["childPicture1", _icon];
+	                        _frame setVariable ["defaultIconPath", _default];
 			};
 
 			// Move the frame and icon controls
@@ -264,31 +189,54 @@ switch (_event) do {
 
 			// Create the slots for this container
 			private _maxLoad = floor getContainerMaxLoad _class;
+			private _container = objNull;
+			switch (_forEachIndex) do {
+				case 0: {_container = uniformContainer player};
+				case 1: {_container = vestContainer player};
+				case 2: {_container = backpackContainer player};
+			};
+			private _currentLoad = [_container] call cre_fnc_getMass;
+
 			if (_maxLoad > 0) then {
 				for "_i" from 0 to (_maxLoad - 1) do {
-					private _slotFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", -1, _storageCtrlGrp];
+					// Create the slot controls
+					private _slotFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedText", -1, _storageCtrlGrp];
+					private _slotIcon = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _storageCtrlGrp];
 					_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-					_slotFrame ctrlSetPosition [
+					_slotIcon ctrlSetText MACRO_PICTURE_SLOT_BACKGROUND;
+
+					// Move the slot controls
+					private _slotPos = [
 						_startX + _slotSizeW * (_i % MACRO_SCALE_SLOT_COUNT_PER_LINE) * 1.0,
 						_startYNew + _slotSizeH * floor (_i / MACRO_SCALE_SLOT_COUNT_PER_LINE) * 1.0,
 						_slotSizeW,
 						_slotSizeH
 					];
-					_slotFrame ctrlCommit 0;
+					{
+						_x ctrlSetPosition _slotPos;
+						_x ctrlCommit 0;
+					} forEach [_slotFrame, _slotIcon];
+
+					// Paint used slots red
+					if (_i < _currentLoad) then {
+						_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+					};
 				};
 			};
 
-			_offsetY = _offsetY + _safeZoneH * (_sizeY + MACRO_SCALE_SLOT_SIZE_H * ceil (_maxLoad / MACRO_SCALE_SLOT_COUNT_PER_LINE) + 0.005);
+			_offsetY = _offsetY + _sizeY + _safeZoneH * (MACRO_SCALE_SLOT_SIZE_H * ceil (_maxLoad / MACRO_SCALE_SLOT_COUNT_PER_LINE) + 0.005);
 
-                        // Save the slot's data
-			_frame setVariable ["active", true];
-			_frame setVariable ["childPicture", _icon];
-                        _frame setVariable ["defaultIconPath", _default];
                 } forEach [
 			[_ctrlUniformFrame,		_ctrlUniformIcon,		MACRO_PICTURE_UNIFORM],
 			[_ctrlVestFrame,		_ctrlVestIcon,			MACRO_PICTURE_VEST],
 			[_ctrlBackpackFrame,		_ctrlBackpackIcon,		MACRO_PICTURE_BACKPACK]
                 ];
+
+		// Move the scrollbar dummy
+		private _pos = ctrlPosition _ctrlScrollbarDummy;
+		_pos set [1, _offsetY];
+		_ctrlScrollbarDummy ctrlSetPosition _pos;
+		_ctrlScrollbarDummy ctrlCommit 0;
 	};
 
         // Update the weapons menu
@@ -348,7 +296,7 @@ switch (_event) do {
 
                                 // Save the slot's data
 				_frame setVariable ["active", true];
-				_frame setVariable ["childPicture", _icon];
+				_frame setVariable ["childPicture1", _icon];
                                 _frame setVariable ["defaultIconPath", _default];
                         };
                 } forEach [
@@ -371,7 +319,7 @@ switch (_event) do {
 /*
 		for "_i" from 1 to _maxI do {
 			for "_j" from 1 to _maxJ do {
-				private _ctrl = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", 3000 + _i * _maxJ + _j];
+				private _ctrl = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", 3000 + _i * _maxJ + _j];
 				_ctrl ctrlSetBackgroundColor [_i / _maxI, _j / _maxJ, 0, 0.5];
 				_ctrl ctrlSetPosition [safeZoneX + (_i / _maxI) * safeZoneW, safeZoneY + (_j / _maxJ) * safeZoneH, safeZoneW / (_maxI * 1.5), safeZoneH / (_maxJ * 1.5)];
 				_ctrl ctrlCommit 0;
@@ -390,59 +338,92 @@ switch (_event) do {
 		_eventExists = true;
 		private _ctrl = _args param [0, controlNull];
 
+		// Set the focus into the dedicated dummy control group
+		ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
+
 		// Move the associated frame and picture to the cursor
 		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
 
 			// Hide the original picture
-			private _childPicture = _ctrl getVariable ["childPicture", controlNull];
-			 _childPicture ctrlShow false;
+			private _childPicture = _ctrl getVariable ["childPicture1", controlNull];
+			_childPicture ctrlShow false;
 
-                         // Create a temporary frame that stays on the slot
-                         private _childFrameSlotTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", MACRO_IDC_SCRIPTEDFRAME];
-			 _childFrameSlotTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-			 _childFrameSlotTemp ctrlSetPosition ctrlPosition _ctrl;
-			 _childFrameSlotTemp ctrlCommit 0;
-			 _ctrl setVariable ["childFrameSlotTemp", _childFrameSlotTemp];
+			// Calculate the control's position offset and save it
+			private _pos = ctrlPosition _ctrl;
+			private _posOffset = [0,0];
+			_ctrlParent = _ctrl;
+			while {!isNull ctrlParentControlsGroup _ctrlParent} do {
+				_ctrlParent = ctrlParentControlsGroup _ctrlParent;
+				private _parentPos = ctrlPosition _ctrlParent;
 
-                         // Create a temporary picture that stays on the slot
- 			 private _childPictureSlotTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE];
- 			 _childPictureSlotTemp ctrlSetText (_ctrl getVariable ["defaultIconPath", ""]);
- 			 _childPictureSlotTemp ctrlSetPosition ctrlPosition _childPicture;
- 			 _childPictureSlotTemp ctrlCommit 0;
- 			 _ctrl setVariable ["childPictureSlotTemp", _childPictureSlotTemp];
+				for "_i" from 0 to 1 do {
+					_posOffset set [_i, (_posOffset select _i) + (_parentPos select _i)];
+				};
+			};
+			_ctrl setVariable ["ctrlPosOffset", _posOffset];
 
- 			 // Create a temporary frame that follows the cursor
- 			 private _childFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", MACRO_IDC_SCRIPTEDFRAME];
- 			 _childFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
- 			 _childFrameTemp ctrlSetPosition ctrlPosition _ctrl;
- 			 _childFrameTemp ctrlCommit 0;
- 			 _ctrl setVariable ["childFrameTemp", _childFrameTemp];
+                        // Create a temporary picture that stays on the slot
+ 			private _childPictureSlotTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, _ctrlParent];
+ 			_childPictureSlotTemp ctrlSetText (_ctrl getVariable ["defaultIconPath", ""]);
+			_childPictureSlotTemp ctrlSetPosition _pos;
+			_childPictureSlotTemp ctrlCommit 0;
+ 			_ctrl setVariable ["childPictureSlotTemp", _childPictureSlotTemp];
 
-  			 // Create a temporary picture that follows the cursor
-  			 private _childPictureTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE];
-  			 _childPictureTemp ctrlSetText ctrlText _childPicture;
-  			 _childPictureTemp ctrlSetPosition ctrlPosition _childPicture;
-  			 _childPictureTemp ctrlCommit 0;
-  			 _ctrl setVariable ["childPictureTemp", _childPictureTemp];
+			// Now we add the offset to the position
+			for "_i" from 0 to 1 do {
+				_pos set [_i, (_pos select _i) + (_posOffset select _i)];
+			};
 
-			// Change the colour of the frame
-			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
+			private _childFrameTemp = _inventory displayCtrl MACRO_IDC_DRAGGING_FRAME;
+			_childFrameTemp ctrlSetPosition _pos;
+			_childFrameTemp ctrlCommit 0;
+			_childFrameTemp ctrlShow true;
+
+			// Set up the dummy dragging controls
+			private _childControlsTemp = [_childFrameTemp];
+			{
+				private _childPictureX = _ctrl getVariable [format ["childPicture%1", _forEachIndex], controlNull];
+				if (!isNull _childPictureX) then {
+
+					// Add the offset to the child's position
+					private _posX = ctrlPosition _childPictureX;
+					for "_i" from 0 to 1 do {
+						_posX set [_i, (_posX select _i) + (_posOffset select _i)];
+					};
+
+					// Copy the child control's parameters
+					_x ctrlSetText ctrlText _childPictureX;
+					_x ctrlSetPosition _posX;
+					_x ctrlCommit 0;
+					_x ctrlShow true;
+					_childControlsTemp pushBack _x;
+				};
+			} forEach [
+				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_1,
+				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_2,
+				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_3,
+				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_4,
+				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_5,
+				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_6,
+				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_7
+			];
+			_ctrl setVariable ["childControlsTemp", _childControlsTemp];
 
 			// Move the temporary children controls if the mouse is moving
 			_ctrl ctrlAddEventHandler ["MouseMoving", {
 				params ["_ctrl", "_posX", "_posY"];
 
+				private _posOffset = _ctrl getVariable ["ctrlPosOffset", [0,0]];
+				private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
+
 				{
 					private _pos = ctrlPosition _x;
-					_pos set [0, _posX - (_pos param [2, 0]) / 2];
-					_pos set [1, _posY - (_pos param [3, 0]) / 2];
+					_pos set [0, _posX - (_pos param [2, 0]) / 2 + (_posOffset select 0)];
+					_pos set [1, _posY - (_pos param [3, 0]) / 2 + (_posOffset select 1)];
 
 					_x ctrlSetPosition _pos;
 					_x ctrlCommit 0;
-				} forEach [
-					_ctrl getVariable ["childFrameTemp", controlNull],
-					_ctrl getVariable ["childPictureTemp", controlNull]
-				];
+				} forEach (_ctrl getVariable ["childControlsTemp", []]);
 			}];
 		};
 	};
@@ -453,27 +434,27 @@ switch (_event) do {
 		private _ctrl = _args param [0, controlNull];
 
 		if (!isNull _ctrl) then {
-			_ctrl ctrlRemoveAllEventHandlers "MouseMoving";
 
-			// Reset the colour of the frame
-			if (_ctrl getVariable ["active", false]) then {
-				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+			// Set the focus back into the control group that this control belongs to
+			switch (ctrlParentControlsGroup _ctrl) do {
+				case (_inventory displayCtrl MACRO_IDC_GROUND_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_GROUND_FOCUS_FRAME)};
+				case (_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_WEAPONS_FOCUS_FRAME)};
+				case (_inventory displayCtrl MACRO_IDC_MEDICAL_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_MEDICAL_FOCUS_FRAME)};
+				case (_inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_STORAGE_FOCUS_FRAME)};
 			};
 
-			// Unhide the original controls
-			private _childPicture = _ctrl getVariable ["childPicture", controlNull];
-                        _childPicture ctrlShow true;
+			_ctrl ctrlRemoveAllEventHandlers "MouseMoving";
 
-			// Update the position
-			private _pos = ctrlPosition _ctrl;
+			// Unhide the child picture
+			(_ctrl getVariable ["childPicture1", controlNull]) ctrlShow true;
+
+			// Delete the temporary slot picture
+			ctrlDelete (_ctrl getVariable ["childPictureSlotTemp", controlNull]);
+
+			// Hide the dragging controls
 			{
-				ctrlDelete _x;
-			} forEach [
-                                _ctrl getVariable ["childFrameSlotTemp", controlNull],
-                                _ctrl getVariable ["childPictureSlotTemp", controlNull],
-                                _ctrl getVariable ["childFrameTemp", controlNull],
-                                _ctrl getVariable ["childPictureTemp", controlNull]
-			];
+				_x ctrlShow false;
+			} forEach (_ctrl getVariable ["childControlsTemp", []]);
 		};
 	};
 };

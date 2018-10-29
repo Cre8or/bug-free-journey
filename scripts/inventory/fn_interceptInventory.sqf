@@ -11,7 +11,7 @@ player addEventHandler ["InventoryOpened", {
                 ["_container", objNull, [objNull]]
         ];
 
-        ["init"] call fnc_cre_inventory
+        ["ui_init"] call fnc_cre_inventory
         true;
 }];
 */

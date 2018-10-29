@@ -21,6 +21,7 @@ class CfgFunctions {
                                 postInit = 1;
         		};
                         //class inventory {};
+			class getMass {};
                 };
 
                 class UI {

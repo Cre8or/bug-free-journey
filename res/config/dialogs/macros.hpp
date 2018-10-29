@@ -4,6 +4,7 @@
 
         // #define COLOUR_SCHEME
 
+
         #ifdef COLOUR_SCHEME
 //                #define MACRO_COLOUR_BACKGROUND                                 0.11, 0.095, 0.06, 0.8
 //                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.8, 0.72, 0.55, 0.15
@@ -65,6 +66,8 @@
         // Medical menu
         #define MACRO_PICTURE_CHARACTER_OUTLINE                         "res\ui\inventory\character.paa"
 
+	// Slot background
+	#define MACRO_PICTURE_SLOT_BACKGROUND				"res\ui\inventory\Slot background.paa";
 
 
 
@@ -73,76 +76,93 @@
 //      IDCS
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
+	// Ground
+	#define MACRO_IDC_GROUND_CTRLGRP                                1000
+	#define MACRO_IDC_GROUND_FOCUS_FRAME                            1001
+
+	// Weapons / Medical
+	#define MACRO_IDC_WEAPONS_CTRLGRP                               2000
+	#define MACRO_IDC_MEDICAL_CTRLGRP                               2001
+	#define MACRO_IDC_WEAPONS_FOCUS_FRAME                           2002
+	#define MACRO_IDC_MEDICAL_FOCUS_FRAME                           2003
+
         // PLayer info
-        #define MACRO_IDC_PLAYER_NAME                                   2001
-        #define MACRO_IDC_SCRIPTEDFRAME					2002
-        #define MACRO_IDC_SCRIPTEDPICTURE				2003
+        #define MACRO_IDC_PLAYER_NAME                                   2101
+
+        // Weapons / Medical buttons
+        #define MACRO_IDC_WEAPONS_BUTTON_FRAME                          2102
+        #define MACRO_IDC_WEAPONS_BUTTON                                2103
+        #define MACRO_IDC_MEDICAL_BUTTON_FRAME                          2104
+        #define MACRO_IDC_MEDICAL_BUTTON                                2105
+
+	// Character (Weapons)
+        #define MACRO_IDC_CHARACTER_WEAPONS_ICON                        2201
 
         // NVGs, binoculars, headgear and goggles
-	#define MACRO_IDC_NVGS_DRAGBOX                                  2101
-	#define MACRO_IDC_NVGS_FRAME                                    2102
-        #define MACRO_IDC_NVGS_ICON                                     2103
-	#define MACRO_IDC_HEADGEAR_DRAGBOX                              2104
-	#define MACRO_IDC_HEADGEAR_FRAME                                2105
-        #define MACRO_IDC_HEADGEAR_ICON                                 2106
-	#define MACRO_IDC_GOGGLES_DRAGBOX                               2107
-	#define MACRO_IDC_GOGGLES_FRAME                                 2108
-        #define MACRO_IDC_GOGGLES_ICON                                  2109
-	#define MACRO_IDC_BINOCULARS_DRAGBOX                            2110
-	#define MACRO_IDC_BINOCULARS_FRAME                              2111
-        #define MACRO_IDC_BINOCULARS_ICON                               2112
+	#define MACRO_IDC_NVGS_FRAME                                    2202
+        #define MACRO_IDC_NVGS_ICON                                     2203
+	#define MACRO_IDC_HEADGEAR_FRAME                                2204
+        #define MACRO_IDC_HEADGEAR_ICON                                 2205
+	#define MACRO_IDC_GOGGLES_FRAME                                 2206
+        #define MACRO_IDC_GOGGLES_ICON                                  2207
+	#define MACRO_IDC_BINOCULARS_FRAME                              2208
+        #define MACRO_IDC_BINOCULARS_ICON                               2209
 
         // Primary Weapon
-	#define MACRO_IDC_PRIMARYWEAPON_DRAGBOX                         2201
-        #define MACRO_IDC_PRIMARYWEAPON_FRAME                           2202
-        #define MACRO_IDC_PRIMARYWEAPON_ICON                            2203
+        #define MACRO_IDC_PRIMARYWEAPON_FRAME                           2301
+        #define MACRO_IDC_PRIMARYWEAPON_ICON                            2302
 
         // Handgun Weapon
-	#define MACRO_IDC_HANDGUNWEAPON_DRAGBOX                         2204
-        #define MACRO_IDC_HANDGUNWEAPON_FRAME                           2205
-        #define MACRO_IDC_HANDGUNWEAPON_ICON                            2206
+        #define MACRO_IDC_HANDGUNWEAPON_FRAME                           2311
+        #define MACRO_IDC_HANDGUNWEAPON_ICON                            2312
 
         // Secondary Weapon
-	#define MACRO_IDC_SECONDARYWEAPON_DRAGBOX                       2207
-        #define MACRO_IDC_SECONDARYWEAPON_FRAME                         2208
-        #define MACRO_IDC_SECONDARYWEAPON_ICON                          2209
+        #define MACRO_IDC_SECONDARYWEAPON_FRAME                         2321
+        #define MACRO_IDC_SECONDARYWEAPON_ICON                          2322
 
         // Assigned slots
-	#define MACRO_IDC_MAP_DRAGBOX                                   2301
-	#define MACRO_IDC_MAP_FRAME                                     2302
-        #define MACRO_IDC_MAP_ICON                                      2303
-	#define MACRO_IDC_GPS_DRAGBOX                                   2304
-	#define MACRO_IDC_GPS_FRAME                                     2305
-        #define MACRO_IDC_GPS_ICON                                      2306
-	#define MACRO_IDC_RADIO_DRAGBOX                                 2307
-	#define MACRO_IDC_RADIO_FRAME                                   2308
-        #define MACRO_IDC_RADIO_ICON                                    2309
-	#define MACRO_IDC_COMPASS_DRAGBOX                               2310
-	#define MACRO_IDC_COMPASS_FRAME                                 2311
-        #define MACRO_IDC_COMPASS_ICON                                  2312
-	#define MACRO_IDC_WATCH_DRAGBOX                                 2313
-	#define MACRO_IDC_WATCH_FRAME                                   2314
-        #define MACRO_IDC_WATCH_ICON                                    2315
+	#define MACRO_IDC_MAP_FRAME                                     2401
+        #define MACRO_IDC_MAP_ICON                                      2402
+	#define MACRO_IDC_GPS_FRAME                                     2403
+        #define MACRO_IDC_GPS_ICON                                      2404
+	#define MACRO_IDC_RADIO_FRAME                                   2405
+        #define MACRO_IDC_RADIO_ICON                                    2406
+	#define MACRO_IDC_COMPASS_FRAME                                 2407
+        #define MACRO_IDC_COMPASS_ICON                                  2408
+	#define MACRO_IDC_WATCH_FRAME                                   2409
+        #define MACRO_IDC_WATCH_ICON                                    2410
 
-        // Character
-        #define MACRO_IDC_CHARACTER_ICON                                2401
-
-        // Buttons
-        #define MACRO_IDC_WEAPONS_BUTTON_FRAME                          2501
-        #define MACRO_IDC_WEAPONS_BUTTON                                2502
-        #define MACRO_IDC_MEDICAL_BUTTON_FRAME                          2503
-        #define MACRO_IDC_MEDICAL_BUTTON                                2504
+	// Character (Medical)
+        #define MACRO_IDC_CHARACTER_MEDICAL_ICON                        2501
 
 	// Storage
-	#define MACRO_IDC_STORAGE_CTRLGRP                               3001
+	#define MACRO_IDC_STORAGE_CTRLGRP                               3000
+	#define MACRO_IDC_STORAGE_FOCUS_FRAME                           3001
+
+	// Uniform, vest and backpack
 	#define MACRO_IDC_UNIFORM_FRAME                                 3101
 	#define MACRO_IDC_UNIFORM_ICON                                  3102
 	#define MACRO_IDC_VEST_FRAME                                    3103
 	#define MACRO_IDC_VEST_ICON                                     3104
 	#define MACRO_IDC_BACKPACK_FRAME                                3105
 	#define MACRO_IDC_BACKPACK_ICON                                 3106
+	#define MACRO_IDC_SCROLLBAR_DUMMY                               3107
 
+	// Empty control group (for focus)
+	#define MACRO_IDC_EMPTY_CTRLGROUP				4000
+	#define MACRO_IDC_EMPTY_FOCUS_FRAME				4001
 
+	// Temporary frame and picture
+	#define MACRO_IDC_DRAGGING_FRAME				4101
+	#define MACRO_IDC_DRAGGING_PICTURE_1				4102
+	#define MACRO_IDC_DRAGGING_PICTURE_2				4103
+	#define MACRO_IDC_DRAGGING_PICTURE_3				4104
+	#define MACRO_IDC_DRAGGING_PICTURE_4				4105
+	#define MACRO_IDC_DRAGGING_PICTURE_5				4106
+	#define MACRO_IDC_DRAGGING_PICTURE_6				4107
+	#define MACRO_IDC_DRAGGING_PICTURE_7				4108
+	#define MACRO_IDC_SCRIPTEDFRAME					4111
+        #define MACRO_IDC_SCRIPTEDPICTURE				4112
 
 
 
