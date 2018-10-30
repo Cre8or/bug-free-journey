@@ -166,13 +166,15 @@
 
 
 
+
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 //      UI ELEMENT SCALING
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
-	#define MACRO_SCALE_SLOT_SIZE_W					0.033
-	#define MACRO_SCALE_SLOT_SIZE_H					0.055
-	#define MACRO_SCALE_SLOT_COUNT_PER_LINE				10
+	#define MACRO_SCALE_SLOT_SIZE_W					0.033 * 0.84
+	#define MACRO_SCALE_SLOT_SIZE_H					0.055 * 0.84
+	#define MACRO_SCALE_SLOT_COUNT_PER_LINE				12
 
 
 

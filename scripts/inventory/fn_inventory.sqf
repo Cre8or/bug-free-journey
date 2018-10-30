@@ -71,15 +71,27 @@ switch (_event) do {
 					_blurFX ppEffectCommit 0;
 					missionNamespace setVariable  ["Cre8ive_Inventory_blurFX", _blurFX, false];
 
+					// Prevent the mousewheel from triggering the action menu
+				        inGameUISetEventHandler ["PrevAction", "true"];
+					inGameUISetEventHandler ["NextAction", "true"];
+
+					// Close the commanding menu if it is open
+					if (commandingMenu != "") then {showCommandingMenu ""};
+
 					// Load the weapons menu (default)
 					["ui_menu_weapons"] call cre_fnc_inventory;
 
 					// Load the storage menu
 					["ui_menu_storage"] call cre_fnc_inventory;
+
+					// Set the focus on something unimportant (to avoid triggering the close button with space)
+					ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
 				};
                         };
                 };
         };
+
+
 
 	// Unloading (closing the inventory)
 	case "ui_unload": {
@@ -89,7 +101,14 @@ switch (_event) do {
 		private _blurFX = missionNamespace getVariable ["Cre8ive_Inventory_BlurFX", 0];
 		_blurFX ppEffectAdjust [0];
 		_blurFX ppEffectCommit 0;
+
+		// Re-enable the action menu
+		inGameUISetEventHandler ["PrevAction", "false"];
+		inGameUISetEventHandler ["NextAction", "false"];
+
 	};
+
+
 
         // Load the weapons menu
         case "ui_menu_weapons": {
@@ -106,9 +125,29 @@ switch (_event) do {
                 (_inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
                 (_inventory displayCtrl MACRO_IDC_MEDICAL_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 
+		// Set the pixel precision mode of all frames to "OFF"
+		{
+			_x ctrlSetPixelPrecision 2;
+		} forEach [
+			_inventory displayCtrl MACRO_IDC_NVGS_FRAME,
+			_inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME,
+			_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME,
+			_inventory displayCtrl MACRO_IDC_BINOCULARS_FRAME,
+			_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME,
+			_inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_FRAME,
+			_inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_FRAME,
+			_inventory displayCtrl MACRO_IDC_MAP_FRAME,
+			_inventory displayCtrl MACRO_IDC_GPS_FRAME,
+			_inventory displayCtrl MACRO_IDC_RADIO_FRAME,
+			_inventory displayCtrl MACRO_IDC_COMPASS_FRAME,
+			_inventory displayCtrl MACRO_IDC_WATCH_FRAME
+		];
+
                 // Update the menu
         	["ui_update_weapons"] call cre_fnc_inventory;
         };
+
+
 
         // Load the medical menu
         case "ui_menu_medical": {
@@ -126,6 +165,8 @@ switch (_event) do {
                 ["ui_update_medical"] call cre_fnc_inventory;
         };
 
+
+
 	// Load the storage menu
 	case "ui_menu_storage": {
 		_eventExists = true;
@@ -138,6 +179,15 @@ switch (_event) do {
 		private _ctrlBackpackFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_FRAME;
 		private _ctrlBackpackIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_ICON;
 		private _ctrlScrollbarDummy = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_SCROLLBAR_DUMMY;
+
+		// Set the pixel precision mode of all frames to "OFF"
+		{
+			_x ctrlSetPixelPrecision 2;
+		} forEach [
+			_ctrlUniformFrame,
+			_ctrlVestFrame,
+			_ctrlBackpackFrame
+		];
 
 		// Determine our starting positions
 		(ctrlPosition _ctrlUniformFrame) params ["_startX", "_startY", "_sizeW", "_sizeY"];
@@ -205,6 +255,9 @@ switch (_event) do {
 					_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 					_slotIcon ctrlSetText MACRO_PICTURE_SLOT_BACKGROUND;
 
+					// Set the frame's pixel precision mode to off, disables rounding
+					_slotFrame ctrlSetPixelPrecision 2;
+
 					// Move the slot controls
 					private _slotPos = [
 						_startX + _slotSizeW * (_i % MACRO_SCALE_SLOT_COUNT_PER_LINE) * 1.0,
@@ -238,6 +291,8 @@ switch (_event) do {
 		_ctrlScrollbarDummy ctrlSetPosition _pos;
 		_ctrlScrollbarDummy ctrlCommit 0;
 	};
+
+
 
         // Update the weapons menu
         case "ui_update_weapons": {
@@ -313,25 +368,16 @@ switch (_event) do {
                         [_inventory displayCtrl MACRO_IDC_COMPASS_FRAME, 		_inventory displayCtrl MACRO_IDC_COMPASS_ICON,		MACRO_PICTURE_COMPASS],
                         [_inventory displayCtrl MACRO_IDC_WATCH_FRAME,	 		_inventory displayCtrl MACRO_IDC_WATCH_ICON,		MACRO_PICTURE_WATCH]
                 ];
-
-		private _maxI = 40;
-		private _maxJ = 20;
-/*
-		for "_i" from 1 to _maxI do {
-			for "_j" from 1 to _maxJ do {
-				private _ctrl = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", 3000 + _i * _maxJ + _j];
-				_ctrl ctrlSetBackgroundColor [_i / _maxI, _j / _maxJ, 0, 0.5];
-				_ctrl ctrlSetPosition [safeZoneX + (_i / _maxI) * safeZoneW, safeZoneY + (_j / _maxJ) * safeZoneH, safeZoneW / (_maxI * 1.5), safeZoneH / (_maxJ * 1.5)];
-				_ctrl ctrlCommit 0;
-			};
-		};
-*/
         };
+
+
 
 	// Update the weapons menu
 	case "ui_update_medical": {
 		_eventExists = true;
 	};
+
+
 
 	// Start dragging
 	case "ui_dragging_start": {
@@ -369,17 +415,13 @@ switch (_event) do {
 			_childPictureSlotTemp ctrlCommit 0;
  			_ctrl setVariable ["childPictureSlotTemp", _childPictureSlotTemp];
 
-			// Now we add the offset to the position
-			for "_i" from 0 to 1 do {
-				_pos set [_i, (_pos select _i) + (_posOffset select _i)];
-			};
-
+			// Create a temporary frame that follows the mouse
 			private _childFrameTemp = _inventory displayCtrl MACRO_IDC_DRAGGING_FRAME;
 			_childFrameTemp ctrlSetPosition _pos;
 			_childFrameTemp ctrlCommit 0;
 			_childFrameTemp ctrlShow true;
 
-			// Set up the dummy dragging controls
+			// Set up additional temporary dragging controls that follow the mouse
 			private _childControlsTemp = [_childFrameTemp];
 			{
 				private _childPictureX = _ctrl getVariable [format ["childPicture%1", _forEachIndex], controlNull];
@@ -409,23 +451,43 @@ switch (_event) do {
 			];
 			_ctrl setVariable ["childControlsTemp", _childControlsTemp];
 
-			// Move the temporary children controls if the mouse is moving
+			// Move the temporary controls if the mouse is moving
 			_ctrl ctrlAddEventHandler ["MouseMoving", {
-				params ["_ctrl", "_posX", "_posY"];
+				params ["_ctrl"];
+				getMousePosition params ["_posX", "_posY"];
 
-				private _posOffset = _ctrl getVariable ["ctrlPosOffset", [0,0]];
-				private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
-
-				{
-					private _pos = ctrlPosition _x;
-					_pos set [0, _posX - (_pos param [2, 0]) / 2 + (_posOffset select 0)];
-					_pos set [1, _posY - (_pos param [3, 0]) / 2 + (_posOffset select 1)];
-
-					_x ctrlSetPosition _pos;
-					_x ctrlCommit 0;
-				} forEach (_ctrl getVariable ["childControlsTemp", []]);
+				// Call the inventory function to handle dragging
+				["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
 			}];
+
+			// Move the temporary controls in place initially
+			getMousePosition params ["_posX", "_posY"];
+			["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
 		};
+	};
+
+
+
+	// Dragging
+	case "ui_dragging": {
+		_eventExists = true;
+
+		// Fetch the parameters
+		_args params [
+			["_ctrl", controlNull, [controlNull]],
+			["_posX", 0, [0]],
+			["_posY", 0, [0]]
+		];
+
+		private _posOffset = _ctrl getVariable ["ctrlPosOffset", [0,0]];
+		{
+			private _pos = ctrlPosition _x;
+			_pos set [0, _posX - (_pos param [2, 0]) / 2];
+			_pos set [1, _posY - (_pos param [3, 0]) / 2];
+
+			_x ctrlSetPosition _pos;
+			_x ctrlCommit 0;
+		} forEach (_ctrl getVariable ["childControlsTemp", []]);
 	};
 
 	// Stop dragging
@@ -458,6 +520,7 @@ switch (_event) do {
 		};
 	};
 };
+
 
 
 
