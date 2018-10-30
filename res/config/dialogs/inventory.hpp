@@ -177,8 +177,8 @@ class MACRO_GUI_NAME {
 					// NVGs
 					class NVGs_Frame : RscText {
 						idc = MACRO_IDC_NVGS_FRAME;
-						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
-						y = _safeZoneH * (0.05);
+						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
+						y = _safeZoneH * (0.1);
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
@@ -191,8 +191,8 @@ class MACRO_GUI_NAME {
 						idc = MACRO_IDC_NVGS_ICON;
 						text = MACRO_PICTURE_NVGS;
 						style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
-						y = _safeZoneH * (0.05);
+						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
+						y = _safeZoneH * (0.1);
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
 					};
@@ -200,42 +200,42 @@ class MACRO_GUI_NAME {
 					// Headgear
 					class Headgear_Frame : NVGs_Frame {
 						idc = MACRO_IDC_HEADGEAR_FRAME;
-						y = _safeZoneH * (0.05 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
+						y = _safeZoneH * (0.1 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
 						childPicture = MACRO_IDC_HEADGEAR_ICON;
 					};
 
 					class Headgear_Picture : NVGs_Picture {
 						idc = MACRO_IDC_HEADGEAR_ICON;
 						text = MACRO_PICTURE_HEADGEAR;
-						y = _safeZoneH * (0.05 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
+						y = _safeZoneH * (0.1 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
 					};
 
 					// Binoculars
 					class Binoculars_Frame : NVGs_Frame {
 						idc = MACRO_IDC_BINOCULARS_FRAME;
-						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W);
+						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
 						childPicture = MACRO_IDC_BINOCULARS_ICON;
 					};
 
 					class Binoculars_Picture : NVGs_Picture {
 						idc = MACRO_IDC_BINOCULARS_ICON;
 						text = MACRO_PICTURE_BINOCULARS;
-						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W);
+						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
 					};
 
 					// Goggles
 					class Goggles_Frame : NVGs_Frame {
 						idc = MACRO_IDC_GOGGLES_FRAME;
-						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W);
-						y = _safeZoneH * (0.05 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
+						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
+						y = _safeZoneH * (0.1 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
 						childPicture = MACRO_IDC_GOGGLES_ICON;
 					};
 
 					class Goggles_Picture : NVGs_Picture {
 						idc = MACRO_IDC_GOGGLES_ICON;
 						text = MACRO_PICTURE_GOGGLES;
-						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W);
-						y = _safeZoneH * (0.05 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
+						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
+						y = _safeZoneH * (0.1 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
 					};
 
 
@@ -244,10 +244,10 @@ class MACRO_GUI_NAME {
 					// Primary Weapon
 					class PrimaryWeapon_Frame : RscText {
 						idc = MACRO_IDC_PRIMARYWEAPON_FRAME;
-						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
-						y = _safeZoneH * (0.05 + 0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 3);
-						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 5;
-						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 2;
+						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
+						y = _safeZoneH * (0.1 + 0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 3);
+						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 6;
+						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 2.5;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
 						childPicture = MACRO_IDC_PRIMARYWEAPON_ICON;
 						onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
@@ -258,36 +258,36 @@ class MACRO_GUI_NAME {
 						idc = MACRO_IDC_PRIMARYWEAPON_ICON;
 						text = MACRO_PICTURE_PRIMARYWEAPON;
 						style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
-						y = _safeZoneH * (0.05 + 0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 3);
-						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 5;
-						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 2;
+						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
+						y = _safeZoneH * (0.1 + 0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 3);
+						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 6;
+						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 2.5;
 					};
 
 					// Handgun weapon
 					class HandgunWeapon_Frame : PrimaryWeapon_Frame {
 						idc = MACRO_IDC_HANDGUNWEAPON_FRAME;
-						y = _safeZoneH * (0.05 + 0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 5);
+						y = _safeZoneH * (0.1 + 0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 5.5);
 						childPicture = MACRO_IDC_HANDGUNWEAPON_ICON;
 					};
 
 					class HandgunWeapon_Picture : PrimaryWeapon_Picture {
 						idc = MACRO_IDC_HANDGUNWEAPON_ICON;
 						text = MACRO_PICTURE_HANDGUNWEAPON;
-						y = _safeZoneH * (0.05 + 0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 5);
+						y = _safeZoneH * (0.1 + 0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 5.5);
 					};
 
 					// Secondary weapon
 					class SecondaryWeapon_Frame : PrimaryWeapon_Frame {
 						idc = MACRO_IDC_SECONDARYWEAPON_FRAME;
-						y = _safeZoneH * (0.05 + 0.005 * 4 + MACRO_SCALE_SLOT_SIZE_H * 7);
+						y = _safeZoneH * (0.1 + 0.005 * 4 + MACRO_SCALE_SLOT_SIZE_H * 8);
 						childPicture = MACRO_IDC_SECONDARYWEAPON_ICON;
 					};
 
 					class SecondaryWeapon_Picture : PrimaryWeapon_Picture {
 						idc = MACRO_IDC_SECONDARYWEAPON_ICON;
 						text = MACRO_PICTURE_SECONDARYWEAPON;
-						y = _safeZoneH * (0.05 + 0.005 * 4 + MACRO_SCALE_SLOT_SIZE_H * 7);
+						y = _safeZoneH * (0.1 + 0.005 * 4 + MACRO_SCALE_SLOT_SIZE_H * 8);
 					};
 
 				// ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -296,7 +296,7 @@ class MACRO_GUI_NAME {
 					class Map_Frame : RscText {
 						idc = MACRO_IDC_MAP_FRAME;
 						x = _safeZoneW * (0.15 - 0.002 - 0.003 * 2 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
-						y = _safeZoneH * 0.6;
+						y = _safeZoneH * 0.65;
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
@@ -310,7 +310,7 @@ class MACRO_GUI_NAME {
 						text = MACRO_PICTURE_MAP;
 						style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
 						x = _safeZoneW * (0.15 - 0.002 - 0.003 * 2 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
-						y = _safeZoneH * 0.6;
+						y = _safeZoneH * 0.65;
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
 					};

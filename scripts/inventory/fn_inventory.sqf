@@ -71,9 +71,10 @@ switch (_event) do {
 					_blurFX ppEffectCommit 0;
 					missionNamespace setVariable  ["Cre8ive_Inventory_blurFX", _blurFX, false];
 
-					// Prevent the mousewheel from triggering the action menu
+					// Stop the action menu from interfering
 				        inGameUISetEventHandler ["PrevAction", "true"];
 					inGameUISetEventHandler ["NextAction", "true"];
+					inGameUISetEventHandler ["Action", "true"];
 
 					// Close the commanding menu if it is open
 					if (commandingMenu != "") then {showCommandingMenu ""};
@@ -105,6 +106,7 @@ switch (_event) do {
 		// Re-enable the action menu
 		inGameUISetEventHandler ["PrevAction", "false"];
 		inGameUISetEventHandler ["NextAction", "false"];
+		inGameUISetEventHandler ["Action", "false"];
 
 	};
 
@@ -117,13 +119,12 @@ switch (_event) do {
 		(_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP) ctrlShow true;
 		(_inventory displayCtrl MACRO_IDC_MEDICAL_CTRLGRP) ctrlShow false;
 
-		// Hide the last moved frame, if there is one
-		private _ctrl = (_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP) getVariable ["lastMovedFrame", controlNull];
-		_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
-
 		// Change the button colours
                 (_inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
                 (_inventory displayCtrl MACRO_IDC_MEDICAL_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+
+		// Reset the overall focus back to the empty dummy control (stops buttons from breaking)
+		ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
 
 		// Set the pixel precision mode of all frames to "OFF"
 		{
@@ -160,6 +161,9 @@ switch (_event) do {
                 // Change the button colours
 		(_inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
                 (_inventory displayCtrl MACRO_IDC_MEDICAL_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+
+		// Reset the overall focus back to the empty dummy control (stops buttons from breaking)
+		ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
 
                 // Update the menu
                 ["ui_update_medical"] call cre_fnc_inventory;
@@ -382,87 +386,100 @@ switch (_event) do {
 	// Start dragging
 	case "ui_dragging_start": {
 		_eventExists = true;
-		private _ctrl = _args param [0, controlNull];
+		_args params [
+			["_ctrl", controlNull, [controlNull]],
+			["_button", 0, [0]]
+		];
 
-		// Set the focus into the dedicated dummy control group
-		ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
+		// Only register left-clicks
+		if (_button == 0) then {
 
-		// Move the associated frame and picture to the cursor
-		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
+			// Set the focus into the dedicated dummy control group (so that the control renders ontop of everything else)
+			ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
 
-			// Hide the original picture
-			private _childPicture = _ctrl getVariable ["childPicture1", controlNull];
-			_childPicture ctrlShow false;
+			// Move the associated frame and picture to the cursor
+			if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
 
-			// Calculate the control's position offset and save it
-			private _pos = ctrlPosition _ctrl;
-			private _posOffset = [0,0];
-			_ctrlParent = _ctrl;
-			while {!isNull ctrlParentControlsGroup _ctrlParent} do {
-				_ctrlParent = ctrlParentControlsGroup _ctrlParent;
-				private _parentPos = ctrlPosition _ctrlParent;
+				// Hide the original picture
+				private _childPicture = _ctrl getVariable ["childPicture1", controlNull];
+				_childPicture ctrlShow false;
 
-				for "_i" from 0 to 1 do {
-					_posOffset set [_i, (_posOffset select _i) + (_parentPos select _i)];
-				};
-			};
-			_ctrl setVariable ["ctrlPosOffset", _posOffset];
+				// Calculate the control's position offset and save it
+				private _pos = ctrlPosition _ctrl;
+				private _posOffset = [0,0];
+				_ctrlParent = _ctrl;
+				while {!isNull ctrlParentControlsGroup _ctrlParent} do {
+					_ctrlParent = ctrlParentControlsGroup _ctrlParent;
+					private _parentPos = ctrlPosition _ctrlParent;
 
-                        // Create a temporary picture that stays on the slot
- 			private _childPictureSlotTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, _ctrlParent];
- 			_childPictureSlotTemp ctrlSetText (_ctrl getVariable ["defaultIconPath", ""]);
-			_childPictureSlotTemp ctrlSetPosition _pos;
-			_childPictureSlotTemp ctrlCommit 0;
- 			_ctrl setVariable ["childPictureSlotTemp", _childPictureSlotTemp];
-
-			// Create a temporary frame that follows the mouse
-			private _childFrameTemp = _inventory displayCtrl MACRO_IDC_DRAGGING_FRAME;
-			_childFrameTemp ctrlSetPosition _pos;
-			_childFrameTemp ctrlCommit 0;
-			_childFrameTemp ctrlShow true;
-
-			// Set up additional temporary dragging controls that follow the mouse
-			private _childControlsTemp = [_childFrameTemp];
-			{
-				private _childPictureX = _ctrl getVariable [format ["childPicture%1", _forEachIndex], controlNull];
-				if (!isNull _childPictureX) then {
-
-					// Add the offset to the child's position
-					private _posX = ctrlPosition _childPictureX;
 					for "_i" from 0 to 1 do {
-						_posX set [_i, (_posX select _i) + (_posOffset select _i)];
+						_posOffset set [_i, (_posOffset select _i) + (_parentPos select _i)];
 					};
-
-					// Copy the child control's parameters
-					_x ctrlSetText ctrlText _childPictureX;
-					_x ctrlSetPosition _posX;
-					_x ctrlCommit 0;
-					_x ctrlShow true;
-					_childControlsTemp pushBack _x;
 				};
-			} forEach [
-				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_1,
-				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_2,
-				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_3,
-				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_4,
-				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_5,
-				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_6,
-				_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_7
-			];
-			_ctrl setVariable ["childControlsTemp", _childControlsTemp];
+				_ctrl setVariable ["ctrlPosOffset", _posOffset];
 
-			// Move the temporary controls if the mouse is moving
-			_ctrl ctrlAddEventHandler ["MouseMoving", {
-				params ["_ctrl"];
+	                        // Create a temporary picture that stays on the slot
+	 			private _childPictureSlotTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, _ctrlParent];
+	 			_childPictureSlotTemp ctrlSetText (_ctrl getVariable ["defaultIconPath", ""]);
+				_childPictureSlotTemp ctrlSetPosition _pos;
+				_childPictureSlotTemp ctrlCommit 0;
+	 			_ctrl setVariable ["childPictureSlotTemp", _childPictureSlotTemp];
+
+				// Create a temporary frame that follows the mouse
+				private _childFrameTemp = _inventory displayCtrl MACRO_IDC_DRAGGING_FRAME;
+				_childFrameTemp ctrlSetPosition _pos;
+				_childFrameTemp ctrlCommit 0;
+				_childFrameTemp ctrlShow true;
+
+				// Change the colour of the original slot frame
+				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+
+				// Set up additional temporary dragging controls that follow the mouse
+				private _childControlsTemp = [_childFrameTemp];
+				{
+					private _childPictureX = _ctrl getVariable [format ["childPicture%1", _forEachIndex], controlNull];
+					if (!isNull _childPictureX) then {
+
+						// Add the offset to the child's position
+						private _posX = ctrlPosition _childPictureX;
+						for "_i" from 0 to 1 do {
+							_posX set [_i, (_posX select _i) + (_posOffset select _i)];
+						};
+
+						// Copy the child control's parameters
+						_x ctrlSetText ctrlText _childPictureX;
+						_x ctrlSetPosition _posX;
+						_x ctrlCommit 0;
+						_x ctrlShow true;
+						_childControlsTemp pushBack _x;
+					};
+				} forEach [
+					_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_1,
+					_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_2,
+					_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_3,
+					_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_4,
+					_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_5,
+					_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_6,
+					_inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_7
+				];
+				_ctrl setVariable ["childControlsTemp", _childControlsTemp];
+
+				// Mark the control as being dragged
+				_ctrl setVariable ["isBeingDragged", true];
+
+				// Move the temporary controls if the mouse is moving
+				_ctrl ctrlAddEventHandler ["MouseMoving", {
+					params ["_ctrl"];
+					getMousePosition params ["_posX", "_posY"];
+
+					// Call the inventory function to handle dragging
+					["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
+				}];
+
+				// Move the temporary controls in place initially
 				getMousePosition params ["_posX", "_posY"];
-
-				// Call the inventory function to handle dragging
 				["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
-			}];
-
-			// Move the temporary controls in place initially
-			getMousePosition params ["_posX", "_posY"];
-			["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
+			};
 		};
 	};
 
@@ -495,9 +512,12 @@ switch (_event) do {
 		_eventExists = true;
 		private _ctrl = _args param [0, controlNull];
 
-		if (!isNull _ctrl) then {
+		if (!isNull _ctrl and {_ctrl getVariable ["isBeingDragged", false]}) then {
 
-			// Set the focus back into the control group that this control belongs to
+			// Mark the control as not being dragged anymore
+			_ctrl setVariable ["isBeingDragged", false];
+
+			// Set the focus inside the control group back to its respective dummy control
 			switch (ctrlParentControlsGroup _ctrl) do {
 				case (_inventory displayCtrl MACRO_IDC_GROUND_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_GROUND_FOCUS_FRAME)};
 				case (_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_WEAPONS_FOCUS_FRAME)};
@@ -505,18 +525,25 @@ switch (_event) do {
 				case (_inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_STORAGE_FOCUS_FRAME)};
 			};
 
-			_ctrl ctrlRemoveAllEventHandlers "MouseMoving";
+			// Only continue if the control is active
+			if (_ctrl getVariable ["active", false] and {ctrlShown _ctrl}) then {
 
-			// Unhide the child picture
-			(_ctrl getVariable ["childPicture1", controlNull]) ctrlShow true;
+				// Reset the colour of the original slot frame
+				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
-			// Delete the temporary slot picture
-			ctrlDelete (_ctrl getVariable ["childPictureSlotTemp", controlNull]);
+				_ctrl ctrlRemoveAllEventHandlers "MouseMoving";
 
-			// Hide the dragging controls
-			{
-				_x ctrlShow false;
-			} forEach (_ctrl getVariable ["childControlsTemp", []]);
+				// Unhide the child picture
+				(_ctrl getVariable ["childPicture1", controlNull]) ctrlShow true;
+
+				// Delete the temporary slot picture
+				ctrlDelete (_ctrl getVariable ["childPictureSlotTemp", controlNull]);
+
+				// Hide the dragging controls
+				{
+					_x ctrlShow false;
+				} forEach (_ctrl getVariable ["childControlsTemp", []]);
+			};
 		};
 	};
 };
