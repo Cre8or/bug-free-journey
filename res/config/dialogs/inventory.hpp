@@ -3,6 +3,8 @@ __EXEC(_safeZoneW = safeZoneW / _safeZoneMul - 1 / _safeZoneMul + 1)
 __EXEC(_safeZoneH = safeZoneH / _safeZoneMul - 1 / _safeZoneMul + 1)
 __EXEC(_safeZoneX = safeZoneX / _safeZoneMul)
 __EXEC(_safeZoneY = safeZoneY / _safeZoneMul)
+__EXEC(uiNamespace setVariable ["Cre8ive_Inventory_SafeZoneX", _safeZoneX])
+__EXEC(uiNamespace setVariable ["Cre8ive_Inventory_SafeZoneY", _safeZoneY])
 __EXEC(uiNamespace setVariable ["Cre8ive_Inventory_SafeZoneW", _safeZoneW])
 __EXEC(uiNamespace setVariable ["Cre8ive_Inventory_SafeZoneH", _safeZoneH])
 
@@ -17,7 +19,7 @@ __EXEC(uiNamespace setVariable ["Cre8ive_Inventory_SafeZoneH", _safeZoneH])
 
 
 class MACRO_GUI_NAME {
-        idd = 888801;
+        idd = -1;
         name = STR(MACRO_GUI_NAME);
         onLoad = "uiNamespace setVariable ['cre8ive_dialog_inventory', _this select 0]";
 
@@ -26,25 +28,25 @@ class MACRO_GUI_NAME {
                         idc = -1;
                         x = _safeZoneX;
                         y = _safeZoneY;
-                        w = _safeZoneW * (0.35 - 0.002);
+                        w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
                         h = _safeZoneH;
                         colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
                 };
 
                 class Player_Frame : Ground_Frame {
-                        x = _safeZoneX + _safeZoneW * (0.35 + 0.002);
+                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
                         w = _safeZoneW * (0.3 - 0.004);
 		};
 
                 class Storage_Frame : Ground_Frame {
-                        x = _safeZoneX + _safeZoneW * (0.65 + 0.002);
+                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_STORAGE + 0.002);
                 };
 
                 // ------------------------------------------------------------------------------------------------------------------------------------------------
                 // Player Info
                 class Player_Name_Frame : RscBox {
                         idc = -1;
-                        x = _safeZoneX + _safeZoneW * (0.35 + 0.002);
+                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
                         y = _safeZoneY;
                         w = _safeZoneW * (0.3 - 0.004);
                         h = _safeZoneH * 0.03;
@@ -57,7 +59,7 @@ class MACRO_GUI_NAME {
                         text = "";
                         sizeEx = _safeZoneW * 0.025;
                         style = ST_LEFT;
-                        x = _safeZoneX + _safeZoneW * (0.35 + 0.002);
+                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
                         y = _safeZoneY;
                         w = _safeZoneW * (0.278 - 0.002);
                         h = _safeZoneH * 0.03;
@@ -68,7 +70,7 @@ class MACRO_GUI_NAME {
                         idc = -1;
                         text = MACRO_PICTURE_EXIT_BUTTON;
                         style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-                        x = _safeZoneX + _safeZoneW * (0.35 + 0.002 + 0.278);
+                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 + 0.278);
                         y = _safeZoneY;
                         w = _safeZoneW * (0.022 - 0.004);
                         h = _safeZoneH * 0.03;
@@ -82,7 +84,7 @@ class MACRO_GUI_NAME {
                         offsetPressedX = 0;
                         offsetPressedY = 0;
                         shadow = 0;
-                        x = _safeZoneX + _safeZoneW * (0.35 + 0.002 + 0.278);
+                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 + 0.278);
                         y = _safeZoneY;
                         w = _safeZoneW * (0.022 - 0.004);
                         h = _safeZoneH * 0.03;
@@ -98,7 +100,7 @@ class MACRO_GUI_NAME {
                         // Weapons
                         class Weapons_Button_Frame : RscText {
                                 idc = MACRO_IDC_WEAPONS_BUTTON_FRAME;
-                                x = _safeZoneX + _safeZoneW * (0.35 + 0.002 * 3);
+                                x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 3);
                                 y = _safeZoneY + _safeZoneH * (0.03 + 0.005);
                                 w = _safeZoneW * 0.143;
                                 h = _safeZoneH * 0.06;		// 0.075
@@ -116,7 +118,7 @@ class MACRO_GUI_NAME {
                                 shadow = 0;
                                 sizeEx = _safeZoneW * 0.03;
                                 text = "WEAPONS";
-                                x = _safeZoneX + _safeZoneW * (0.35 + 0.002 * 3);
+                                x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 3);
                                 y = _safeZoneY + _safeZoneH * (0.03 + 0.005);
                                 w = _safeZoneW * 0.143;
                                 h = _safeZoneH * 0.06;	// 0.075
@@ -130,14 +132,14 @@ class MACRO_GUI_NAME {
                         // Medical
                         class Medical_Button_Frame : Weapons_Button_Frame {
                                 idc = MACRO_IDC_MEDICAL_BUTTON_FRAME;
-                                x = _safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.143);
+                                x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 4 + 0.143);
                                 colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
                         };
 
                         class Medical_Button : Weapons_Button {
                                 idc = MACRO_IDC_MEDICAL_BUTTON;
                                 text = "MEDICAL";
-                                x = _safeZoneX + _safeZoneW * (0.35 + 0.002 * 4 + 0.143);
+                                x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 4 + 0.143);
                                 action = "['ui_menu_medical'] call cre_fnc_inventory";
                         };
 
@@ -145,7 +147,7 @@ class MACRO_GUI_NAME {
                 // Weapons Control Group
 		class Weapons_CtrlGrp : RscControlsGroupNoScrollbars {
 			idc = MACRO_IDC_WEAPONS_CTRLGRP;
-			x = _safeZoneX + _safeZoneW * (0.35 + 0.002);
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
 			y = _safeZoneY + _safeZoneH * 0.1;
                         w = _safeZoneW * (0.3 - 0.004);
                         h = _safeZoneH * 0.9;
@@ -165,7 +167,7 @@ class MACRO_GUI_NAME {
 					idc = MACRO_IDC_CHARACTER_WEAPONS_ICON;
 					text = MACRO_PICTURE_CHARACTER_OUTLINE;
 					style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-					x = -_safeZoneW * (0.35 + 0.002);
+					x = -_safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
 					y = 0;
 					w = _safeZoneW;
 					h = _safeZoneH * 0.9;
@@ -374,7 +376,7 @@ class MACRO_GUI_NAME {
                 // Medical Control Group
 		class Medical_CtrlGrp : RscControlsGroupNoScrollbars {
 			idc = MACRO_IDC_MEDICAL_CTRLGRP;
-			x = _safeZoneX + _safeZoneW * (0.35 + 0.002);
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
 			y = _safeZoneY + _safeZoneH * 0.1;
                         w = _safeZoneW * (0.3 - 0.004);
                         h = _safeZoneH * 0.9;
@@ -394,7 +396,7 @@ class MACRO_GUI_NAME {
 					idc = MACRO_IDC_CHARACTER_MEDICAL_ICON;
 					text = MACRO_PICTURE_CHARACTER_OUTLINE;
 					style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-					x = -_safeZoneW * (0.35 + 0.002);
+					x = -_safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
 					y = 0;
 					w = _safeZoneW;
 					h = _safeZoneH * 0.9;
@@ -407,9 +409,9 @@ class MACRO_GUI_NAME {
                 // Storage Frame
 		class Storage_CtrlGrp : RscControlsGroupNoHScrollbars {
 			idc = MACRO_IDC_STORAGE_CTRLGRP;
-			x = _safeZoneX + _safeZoneW * (0.65 + 0.002);
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_STORAGE + 0.002);
                         y = _safeZoneY;
-                        w = _safeZoneW * (0.35 - 0.002);
+                        w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
                         h = _safeZoneH;
 
 			class controls {
@@ -486,7 +488,7 @@ class MACRO_GUI_NAME {
 			idc = MACRO_IDC_GROUND_CTRLGRP;
 			x = _safeZoneX;
                         y = _safeZoneY;
-                        w = _safeZoneW * (0.35 - 0.002);
+                        w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
                         h = _safeZoneH;
 
 			class controls {
@@ -532,8 +534,8 @@ class MACRO_GUI_NAME {
 			colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_ACTIVE);
 		};
 
-		class Dragging_Dummy_Picture_1 : RscPicture {
-			idc = MACRO_IDC_DRAGGING_PICTURE_1;
+		class Dragging_Dummy_Picture_Icon : RscPicture {
+			idc = MACRO_IDC_DRAGGING_PICTURE_ICON;
 			style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
 			x = 0;
 			y = 0;
@@ -541,28 +543,28 @@ class MACRO_GUI_NAME {
 			h = 0;
 		};
 
-		class Dragging_Dummy_Picture_2 : Dragging_Dummy_Picture_1 {
-			idc = MACRO_IDC_DRAGGING_PICTURE_2;
+		class Dragging_Dummy_Picture_Attachment_Muzzle : Dragging_Dummy_Picture_Icon {
+			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MUZZLE;
 		};
 
-		class Dragging_Dummy_Picture_3 : Dragging_Dummy_Picture_1 {
-			idc = MACRO_IDC_DRAGGING_PICTURE_3;
+		class Dragging_Dummy_Picture_Attachment_Bipod : Dragging_Dummy_Picture_Icon {
+			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_BIPOD;
 		};
 
-		class Dragging_Dummy_Picture_4 : Dragging_Dummy_Picture_1 {
-			idc = MACRO_IDC_DRAGGING_PICTURE_4;
+		class Dragging_Dummy_Picture_Attachment_Rail : Dragging_Dummy_Picture_Icon {
+			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_RAIL;
 		};
 
-		class Dragging_Dummy_Picture_5 : Dragging_Dummy_Picture_1 {
-			idc = MACRO_IDC_DRAGGING_PICTURE_5;
+		class Dragging_Dummy_Picture_Attachment_Optic : Dragging_Dummy_Picture_Icon {
+			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_OPTIC;
 		};
 
-		class Dragging_Dummy_Picture_6 : Dragging_Dummy_Picture_1 {
-			idc = MACRO_IDC_DRAGGING_PICTURE_6;
+		class Dragging_Dummy_Picture_Attachment_Magazine : Dragging_Dummy_Picture_Icon {
+			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MAGAZINE;
 		};
 
-		class Dragging_Dummy_Picture_7 : Dragging_Dummy_Picture_1 {
-			idc = MACRO_IDC_DRAGGING_PICTURE_7;
+		class Dragging_Dummy_Picture_Attachment_AltMagazine : Dragging_Dummy_Picture_Icon {
+			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_ALTMAGAZINE;
 		};
         };
 };

@@ -2,18 +2,18 @@
 //      COLOURS
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
-        // #define COLOUR_SCHEME
+        //#define COLOUR_SCHEME
 
 
         #ifdef COLOUR_SCHEME
-//                #define MACRO_COLOUR_BACKGROUND                                 0.11, 0.095, 0.06, 0.8
-//                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.8, 0.72, 0.55, 0.15
-//                #define MACRO_COLOUR_ELEMENT_ACTIVE                             0.8, 0.72, 0.55, 0.6
-//                #define MACRO_COLOUR_SEPARATOR                                  0.08, 0.07, 0.045, 0.8
-		#define MACRO_COLOUR_BACKGROUND                                 0.095, 0.11, 0.06, 0.8
-                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.72, 0.8, 0.55, 0.15
-                #define MACRO_COLOUR_ELEMENT_ACTIVE                             0.72, 0.8, 0.55, 0.6
-                #define MACRO_COLOUR_SEPARATOR                                  0.07, 0.08, 0.045, 0.8
+                #define MACRO_COLOUR_BACKGROUND                                 0.11, 0.095, 0.06, 0.8
+                #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.8, 0.72, 0.55, 0.15
+                #define MACRO_COLOUR_ELEMENT_ACTIVE                             0.8, 0.72, 0.55, 0.5
+                #define MACRO_COLOUR_SEPARATOR                                  0.08, 0.07, 0.045, 0.8
+//		#define MACRO_COLOUR_BACKGROUND                                 0.095, 0.11, 0.06, 0.8
+//		#define MACRO_COLOUR_ELEMENT_INACTIVE                           0.72, 0.8, 0.55, 0.15
+//		#define MACRO_COLOUR_ELEMENT_ACTIVE                             0.72, 0.8, 0.55, 0.4
+//		#define MACRO_COLOUR_SEPARATOR                                  0.07, 0.08, 0.045, 0.8
         #else
                 #define MACRO_COLOUR_BACKGROUND                                 0.1, 0.1, 0.1, 0.8
                 #define MACRO_COLOUR_ELEMENT_INACTIVE                           0.7, 0.7, 0.7, 0.15
@@ -67,7 +67,8 @@
         #define MACRO_PICTURE_CHARACTER_OUTLINE                         "res\ui\inventory\character.paa"
 
 	// Slot background
-	#define MACRO_PICTURE_SLOT_BACKGROUND				"res\ui\inventory\Slot background.paa";
+	#define MACRO_PICTURE_SLOT_BACKGROUND				"res\ui\inventory\Slot background.paa"
+
 
 
 
@@ -154,13 +155,13 @@
 
 	// Temporary frame and picture
 	#define MACRO_IDC_DRAGGING_FRAME				4101
-	#define MACRO_IDC_DRAGGING_PICTURE_1				4102
-	#define MACRO_IDC_DRAGGING_PICTURE_2				4103
-	#define MACRO_IDC_DRAGGING_PICTURE_3				4104
-	#define MACRO_IDC_DRAGGING_PICTURE_4				4105
-	#define MACRO_IDC_DRAGGING_PICTURE_5				4106
-	#define MACRO_IDC_DRAGGING_PICTURE_6				4107
-	#define MACRO_IDC_DRAGGING_PICTURE_7				4108
+	#define MACRO_IDC_DRAGGING_PICTURE_ICON				4102
+	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MUZZLE		4103
+	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_BIPOD		4104
+	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_RAIL		4105
+	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_OPTIC		4106
+	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MAGAZINE		4107
+	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_ALTMAGAZINE	4108
 	#define MACRO_IDC_SCRIPTEDFRAME					4111
         #define MACRO_IDC_SCRIPTEDPICTURE				4112
 
@@ -169,12 +170,29 @@
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------
-//      UI ELEMENT SCALING
+//      UI ELEMENT POSITIONING AND SCALING
 // ------------------------------------------------------------------------------------------------------------------------------------------------
+
+	#define MACRO_POS_SEPARATOR_GROUND				0.35
+	#define MACRO_POS_SEPARATOR_STORAGE				0.65
 
 	#define MACRO_SCALE_SLOT_SIZE_W					0.033 * 0.84
 	#define MACRO_SCALE_SLOT_SIZE_H					0.055 * 0.84
 	#define MACRO_SCALE_SLOT_COUNT_PER_LINE				12
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//      ITEM TYPES
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+        #define MACRO_ENUM_CATEGORY_ITEM                                0
+        #define MACRO_ENUM_CATEGORY_WEAPON                              1
+        #define MACRO_ENUM_CATEGORY_MAGAZINE                            2
+        #define MACRO_ENUM_CATEGORY_VEHICLE                             3
+        #define MACRO_ENUM_CATEGORY_GLASSES                             4
 
 
 
@@ -192,12 +210,26 @@
 
 
 
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//      DEV / DEBUGGING
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+        // Debug toggles - uncomment to enable debug outputs in the respective script
+	//#define MACRO_DEBUG_GETCLASSICON
+
+
+
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 //      OTHERS / EXTRAS
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
+        // Overall inventory storage capacity scaling
+        #define MACRO_STORAGE_CAPACITY_MULTIPLIER                       0.5
+
 	// Name of the UI
-	#define MACRO_GUI_NAME Rsc_Cre8ive_Inventory
+	#define MACRO_GUI_NAME                                         Rsc_Cre8ive_Inventory
 
 	// Determine which config file the UI is defined in (mission or addon format)
 	#define MACRO_CONFIG_FILE_SWITCH

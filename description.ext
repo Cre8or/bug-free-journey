@@ -5,11 +5,30 @@
 
 
 class CfgFunctions {
+        class ca {
+                class AI {
+                        file = "scripts\AI";
+
+                        class unitGuerrillaAI{};
+        		class groupGuerrillaAI{};
+
+        		class unitSuppressiveAI{};
+        		class groupSuppressiveAI{};
+
+        		class fireWeaponSafe{};
+
+        		class compileVehicleWeapons{};
+                };
+        };
+
         class cre {
                 class AI {
                         file = "scripts\AI";
 
                         class civ_idleAnim {};
+
+                        class addAISpawn {};
+                        //class handleWarfare {};
                 };
 
                 class inventory {
@@ -24,10 +43,13 @@ class CfgFunctions {
 			class getMass {};
                 };
 
-                class UI {
-                        file = "scripts\UI";
+                class config {
+                        file = "scripts\config";
 
+                        class getClassCategory {};
                         class getClassIcon {};
+                        class getClassMass {};
+                        class getClassSlotSize {};
                 };
         };
 };

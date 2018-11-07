@@ -1,0 +1,17 @@
+TODO:
+- Make use of getClassSlotSize in ui_dragging_start event to scale the controls accordingly when dragging
+- Add a global scale multiplier (macro) for slot pictures
+
+
+
+
+
+FAILED:
+- When dragging, dynamically set the focus on the control group that the mouse cursor is over (so that scrollbars work)
+
+
+
+
+
+DONE:
+- Figure out why weapon controls can't be dragged further than the bottom of the inventoy screen (and get stuck)
