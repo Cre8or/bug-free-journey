@@ -1,15 +1,25 @@
+/* --------------------------------------------------------------------------------------------------------------------
+        Author:         Cre8or
+        Description:
+                Returns the total mass of all items inside a container. Does not include the container's mass.
+        Arguments:
+                0:      <OBJECT>        Container object
+        Returns:
+                0:      <NUMBER>	Mass of all objects inside the container object
+-------------------------------------------------------------------------------------------------------------------- */
+
 params [
-	["_box", objNull, [objNull]]
+	["_obj", objNull, [objNull]]
 ];
 
-if (!alive _box) exitWith {};
+if (!alive _obj) exitWith {};
 
 
 
 
 
 // Set up some variables
-_totalMass = 0;
+private _totalMass = 0;
 
 
 
@@ -37,10 +47,10 @@ _totalMass = 0;
 		_totalMass = _totalMass + _mass * _count;
 	} forEach _classes;
 } forEach [
-	getWeaponCargo _box,
-	getMagazineCargo _box,
-	getItemCargo _box,
-	getBackpackCargo _box
+	getWeaponCargo _obj,
+	getMagazineCargo _obj,
+	getItemCargo _obj,
+	getBackpackCargo _obj
 ];
 
 // Return the total mass

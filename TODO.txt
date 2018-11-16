@@ -1,6 +1,38 @@
 TODO:
+- NVGs/Binoculars should be counted as part of the item category
+- Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
+- Add child controls support for weapon attachments
+- Fully implement dragging functionality so it actually works (actually moving things around in inventories)
+- Add a global scale multiplier (macro) for slot pictures?
+- Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
+- Search for "TODO" and "DEBUG" comments and address them
+
+
+
+
+DONE:	(top: most recent)
+- Distinguish between more categories:
+	* Unifoms
+	* Vests
+	* Backpacks
+- Convert weapons menu to use generateChildCOntrols
+	* Remove built-in icon controls and associated macros
+	* Modify weapons/medical menu events to hide the new child controls correctly
+- Add a fillbar to magazine items if they have more than one bullet
+- Rewrite the dragging code to accomodate for multiple child controls, irrespective of scale, offset and count
+ 	* Also consider a way of detecting the "main" icon control (1st item in array?)
+	* Finally, decide on default icon paths for various inventory items (magazines, grenades, attachments, etc.)
+- Remove dragging controls from inventory.hpp (and their corresponding macros)
+- Automatically generate inventory data for unknown containers when opening the inventory screen
+- Figure out the inventory data format
+	* Generate UIDs for every item
+	* Store a minimum of 3 entries in the item data:
+		+ UID
+		+ classname
+		+ slot position
+	* Generate inventory slots layout automatically (for not-yet-processed containers)
 - Make use of getClassSlotSize in ui_dragging_start event to scale the controls accordingly when dragging
-- Add a global scale multiplier (macro) for slot pictures
+- Figure out why weapon controls can't be dragged further than the bottom of the inventoy screen (and get stuck)
 
 
 
@@ -8,10 +40,3 @@ TODO:
 
 FAILED:
 - When dragging, dynamically set the focus on the control group that the mouse cursor is over (so that scrollbars work)
-
-
-
-
-
-DONE:
-- Figure out why weapon controls can't be dragged further than the bottom of the inventoy screen (and get stuck)

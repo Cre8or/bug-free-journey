@@ -27,21 +27,25 @@ case "ui_dragging_stop": {
                 // Only continue if the control is active
                 if (_ctrl getVariable ["active", false] and {ctrlShown _ctrl}) then {
 
+			_ctrl ctrlRemoveAllEventHandlers "MouseMoving";
+			private _ctrlFrameTemp = _ctrl getVariable ["ctrlFrameTemp", controlNull];
+
                         // Reset the colour of the original slot frame
                         _ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
-                        _ctrl ctrlRemoveAllEventHandlers "MouseMoving";
-
-                        // Unhide the child picture
-                        (_ctrl getVariable ["childPictureIcon", controlNull]) ctrlShow true;
-
                         // Delete the temporary slot picture
-                        ctrlDelete (_ctrl getVariable ["childPictureSlotTemp", controlNull]);
+                        ctrlDelete (_ctrl getVariable ["ctrlIconTemp", controlNull]);
 
-                        // Hide the dragging controls
+                        // Remove the dragging controls
                         {
-                                _x ctrlShow false;
-                        } forEach (_ctrl getVariable ["childControlsTemp", []]);
+                                ctrlDelete _x;
+                        } forEach (_ctrlFrameTemp getVariable ["childControls", []]);
+			ctrlDelete _ctrlFrameTemp;
+
+			// Unhide the original control's child controls
+			{
+				_x ctrlShow true;
+			} forEach (_ctrl getVariable ["childControls", []]);
                 };
         };
 };

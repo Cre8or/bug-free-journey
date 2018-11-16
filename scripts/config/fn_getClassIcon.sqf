@@ -15,12 +15,12 @@
 
 params [
         ["_class", "", [""]],
-        ["_category", -1, [-1]],
-        ["_default", "", [""]]
+        ["_category", MACRO_ENUM_CATEGORY_INVALID, [MACRO_ENUM_CATEGORY_INVALID]],
+        ["_defaultIconPath", "", [""]]
 ];
 
-// If no class was provided, exit
-if (_class == "" or {_category == -1}) exitWith {};
+// If no class was provided, exit and return an empty string
+if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {_defaultIconPath};
 
 
 
@@ -40,10 +40,14 @@ private _iconPath = _namespace getVariable [_class, " "];
 
 // If the icon path doesn't exist yet, fetch it from the config
 if (_iconPath == " ") then {
+	_iconPath = "";
 
         switch (_category) do {
                 case MACRO_ENUM_CATEGORY_ITEM;
-                case MACRO_ENUM_CATEGORY_WEAPON: {
+                case MACRO_ENUM_CATEGORY_WEAPON;
+		case MACRO_ENUM_CATEGORY_UNIFORM;
+		case MACRO_ENUM_CATEGORY_VEST;
+		case MACRO_ENUM_CATEGORY_HEADGEAR: {
                         _iconPath = [configfile >> "CfgWeapons" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
 
 			#ifdef MACRO_DEBUG_GETCLASSICON
@@ -57,6 +61,7 @@ if (_iconPath == " ") then {
 				systemChat format ["(getClassIcon) Item is a magazine - Icon: %1)", _iconPath];
 			#endif
                 };
+		case MACRO_ENUM_CATEGORY_BACKPACK;
                 case MACRO_ENUM_CATEGORY_VEHICLE: {
                         _iconPath = [configfile >> "CfgVehicles" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
 
@@ -71,12 +76,17 @@ if (_iconPath == " ") then {
 				systemChat format ["(getClassIcon) Item is a pair of glasses - Icon: %1)", _iconPath];
 			#endif
                 };
+		default {
+			private _str = format ["ERROR [cre_fnc_getClassIcon]: No rule for category '%1' (%2)!", _category, _class];
+			systemChat _str;
+			hint _str;
+		};
         };
 
-        // If no icon was found in the config, use the default value instead
+        // If no icon was found in the config, use the default path instead
         if (_iconPath == "") then {
-        	if (_default != "") then {
-                        _iconPath = _default;
+        	if (_defaultIconPath != "") then {
+                        _iconPath = _defaultIconPath;
         	} else {
                         _iconPath = " ";
                         private _str = format ["ERROR [cre_fnc_getClassIcon]: Could not find icon for '%1', and no default path was provided!", _class];

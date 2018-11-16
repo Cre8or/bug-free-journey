@@ -13,11 +13,11 @@
 
 params [
         ["_class", "", [""]],
-	["_category", -1, [-1]]
+	["_category", MACRO_ENUM_CATEGORY_INVALID, [MACRO_ENUM_CATEGORY_INVALID]]
 ];
 
-// If no class or no category was provided, exit
-if (_class == "" or {_category == -1}) exitWith {};
+// If no class or no category was provided, exit and return no mass
+if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {0};
 
 
 
@@ -44,23 +44,32 @@ if (_mass <= 0) then {
 
         // Determine the config path based on the category
         switch (_category) do {
-                case MACRO_ENUM_CATEGORY_ITEM;
-                case MACRO_ENUM_CATEGORY_WEAPON: {
+		case MACRO_ENUM_CATEGORY_ITEM;
+                case MACRO_ENUM_CATEGORY_WEAPON;
+		case MACRO_ENUM_CATEGORY_UNIFORM;
+		case MACRO_ENUM_CATEGORY_VEST;
+		case MACRO_ENUM_CATEGORY_HEADGEAR: {
                         _configPath = configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "mass";
                         _configPathAlt = configFile >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
                 };
-                case MACRO_ENUM_CATEGORY_MAGAZINE: {
-                        _configPath = configFile >> "CfgMagazines" >> _class >> "mass";
-                        _configPathAlt = _configPath;
-                };
+		case MACRO_ENUM_CATEGORY_BACKPACK;
                 case MACRO_ENUM_CATEGORY_VEHICLE: {
                         _configPath = configFile >> "CfgVehicles" >> _class >> "mass";
+                        _configPathAlt = _configPath;
+                };
+                case MACRO_ENUM_CATEGORY_MAGAZINE: {
+                        _configPath = configFile >> "CfgMagazines" >> _class >> "mass";
                         _configPathAlt = _configPath;
                 };
                 case MACRO_ENUM_CATEGORY_GLASSES: {
                         _configPath = configFile >> "CfgGlasses" >> _class >> "mass";
                         _configPathAlt = configFile >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
                 };
+		default {
+			private _str = format ["ERROR [cre_fnc_getClassMass]: No rule for category '%1' (%2)!", _category, _class];
+			systemChat _str;
+			hint _str;
+		};
         };
 
         // Fetch the mass

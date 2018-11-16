@@ -41,6 +41,10 @@ class CfgFunctions {
         		};
                         //class inventory {};
 			class getMass {};
+                        class getContainerSize {};
+
+			class inventory_createNamespace {};
+                        class generateContainerData {};
                 };
 
                 class config {

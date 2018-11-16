@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=270;
+		nextID=286;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={27157.773,20.880386,24109.283};
-		dir[]={-0.60765195,-0.43234083,0.66622818};
-		up[]={-0.29134905,0.90170872,0.31943458};
-		aside[]={0.73884708,-1.4412217e-007,0.67388988};
+		pos[]={27148.482,134.5766,24095.879};
+		dir[]={-0.29246843,-0.94082457,0.17153932};
+		up[]={-0.81152409,0.33892998,0.47597814};
+		aside[]={0.50595319,-2.8240029e-006,0.86263901};
 	};
 };
 binarizationWanted=0;
@@ -42,13 +42,16 @@ addons[]=
 	"A3_Characters_F_Exp",
 	"A3_Structures_F_Bootcamp_VR_Blocks",
 	"A3_Modules_F_Curator_Curator",
-	"A3_Misc_F_Helpers"
+	"A3_Misc_F_Helpers",
+	"A3_Structures_F_Civ_Lamps",
+	"A3_Modules_F",
+	"A3_Structures_F_EPA_Civ_Constructions"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=11;
+		items=14;
 		class Item0
 		{
 			className="A3_Characters_F";
@@ -126,6 +129,27 @@ class AddonsMetaData
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
+		class Item11
+		{
+			className="A3_Structures_F";
+			name="Arma 3 - Buildings and Structures";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
+		class Item12
+		{
+			className="A3_Modules_F";
+			name="Arma 3 Alpha - Scripted Modules";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
+		class Item13
+		{
+			className="A3_Structures_F_EPA";
+			name="Arma 3 Survive Episode - Buildings and Structures";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
 	};
 };
 randomSeed=5850322;
@@ -168,7 +192,7 @@ class Mission
 		forecastLightnings=0.1;
 		year=2035;
 		month=6;
-		day=24;
+		day=20;
 		hour=12;
 		minute=0;
 		startFogDecay=0.013;
@@ -176,7 +200,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=96;
+		items=104;
 		class Item0
 		{
 			dataType="Group";
@@ -2591,6 +2615,176 @@ class Mission
 			};
 			id=259;
 			type="Sign_Arrow_Direction_F";
+		};
+		class Item96
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={27147.729,15.123605,24130.57};
+				angles[]={0,0.77718818,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=272;
+			type="Land_LampStreet_small_F";
+		};
+		class Item97
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={27145.375,18.986015,24156.578};
+				angles[]={0,5.7304149,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=276;
+			type="Land_LampStreet_F";
+			atlOffset=9.5367432e-007;
+		};
+		class Item98
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={27111.572,18.371771,24111.043};
+				angles[]={0,5.2208476,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=277;
+			type="Land_LampStreet_F";
+		};
+		class Item99
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={27113.711,18.525749,24063.574};
+				angles[]={0,4.8926983,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=278;
+			type="Land_LampStreet_F";
+			atlOffset=-9.5367432e-007;
+		};
+		class Item100
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={27186.869,18.864571,24181.668};
+				angles[]={0,5.6183648,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=279;
+			type="Land_LampStreet_F";
+		};
+		class Item101
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={27227.328,17.601948,24213.945};
+				angles[]={0,5.6500921,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=280;
+			type="Land_LampStreet_F";
+			atlOffset=9.5367432e-007;
+		};
+		class Item102
+		{
+			dataType="Logic";
+			class PositionInfo
+			{
+				position[]={27147.82,12.026225,24130.852};
+				angles[]={6.256525,0,6.2525291};
+			};
+			areaSize[]={1,0,1};
+			flags=1;
+			id=282;
+			type="ModuleHideTerrainObjects_F";
+			class CustomAttributes
+			{
+				class Attribute0
+				{
+					property="#filter";
+					expression="_this setVariable [""#filter"",_value]";
+					class Value
+					{
+						class data
+						{
+							class type
+							{
+								type[]=
+								{
+									"SCALAR"
+								};
+							};
+							value=15;
+						};
+					};
+				};
+				class Attribute1
+				{
+					property="#hideLocally";
+					expression="_this setVariable [""#hideLocally"",_value]";
+					class Value
+					{
+						class data
+						{
+							class type
+							{
+								type[]=
+								{
+									"BOOL"
+								};
+							};
+							value=0;
+						};
+					};
+				};
+				nAttributes=2;
+			};
+		};
+		class Item103
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={27160.121,12.368374,24116.018};
+				angles[]={0,1.2341483,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=285;
+			type="Land_PortableLight_single_F";
 		};
 	};
 	class Connections

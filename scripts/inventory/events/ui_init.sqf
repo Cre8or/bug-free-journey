@@ -59,6 +59,28 @@ case "ui_init": {
                                 // Load the storage menu
                                 ["ui_update_storage"] call cre_fnc_inventory;
 
+			        // Set the pixel precision mode of all slot frames to "OFF"
+			        {
+			                _x ctrlSetPixelPrecision 2;
+			        } forEach [
+			                _inventory displayCtrl MACRO_IDC_NVGS_FRAME,
+			                _inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME,
+			                _inventory displayCtrl MACRO_IDC_GOGGLES_FRAME,
+			                _inventory displayCtrl MACRO_IDC_BINOCULARS_FRAME,
+			                _inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME,
+			                _inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_FRAME,
+			                _inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_FRAME,
+			                _inventory displayCtrl MACRO_IDC_MAP_FRAME,
+			                _inventory displayCtrl MACRO_IDC_GPS_FRAME,
+			                _inventory displayCtrl MACRO_IDC_RADIO_FRAME,
+					_inventory displayCtrl MACRO_IDC_COMPASS_FRAME,
+			                _inventory displayCtrl MACRO_IDC_WATCH_FRAME,
+					_inventory displayCtrl MACRO_IDC_UNIFORM_FRAME,
+					_inventory displayCtrl MACRO_IDC_VEST_FRAME,
+					_inventory displayCtrl MACRO_IDC_BACKPACK_FRAME
+			        ];
+
+
                                 // Set the focus on something unimportant (to avoid triggering the close button with space)
                                 ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
                         };

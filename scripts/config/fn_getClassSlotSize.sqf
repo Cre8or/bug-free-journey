@@ -13,11 +13,11 @@
 
 params [
         ["_class", "", [""]],
-	["_category", -1, [-1]]
+	["_category", MACRO_ENUM_CATEGORY_INVALID, [MACRO_ENUM_CATEGORY_INVALID]]
 ];
 
-// If no class or no category was provided, exit
-if (_class == "" or {_category == -1}) exitWith {};
+// If no class or no category was provided, exit and return an empty array
+if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {[1,1]};
 
 
 
@@ -42,10 +42,27 @@ if (_slotSize isEqualTo []) then {
         private _configPath = "";
         switch (_category) do {
                 case MACRO_ENUM_CATEGORY_ITEM;
-                case MACRO_ENUM_CATEGORY_WEAPON: {_configPath = "CfgWeapons"};
-                case MACRO_ENUM_CATEGORY_MAGAZINE: {_configPath = "CfgMagazines"};
-                case MACRO_ENUM_CATEGORY_VEHICLE: {_configPath = "CfgVehicles"};
-                case MACRO_ENUM_CATEGORY_GLASSES: {_configPath = "CfgGlasses"};
+                case MACRO_ENUM_CATEGORY_WEAPON;
+		case MACRO_ENUM_CATEGORY_UNIFORM;
+		case MACRO_ENUM_CATEGORY_VEST;
+		case MACRO_ENUM_CATEGORY_HEADGEAR: {
+			_configPath = "CfgWeapons"
+		};
+		case MACRO_ENUM_CATEGORY_BACKPACK;
+                case MACRO_ENUM_CATEGORY_VEHICLE: {
+			_configPath = "CfgVehicles"
+		};
+                case MACRO_ENUM_CATEGORY_MAGAZINE: {
+			_configPath = "CfgMagazines"
+		};
+                case MACRO_ENUM_CATEGORY_GLASSES: {
+			_configPath = "CfgGlasses"
+		};
+		default {
+			private _str = format ["ERROR [cre_fnc_getClassSlotSize]: No rule for category '%1' (%2)!", _category, _class];
+			systemChat _str;
+			hint _str;
+		};
         };
 
         // Look up the slot size in the config (in case it's specifically defined for this class)
@@ -69,13 +86,18 @@ if (_slotSize isEqualTo []) then {
                                 _slotSize = [_x, _y];
                         };
                         case MACRO_ENUM_CATEGORY_ITEM;
+			case MACRO_ENUM_CATEGORY_UNIFORM;
+			case MACRO_ENUM_CATEGORY_VEST;
+			case MACRO_ENUM_CATEGORY_BACKPACK;
                         case MACRO_ENUM_CATEGORY_GLASSES;
+			case MACRO_ENUM_CATEGORY_HEADGEAR;
                         case MACRO_ENUM_CATEGORY_VEHICLE: {
                                 private _x = round (1.0 * _mass ^ (1/3));     // Cubic root
                                 private _y = floor (1.0 * _mass ^ (1/3));
                                 _slotSize = [_x, _y];
                         };
                         default {
+				_slotSize = [1,1];
                                 private _str = format ["ERROR [cre_fnc_getClassSlotSize]: Could not determine slot size for '%1'!", _class];
                 	        systemChat _str;
                 	        hint _str;

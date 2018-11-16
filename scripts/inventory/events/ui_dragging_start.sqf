@@ -11,7 +11,15 @@ case "ui_dragging_start": {
         // Only register left-clicks
         if (_button == 0) then {
 
-                // Set the focus into the dedicated dummy control group (so that the control renders ontop of everything else)
+	        // Set the focus into the parent group of the passed control, so it moves ontop of everything else
+	        switch (ctrlParentControlsGroup _ctrl) do {
+	                case (_inventory displayCtrl MACRO_IDC_GROUND_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_GROUND_FOCUS_FRAME)};
+	                case (_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_WEAPONS_FOCUS_FRAME)};
+	                case (_inventory displayCtrl MACRO_IDC_MEDICAL_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_MEDICAL_FOCUS_FRAME)};
+	                case (_inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_STORAGE_FOCUS_FRAME)};
+	        };
+
+                // Next we shift the focus into the dummy controls group to force the temporary controls to the top
                 ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
 
                 // Move the associated frame and picture to the cursor
@@ -21,81 +29,54 @@ case "ui_dragging_start": {
 			private _class = _ctrl getVariable ["class", ""];
 			private _category = [_class] call cre_fnc_getClassCategory;
 			private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+			private _defaultIconPath = _ctrl getVariable ["defaultIconPath", ""];
 			private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 			private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
 
-                        // Hide the original picture
-                        private _childPicture = _ctrl getVariable ["childPictureIcon", controlNull];
-                        _childPicture ctrlShow false;
-
-                        // Calculate the control's position offset and save it
-                        private _pos = ctrlPosition _ctrl;
-                        private _posOffset = [0,0];
-                        _ctrlParent = _ctrl;
-                        while {!isNull ctrlParentControlsGroup _ctrlParent} do {
-                                _ctrlParent = ctrlParentControlsGroup _ctrlParent;
-                                private _parentPos = ctrlPosition _ctrlParent;
-
-                                for "_i" from 0 to 1 do {
-                                        _posOffset set [_i, (_posOffset select _i) + (_parentPos select _i)];
-                                };
-                        };
-                        //_ctrl setVariable ["ctrlPosOffset", _posOffset];
-                        // -------------------- TODO: Check if this is still needed ^ ------------------------------------------------------------------------------------------------------------------------------------------------------
+                        // Hide the original child controls
+                        private _childControls = _ctrl getVariable ["childControls", []];
+                        {
+				_x  ctrlShow false;
+			} forEach _childControls;
 
                         // Create a temporary picture that stays on the slot
-                        private _childPictureSlotTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, _ctrlParent];
-                        _childPictureSlotTemp ctrlSetText (_ctrl getVariable ["defaultIconPath", ""]);
-                        _childPictureSlotTemp ctrlSetPosition _pos;
-                        _childPictureSlotTemp ctrlCommit 0;
-                        _ctrl setVariable ["childPictureSlotTemp", _childPictureSlotTemp];
+			private _posCtrl = ctrlPosition _ctrl;
+                        private _ctrlIconTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, ctrlParentControlsGroup _ctrl];
+                        _ctrlIconTemp ctrlSetText _defaultIconPath;
+                        _ctrlIconTemp ctrlSetPosition _posCtrl;
+                        _ctrlIconTemp ctrlCommit 0;
+                        _ctrl setVariable ["ctrlIconTemp", _ctrlIconTemp];
 
 			// Update the size
-			_pos set [2, (_slotSize select 0) * _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
-			_pos set [3, (_slotSize select 1) * _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
+			_posCtrl set [2, (_slotSize select 0) * _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
+			_posCtrl set [3, (_slotSize select 1) * _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
 
                         // Create a temporary frame that follows the mouse
-                        private _childFrameTemp = _inventory displayCtrl MACRO_IDC_DRAGGING_FRAME;
-                        _childFrameTemp ctrlSetPosition _pos;
-                        _childFrameTemp ctrlCommit 0;
-                        _childFrameTemp ctrlShow true;
+                        private _ctrlFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", -1];
+                        _ctrlFrameTemp ctrlSetPosition _posCtrl;
+                        _ctrlFrameTemp ctrlCommit 0;
+                        _ctrlFrameTemp ctrlShow true;
+			_ctrlFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+			_ctrl setVariable ["ctrlFrameTemp", _ctrlFrameTemp];
+
+			// Set the frame's pixel precision mode to off, disables rounding
+                        _ctrlFrameTemp ctrlSetPixelPrecision 2;
 
                         // Change the colour of the original slot frame
                         _ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 
-                        // Set up additional temporary dragging controls that follow the mouse
-                        private _childControlsTemp = [_childFrameTemp];
-                        {
-                                private _childPictureX = _ctrl getVariable [format ["childPictureIcon", _forEachIndex], controlNull];
-                                if (!isNull _childPictureX) then {
+			// Generate additional child controls
+			private _childControls = [_ctrlFrameTemp, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
 
-                                        // Add the offset to the child's position
-                                        private _posX = ctrlPosition _childPictureX;
-                                        for "_i" from 0 to 1 do {
-                                                _posX set [_i, (_posX select _i) + (_posOffset select _i)];
-                                        };
-
-					// Scale the elements according to the slot size
-					_posX set [2, _pos select 2];
-					_posX set [3, _pos select 3];
-
-                                        // Copy the child control's parameters
-                                        _x ctrlSetText ctrlText _childPictureX;
-                                        _x ctrlSetPosition _posX;
-                                        _x ctrlCommit 0;
-                                        _x ctrlShow true;
-                                        _childControlsTemp pushBack _x;
-                                };
-                        } forEach [
-                                _inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_ICON,
-                                _inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MUZZLE,
-                                _inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_BIPOD,
-                                _inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_RAIL,
-                                _inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_OPTIC,
-                                _inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MAGAZINE,
-                                _inventory displayCtrl MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_ALTMAGAZINE
-                        ];
-                        _ctrl setVariable ["childControlsTemp", _childControlsTemp];
+// -------------------- TODO: Iterate through the new child controls and determine their offset to the temp frame! ------------------------------------------------------------------------
+			{
+				private _posX = ctrlPosition _x;
+				private _posOffset = [
+					(_posX select 0) - (_posCtrl select 0),
+					(_posX select 1) - (_posCtrl select 1)
+				];
+				_x setVariable ["offset", _posOffset];
+			} forEach _childControls;
 
                         // Mark the control as being dragged
                         _ctrl setVariable ["isBeingDragged", true];

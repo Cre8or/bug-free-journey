@@ -15,4 +15,4 @@ if (is3DEN) then {createDialog "Rsc_Cre8ive_Inventory"} else {["ui_init"] call c
 
 cre_fnc_inventory = compile preprocessFileLineNumbers "scripts\inventory\fn_inventory.sqf";
 
-cre_warfare = [] spawn compile preprocessFileLineNumbers "scripts\AI\fn_handleWarfare.sqf"
+cre_warfare = [] spawn compile preprocessFileLineNumbers "scripts\AI\fn_handleWarfare.sqf";

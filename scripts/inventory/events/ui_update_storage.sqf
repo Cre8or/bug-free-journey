@@ -5,21 +5,9 @@ case "ui_update_storage": {
         // Grab some of our inventory controls
         private _storageCtrlGrp = _inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP;
         private _ctrlUniformFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_UNIFORM_FRAME;
-        private _ctrlUniformIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_UNIFORM_ICON;
         private _ctrlVestFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_VEST_FRAME;
-        private _ctrlVestIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_VEST_ICON;
         private _ctrlBackpackFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_FRAME;
-        private _ctrlBackpackIcon = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_ICON;
         private _ctrlScrollbarDummy = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_SCROLLBAR_DUMMY;
-
-        // Set the pixel precision mode of all frames to "OFF"
-        {
-                _x ctrlSetPixelPrecision 2;
-        } forEach [
-                _ctrlUniformFrame,
-                _ctrlVestFrame,
-                _ctrlBackpackFrame
-        ];
 
         // Determine our starting positions
         (ctrlPosition _ctrlUniformFrame) params ["_startX", "_startY", "_sizeW", "_sizeY"];
@@ -36,109 +24,177 @@ case "ui_update_storage": {
                 backpack player
         ];
 
+	// Determine our containers array
+	private _containers = [
+		uniformContainer player,
+		vestContainer player,
+		backpackContainer player
+	];
+
         // Determine the icon paths for the items and weapons that we have
         {
                 private _containerFrame = _x select 0;
-                private _containerIcon = _x select 1;
+		private _defaultIconPath = _x select 1;
                 private _class = _classes param [_forEachIndex, ""];
+		private _category = MACRO_ENUM_CATEGORY_EMPTY;
+		private _slotSize = [1,1];
                 private _startYNew = _startY + _sizeY + _offsetY;
 
-                if (_class != "") then {
-                        private _default = _x select 2;
-                        private _category = [_class] call cre_fnc_getClassCategory;
-                        private _containerIconPath = [_class, _category, _default] call cre_fnc_getClassIcon;
-                        //private _containerIconPath = "res\ui\inventory\weapon_frame.paa";
+		// Move the frame
+		private _posFrame = ctrlPosition _containerFrame;
+		_posFrame set [1, _startY + _offsetY];
+		_containerFrame ctrlSetPosition _posFrame;
+		_containerFrame ctrlCommit 0;
 
-                        _containerIcon ctrlSetText _containerIconPath;
+		// If the slot has something in it, fetch its data
+                if (_class != "") then {
+			_category = [_class] call cre_fnc_getClassCategory;
+			_slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+
+			// Change the frame's colour
                         _containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
-                        // Save the slot's data
+			// Mark the slot as active
                         _containerFrame setVariable ["active", true];
-                        _containerFrame setVariable ["childPictureIcon", _containerIcon];
-                        _containerFrame setVariable ["defaultIconPath", _default];
                         _containerFrame setVariable ["class", _class];
                 };
 
-                // Move the frame and icon controls
-                {
-                        (ctrlPosition _x) params ["_posX", "", "_w", "_h"];
-                        _x ctrlSetPosition [
-                                _posX,
-                                _startY + _offsetY,
-                                _w,
-                                _h
-                        ];
-                        _x ctrlCommit 0;
-                } forEach [_containerFrame, _containerIcon];
+		// Generate the child controls
+		[_containerFrame, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
 
-                // Fetch the maximum load of this container
-                private _maxLoad = floor (MACRO_STORAGE_CAPACITY_MULTIPLIER * getContainerMaxLoad _class);
-                private _slotsCountPerLine = ((ceil (_maxLoad / 3)) min MACRO_SCALE_SLOT_COUNT_PER_LINE) max 1;
-                private _slotControls = [];
+		// Save the slot's default icon path
+		_containerFrame setVariable ["defaultIconPath", _defaultIconPath];
 
-                // Only continue if the container can fit anything
-                if (_maxLoad > 0) then {
-                        private _container = objNull;
-                        switch (_forEachIndex) do {
-                                case 0: {_container = uniformContainer player};
-                                case 1: {_container = vestContainer player};
-                                case 2: {_container = backpackContainer player};
-                        };
-                        private _currentLoad = floor (MACRO_STORAGE_CAPACITY_MULTIPLIER * ([_container] call cre_fnc_getMass));
 
-                        // Create the slot controls for this container
-                        for "_i" from 0 to (_maxLoad - 1) do {
-                                private _slotFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedText", -1, _storageCtrlGrp];
-                                private _slotIcon = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _storageCtrlGrp];
-                                _slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-                                _slotIcon ctrlSetText MACRO_PICTURE_SLOT_BACKGROUND;
+		// Fetch the container data
+		private _container = _containers select _forEachIndex;
+		private _containerData = _container getVariable ["cre8ive_data", locationNull];
+		private _containerUID = _containerData getVariable ["cre8ive_UID", ""];
 
-                                // Set the frame's pixel precision mode to off, disables rounding
-                                _slotFrame ctrlSetPixelPrecision 2;
-
-                                // Move the slot controls
-                                private _slotPos = [
-                                        _startX + _slotSizeW * (_i % _slotsCountPerLine),
-                                        _startYNew + _slotSizeH * floor (_i / _slotsCountPerLine),
-                                        _slotSizeW,
-                                        _slotSizeH
-                                ];
-                                {
-                                        _x ctrlSetPosition _slotPos;
-                                        _x ctrlCommit 0;
-                                } forEach [_slotFrame, _slotIcon];
-
-                                // Mark used slots as active
-                                if (_i < _currentLoad) then {
-                                        _slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-
-                                        // Save the slot's data
-                                        _slotFrame setVariable ["active", true];
-                                        _slotFrame setVariable ["childPicture1", _slotIcon];
-                                        _slotFrame setVariable ["defaultIconPath", MACRO_PICTURE_SLOT_BACKGROUND];
-
-                                        // Add dragging EHs
-                                        _slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_start", _this] call cre_fnc_inventory}];
-                                        _slotFrame ctrlAddEventHandler ["MouseButtonUp", {["ui_dragging_stop", _this] call cre_fnc_inventory}];
-                                };
-
-                                // Add the controls to the list of child controls
-                                _slotControls pushBack _slotFrame;
-                                _slotControls pushBack _slotIcon;
-
-                                // Save the frame onto the control via its position
-                                _containerFrame setVariable [format ["slotFrame_%1_%2", _i % _slotsCountPerLine, floor (_i / _slotsCountPerLine)], _slotFrame];
-                        };
+                // If the container doesn't have any data yet, generate it
+// ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
+                if (true or _containerUID == "") then {
+                        _containerData = [_container] call cre_fnc_generateContainerData;
+        		_containerUID = _containerData getVariable ["cre8ive_UID", ""];
                 };
 
-                // Save the child controls onto the container control
-                _containerFrame setVariable ["slotControls", _slotControls];
+                // Fetch the container's dimensions and slots count
+		private _containerSize = _containerData getVariable ["containerSize", [1,1]];
+		private _containerSlotsCount = _containerData getVariable ["containerSlotsCount", 1];
 
-                _offsetY = _offsetY + _sizeY + _safeZoneH * (MACRO_SCALE_SLOT_SIZE_H * ceil (_maxLoad / _slotsCountPerLine) + 0.005);
+		// Fetch the control's last container UID
+		private _lastContainerUID = _containerFrame getVariable ["lastContainerUID", ""];
+
+		// If we previously had a different container, rebuild the controls
+		if (_containerUID != _lastContainerUID) then {
+				_containerSize params ["_sizeW", "_sizeH"];
+			private _lastYSizeW = _containerSlotsCount - (_sizeH - 1) * _sizeW;
+
+			// Delete all controls of the previous container
+			private _allSlotFrames = _containerFrame getVariable ["allSlotFrames", []];
+			{
+				// Delete all child controls of the slot controls
+				{
+					ctrlDelete _x;
+				} forEach (_x getVariable ["childControls", []]);
+				ctrlDelete (_x getVariable ["slotControl", controlNull]);
+				ctrlDelete _x;
+			} forEach _allSlotFrames;
+			_allSlotFrames = [];
+
+			// Create the new slots
+			for "_posY" from 1 to _sizeH do {
+				_newW = [_sizeW, _lastYSizeW] select (_posY == _sizeH);
+				for "_posX" from 1 to _newW do {
+					private _slotFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", -1, _storageCtrlGrp];
+					private _slotIcon = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _storageCtrlGrp];
+					_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+					_slotIcon ctrlSetText MACRO_PICTURE_SLOT_BACKGROUND;
+
+	                                // Set the frame's pixel precision mode to off, disables rounding
+	                                _slotFrame ctrlSetPixelPrecision 2;
+
+	                                // Move the slot controls
+					private _slotPos = [
+						_startX + _slotSizeW * (_posX - 1),
+						_startYNew + _slotSizeH * (_posY - 1),
+						_slotSizeW,
+						_slotSizeH
+					];
+					{
+	                                        _x ctrlSetPosition _slotPos;
+	                                        _x ctrlCommit 0;
+					} forEach [_slotFrame, _slotIcon];
+
+					// Save the slot's frame control onto the container
+					_containerFrame setVariable [format ["slot_%1_%2", _posX, _posY], _slotFrame];
+					_allSlotFrames pushBack _slotFrame;
+				};
+			};
+
+			// Save this container's new slot controls
+			_containerFrame setVariable ["allSlotFrames", _allSlotFrames];
+			_containerFrame setVariable ["lastContainerUID", _containerUID];
+		};
+
+		// Iterate through the items
+		private _items = _containerData getVariable ["items", []];
+		{
+			// Only continue if the item is valid
+			if (!isNull _x) then {
+				private _itemClass = _x getVariable ["class", ""];
+				private _itemSlot = _x getVariable ["slotPos", []];
+				private _itemCategory = [_itemClass] call cre_fnc_getClassCategory;
+				private _itemSize = [_itemClass, _itemCategory] call cre_fnc_getClassSlotSize;
+				_itemSlot params ["_posX", "_posY"];
+				_itemSize params ["_sizeW", "_sizeH"];
+
+				// Fetch the occupied slots
+				private _slotsStr = [];
+				for "_posItemY" from _posY to (_posY + (_itemSize select 1) - 1) do {
+					for "_posItemX" from _posX to (_posX + (_itemSize select 0) - 1) do {
+						_slotsStr pushBack format ["slot_%1_%2", _posItemX, _posItemY];
+					};
+				};
+				_slotsStr deleteAt 0;
+
+				// Hide the occupied slots
+				{
+					private _slotFrame = _containerFrame getVariable [_x, controlNull];
+					_slotFrame ctrlShow false;
+				} forEach _slotsStr;
+
+				// Scale the slot controls
+				private _slotFrame = _containerFrame getVariable [format ["slot_%1_%2", _posX, _posY], controlNull];
+				private _slotPos = ctrlPosition _slotFrame;
+				_slotPos set [2, _slotSizeW * _sizeW];
+				_slotPos set [3, _slotSizeH * _sizeH];
+				_slotFrame ctrlSetPosition _slotPos;
+				_slotFrame ctrlCommit 0;
+				_slotFrame ctrlShow true;
+
+				// Generate the child controls for this slot
+				[_slotFrame, _itemClass, _itemCategory, _itemSize, MACRO_PICTURE_SLOT_BACKGROUND] call cre_fnc_generateChildControls;
+
+                                // Change the colour of the frame
+                                _slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+
+                                // Add event handlers for dragging
+                                _slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_start", _this] call cre_fnc_inventory}];
+                                _slotFrame ctrlAddEventHandler ["MouseButtonUp", {["ui_dragging_stop", _this] call cre_fnc_inventory}];
+
+                                // Save some data onto the control
+                                _slotFrame setVariable ["active", true];
+                                _slotFrame setVariable ["defaultIconPath", _slotIconPath];
+                                _slotFrame setVariable ["class", _itemClass];
+			};
+		} forEach _items;
+
+		_offsetY = _offsetY + _sizeY + _safeZoneH * (MACRO_SCALE_SLOT_SIZE_H * (_containerSize select 1) + 0.005);
         } forEach [
-                [_ctrlUniformFrame,		_ctrlUniformIcon,		MACRO_PICTURE_UNIFORM],
-                [_ctrlVestFrame,		_ctrlVestIcon,			MACRO_PICTURE_VEST],
-                [_ctrlBackpackFrame,		_ctrlBackpackIcon,		MACRO_PICTURE_BACKPACK]
+                [_ctrlUniformFrame,		MACRO_PICTURE_UNIFORM],
+                [_ctrlVestFrame,		MACRO_PICTURE_VEST],
+                [_ctrlBackpackFrame,		MACRO_PICTURE_BACKPACK]
         ];
 
         // Move the scrollbar dummy

@@ -47,9 +47,16 @@
         #define MACRO_PICTURE_WEAPON_MUZZLE                             "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_muzzle_gs.paa"
         #define MACRO_PICTURE_WEAPON_BIPOD                              "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_bipod_gs.paa"
         #define MACRO_PICTURE_WEAPON_SIDE                               "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_side_gs.paa"
-        #define MACRO_PICTURE_WEAPON_TOP                                "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_top_gs.paa"
+        #define MACRO_PICTURE_WEAPON_OPTIC                              "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_top_gs.paa"
         #define MACRO_PICTURE_WEAPON_MAGAZINEGL                         "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_magazineGL_gs.paa"
         #define MACRO_PICTURE_WEAPON_MAGAZINE                           "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_magazine_gs.paa"
+
+	// Weapon accessories
+	#define MACRO_PICTURE_WEAPON_ACC_MUZZLE				"a3\weapons_f\Data\UI\attachment_muzzle.paa"
+	#define MACRO_PICTURE_WEAPON_ACC_BIPOD				"a3\weapons_f\Data\UI\attachment_muzzle.paa"
+// ---- TODO: Find a proper icon for the bipod! ---------------------------------------------------------------------------------------------------------
+	#define MACRO_PICTURE_WEAPON_ACC_SIDE				"a3\weapons_f\Data\UI\attachment_side.paa"
+	#define MACRO_PICTURE_WEAPON_ACC_OPTIC				"a3\weapons_f\Data\UI\attachment_top.paa"
 
         // Assigned slots
         #define MACRO_PICTURE_MAP                                       "a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_map_gs.paa"
@@ -101,40 +108,28 @@
 
         // NVGs, binoculars, headgear and goggles
 	#define MACRO_IDC_NVGS_FRAME                                    2202
-        #define MACRO_IDC_NVGS_ICON                                     2203
-	#define MACRO_IDC_HEADGEAR_FRAME                                2204
-        #define MACRO_IDC_HEADGEAR_ICON                                 2205
-	#define MACRO_IDC_GOGGLES_FRAME                                 2206
-        #define MACRO_IDC_GOGGLES_ICON                                  2207
-	#define MACRO_IDC_BINOCULARS_FRAME                              2208
-        #define MACRO_IDC_BINOCULARS_ICON                               2209
+	#define MACRO_IDC_HEADGEAR_FRAME                                2203
+	#define MACRO_IDC_GOGGLES_FRAME                                 2204
+	#define MACRO_IDC_BINOCULARS_FRAME                              2205
 
         // Primary Weapon
-        #define MACRO_IDC_PRIMARYWEAPON_FRAME                           2301
-        #define MACRO_IDC_PRIMARYWEAPON_ICON                            2302
+        #define MACRO_IDC_PRIMARYWEAPON_FRAME                           2211
 
         // Handgun Weapon
-        #define MACRO_IDC_HANDGUNWEAPON_FRAME                           2311
-        #define MACRO_IDC_HANDGUNWEAPON_ICON                            2312
+        #define MACRO_IDC_HANDGUNWEAPON_FRAME                           2212
 
         // Secondary Weapon
-        #define MACRO_IDC_SECONDARYWEAPON_FRAME                         2321
-        #define MACRO_IDC_SECONDARYWEAPON_ICON                          2322
+        #define MACRO_IDC_SECONDARYWEAPON_FRAME                         2213
 
         // Assigned slots
-	#define MACRO_IDC_MAP_FRAME                                     2401
-        #define MACRO_IDC_MAP_ICON                                      2402
-	#define MACRO_IDC_GPS_FRAME                                     2403
-        #define MACRO_IDC_GPS_ICON                                      2404
-	#define MACRO_IDC_RADIO_FRAME                                   2405
-        #define MACRO_IDC_RADIO_ICON                                    2406
-	#define MACRO_IDC_COMPASS_FRAME                                 2407
-        #define MACRO_IDC_COMPASS_ICON                                  2408
-	#define MACRO_IDC_WATCH_FRAME                                   2409
-        #define MACRO_IDC_WATCH_ICON                                    2410
+	#define MACRO_IDC_MAP_FRAME                                     2221
+	#define MACRO_IDC_GPS_FRAME                                     2222
+	#define MACRO_IDC_RADIO_FRAME                                   2223
+	#define MACRO_IDC_COMPASS_FRAME                                 2224
+	#define MACRO_IDC_WATCH_FRAME                                   2225
 
 	// Character (Medical)
-        #define MACRO_IDC_CHARACTER_MEDICAL_ICON                        2501
+        #define MACRO_IDC_CHARACTER_MEDICAL_ICON                        2301
 
 	// Storage
 	#define MACRO_IDC_STORAGE_CTRLGRP                               3000
@@ -142,28 +137,35 @@
 
 	// Uniform, vest and backpack
 	#define MACRO_IDC_UNIFORM_FRAME                                 3101
-	#define MACRO_IDC_UNIFORM_ICON                                  3102
-	#define MACRO_IDC_VEST_FRAME                                    3103
-	#define MACRO_IDC_VEST_ICON                                     3104
-	#define MACRO_IDC_BACKPACK_FRAME                                3105
-	#define MACRO_IDC_BACKPACK_ICON                                 3106
-	#define MACRO_IDC_SCROLLBAR_DUMMY                               3107
+	#define MACRO_IDC_VEST_FRAME                                    3102
+	#define MACRO_IDC_BACKPACK_FRAME                                3103
+	#define MACRO_IDC_SCROLLBAR_DUMMY                               3104
 
 	// Empty control group (for focus)
 	#define MACRO_IDC_EMPTY_CTRLGROUP				4000
 	#define MACRO_IDC_EMPTY_FOCUS_FRAME				4001
 
 	// Temporary frame and picture
-	#define MACRO_IDC_DRAGGING_FRAME				4101
-	#define MACRO_IDC_DRAGGING_PICTURE_ICON				4102
-	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MUZZLE		4103
-	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_BIPOD		4104
-	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_RAIL		4105
-	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_OPTIC		4106
-	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MAGAZINE		4107
-	#define MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_ALTMAGAZINE	4108
-	#define MACRO_IDC_SCRIPTEDFRAME					4111
-        #define MACRO_IDC_SCRIPTEDPICTURE				4112
+	#define MACRO_IDC_SCRIPTEDFRAME					4101
+        #define MACRO_IDC_SCRIPTEDPICTURE				4102
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//      UI ELEMENT CHILD CONTROL TYPES
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+	#define MACRO_ENUM_CTRL_PICTURE_ICON				0
+	#define MACRO_ENUM_CTRL_OUTLINE					1
+	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_MUZZLE			10
+	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_BIPOD			11
+	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_RAIL			12
+	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_OPTIC			13
+	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_MAGAZINE			14
+	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_ALTMAGAZINE		15
+	#define MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR			20
 
 
 
@@ -188,11 +190,20 @@
 //      ITEM TYPES
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
+	#define MACRO_ENUM_CATEGORY_EMPTY				-2
+	#define MACRO_ENUM_CATEGORY_INVALID				-1
+
         #define MACRO_ENUM_CATEGORY_ITEM                                0
         #define MACRO_ENUM_CATEGORY_WEAPON                              1
         #define MACRO_ENUM_CATEGORY_MAGAZINE                            2
-        #define MACRO_ENUM_CATEGORY_VEHICLE                             3
-        #define MACRO_ENUM_CATEGORY_GLASSES                             4
+
+	#define MACRO_ENUM_CATEGORY_UNIFORM				3
+	#define MACRO_ENUM_CATEGORY_VEST				4
+	#define MACRO_ENUM_CATEGORY_BACKPACK				5
+
+	#define MACRO_ENUM_CATEGORY_GLASSES                             6
+	#define MACRO_ENUM_CATEGORY_HEADGEAR				7
+	#define MACRO_ENUM_CATEGORY_VEHICLE                             8
 
 
 
@@ -205,7 +216,6 @@
         #define CURLY(DATA) {##DATA##}
         #define SQUARE(DATA) [##DATA##]
 	#define STR(DATA) #DATA
-
 
 
 

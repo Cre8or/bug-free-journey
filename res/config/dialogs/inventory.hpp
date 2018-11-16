@@ -184,44 +184,19 @@ class MACRO_GUI_NAME {
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-						childPicture = MACRO_IDC_NVGS_ICON;
 						onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
 						onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
-					};
-
-					class NVGs_Picture : RscPicture {
-						idc = MACRO_IDC_NVGS_ICON;
-						text = MACRO_PICTURE_NVGS;
-						style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
-						y = _safeZoneH * (0.1);
-						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
-						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
 					};
 
 					// Headgear
 					class Headgear_Frame : NVGs_Frame {
 						idc = MACRO_IDC_HEADGEAR_FRAME;
 						y = _safeZoneH * (0.1 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
-						childPicture = MACRO_IDC_HEADGEAR_ICON;
-					};
-
-					class Headgear_Picture : NVGs_Picture {
-						idc = MACRO_IDC_HEADGEAR_ICON;
-						text = MACRO_PICTURE_HEADGEAR;
-						y = _safeZoneH * (0.1 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
 					};
 
 					// Binoculars
 					class Binoculars_Frame : NVGs_Frame {
 						idc = MACRO_IDC_BINOCULARS_FRAME;
-						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
-						childPicture = MACRO_IDC_BINOCULARS_ICON;
-					};
-
-					class Binoculars_Picture : NVGs_Picture {
-						idc = MACRO_IDC_BINOCULARS_ICON;
-						text = MACRO_PICTURE_BINOCULARS;
 						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
 					};
 
@@ -230,16 +205,7 @@ class MACRO_GUI_NAME {
 						idc = MACRO_IDC_GOGGLES_FRAME;
 						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
 						y = _safeZoneH * (0.1 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
-						childPicture = MACRO_IDC_GOGGLES_ICON;
 					};
-
-					class Goggles_Picture : NVGs_Picture {
-						idc = MACRO_IDC_GOGGLES_ICON;
-						text = MACRO_PICTURE_GOGGLES;
-						x = _safeZoneW * (0.15 - 0.002 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
-						y = _safeZoneH * (0.1 + 0.005 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
-					};
-
 
 				// ------------------------------------------------------------------------------------------------------------------------------------------------
 				// WEAPONS
@@ -251,44 +217,18 @@ class MACRO_GUI_NAME {
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 6;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 2.5;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-						childPicture = MACRO_IDC_PRIMARYWEAPON_ICON;
 						onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
 						onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
 					};
-
-					class PrimaryWeapon_Picture : RscPicture {
-						idc = MACRO_IDC_PRIMARYWEAPON_ICON;
-						text = MACRO_PICTURE_PRIMARYWEAPON;
-						style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
-						y = _safeZoneH * (0.1 + 0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 3);
-						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 6;
-						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 2.5;
-					};
-
 					// Handgun weapon
 					class HandgunWeapon_Frame : PrimaryWeapon_Frame {
 						idc = MACRO_IDC_HANDGUNWEAPON_FRAME;
-						y = _safeZoneH * (0.1 + 0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 5.5);
-						childPicture = MACRO_IDC_HANDGUNWEAPON_ICON;
-					};
-
-					class HandgunWeapon_Picture : PrimaryWeapon_Picture {
-						idc = MACRO_IDC_HANDGUNWEAPON_ICON;
-						text = MACRO_PICTURE_HANDGUNWEAPON;
 						y = _safeZoneH * (0.1 + 0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 5.5);
 					};
 
 					// Secondary weapon
 					class SecondaryWeapon_Frame : PrimaryWeapon_Frame {
 						idc = MACRO_IDC_SECONDARYWEAPON_FRAME;
-						y = _safeZoneH * (0.1 + 0.005 * 4 + MACRO_SCALE_SLOT_SIZE_H * 8);
-						childPicture = MACRO_IDC_SECONDARYWEAPON_ICON;
-					};
-
-					class SecondaryWeapon_Picture : PrimaryWeapon_Picture {
-						idc = MACRO_IDC_SECONDARYWEAPON_ICON;
-						text = MACRO_PICTURE_SECONDARYWEAPON;
 						y = _safeZoneH * (0.1 + 0.005 * 4 + MACRO_SCALE_SLOT_SIZE_H * 8);
 					};
 
@@ -302,31 +242,13 @@ class MACRO_GUI_NAME {
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-						childPicture = MACRO_IDC_MAP_ICON;
 						onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
 						onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
-					};
-
-					class Map_Picture : RscPicture {
-						idc = MACRO_IDC_MAP_ICON;
-						text = MACRO_PICTURE_MAP;
-						style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-						x = _safeZoneW * (0.15 - 0.002 - 0.003 * 2 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
-						y = _safeZoneH * 0.65;
-						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
-						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
 					};
 
 					// GPS
 					class GPS_Frame : Map_Frame {
 						idc = MACRO_IDC_GPS_FRAME;
-						x = _safeZoneW * (0.15 - 0.002 - 0.003 - MACRO_SCALE_SLOT_SIZE_W * 1.5);
-						childPicture = MACRO_IDC_GPS_ICON;
-					};
-
-					class GPS_Picture : Map_Picture {
-						idc = MACRO_IDC_GPS_ICON;
-						text = MACRO_PICTURE_GPS;
 						x = _safeZoneW * (0.15 - 0.002 - 0.003 - MACRO_SCALE_SLOT_SIZE_W * 1.5);
 					};
 
@@ -334,38 +256,17 @@ class MACRO_GUI_NAME {
 					class Radio_Frame : Map_Frame {
 						idc = MACRO_IDC_RADIO_FRAME;
 						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 0.5);
-						childPicture = MACRO_IDC_RADIO_ICON;
-					};
-
-					class Radio_Picture : Map_Picture {
-						idc = MACRO_IDC_RADIO_ICON;
-						text = MACRO_PICTURE_RADIO;
-						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 0.5);
 					};
 
 					// Compass
 					class Compass_Frame : Map_Frame {
 						idc = MACRO_IDC_COMPASS_FRAME;
 						x = _safeZoneW * (0.15 - 0.002 + 0.003 + MACRO_SCALE_SLOT_SIZE_W * 0.5);
-						childPicture = MACRO_IDC_COMPASS_ICON;
-					};
-
-					class Compass_Picture : Map_Picture {
-						idc = MACRO_IDC_COMPASS_ICON;
-						text = MACRO_PICTURE_COMPASS;
-						x = _safeZoneW * (0.15 - 0.002 + 0.003 + MACRO_SCALE_SLOT_SIZE_W * 0.5);
 					};
 
 					// Watch
 					class Watch_Frame : Map_Frame {
 						idc = MACRO_IDC_WATCH_FRAME;
-						x = _safeZoneW * (0.15 - 0.002 + 0.003 * 2 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
-						childPicture = MACRO_IDC_WATCH_ICON;
-					};
-
-					class Watch_Picture : Map_Picture {
-						idc = MACRO_IDC_WATCH_ICON;
-						text = MACRO_PICTURE_WATCH;
 						x = _safeZoneW * (0.15 - 0.002 + 0.003 * 2 + MACRO_SCALE_SLOT_SIZE_W * 1.5);
 					};
 
@@ -436,38 +337,16 @@ class MACRO_GUI_NAME {
 					onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
 				};
 
-				class Storage_Uniform_Icon : RscPicture {
-					idc = MACRO_IDC_UNIFORM_ICON;
-					text = MACRO_PICTURE_UNIFORM;
-					style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-					x = _safeZoneW * 0.002 * 2;
-		                        y = _safeZoneH * 0.005;
-		                        w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
-		                        h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
-				};
-
 				// Vest
 				class Storage_Vest_Frame : Storage_Uniform_Frame {
 					idc = MACRO_IDC_VEST_FRAME;
 		                        y = _safeZoneH * (0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
 				};
 
-				class Storage_Vest_Icon : Storage_Uniform_Icon {
-					idc = MACRO_IDC_VEST_ICON;
-					text = MACRO_PICTURE_VEST;
-					y = _safeZoneH * (0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
-				};
-
 				// Backpack
 				class Storage_Backpack_Frame : Storage_Uniform_Frame {
 					idc = MACRO_IDC_BACKPACK_FRAME;
 		                        y = _safeZoneH * (0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 3);
-				};
-
-				class Storage_Backpack_Icon : Storage_Uniform_Icon {
-					idc = MACRO_IDC_BACKPACK_ICON;
-					text = MACRO_PICTURE_BACKPACK;
-					y = _safeZoneH * (0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 3);
 				};
 
 				// Scrollbar Dummy
@@ -523,49 +402,6 @@ class MACRO_GUI_NAME {
 				};
 			};
 		};
-
-                // Temporary dragging controls
-		class Dragging_Dummy_Frame : RscBox {
-			idc = MACRO_IDC_DRAGGING_FRAME;
-			x = 0;
-			y = 0;
-			w = 0;
-			h = 0;
-			colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_ACTIVE);
-		};
-
-		class Dragging_Dummy_Picture_Icon : RscPicture {
-			idc = MACRO_IDC_DRAGGING_PICTURE_ICON;
-			style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-			x = 0;
-			y = 0;
-			w = 0;
-			h = 0;
-		};
-
-		class Dragging_Dummy_Picture_Attachment_Muzzle : Dragging_Dummy_Picture_Icon {
-			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MUZZLE;
-		};
-
-		class Dragging_Dummy_Picture_Attachment_Bipod : Dragging_Dummy_Picture_Icon {
-			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_BIPOD;
-		};
-
-		class Dragging_Dummy_Picture_Attachment_Rail : Dragging_Dummy_Picture_Icon {
-			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_RAIL;
-		};
-
-		class Dragging_Dummy_Picture_Attachment_Optic : Dragging_Dummy_Picture_Icon {
-			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_OPTIC;
-		};
-
-		class Dragging_Dummy_Picture_Attachment_Magazine : Dragging_Dummy_Picture_Icon {
-			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_MAGAZINE;
-		};
-
-		class Dragging_Dummy_Picture_Attachment_AltMagazine : Dragging_Dummy_Picture_Icon {
-			idc = MACRO_IDC_DRAGGING_PICTURE_ATTACHMENT_ALTMAGAZINE;
-		};
         };
 };
 
@@ -582,7 +418,7 @@ class Cre8ive_Inventory_ScriptedBox : RscBox {
 	h = 0;
 };
 
-class Cre8ive_Inventory_ScriptedText : RscText {
+class Cre8ive_Inventory_ScriptedFrame : RscText {
 	x = 0;
 	y = 0;
 	w = 0;
@@ -595,4 +431,12 @@ class Cre8ive_Inventory_ScriptedPicture : RscPicture {
 	y = 0;
 	w = 0;
 	h = 0;
+};
+
+class Cre8ive_Inventory_ScriptedOutline : RscBox {
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
+	style = ST_WITH_RECT;
 };
