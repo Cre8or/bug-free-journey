@@ -9,7 +9,7 @@
                         MACRO_ENUM_CATEGORY_VEHICLE             ( -> CfgVehicles)
                         MACRO_ENUM_CATEGORY_GLASSES             ( -> CfgGlasses)
         Arguments:
-                0:      <STRING>        Classname of item to check
+                0:      <STRING>        Classname the of item to check
         Returns:
                 0:      <NUMBER>        Category of the class (see above)
 -------------------------------------------------------------------------------------------------------------------- */

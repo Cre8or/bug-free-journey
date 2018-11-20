@@ -9,6 +9,8 @@
                 0:      <LOCATION>	Generated container data
 -------------------------------------------------------------------------------------------------------------------- */
 
+#include "..\..\res\config\dialogs\macros.hpp"
+
 params [
         ["_container", objNull, [objNull]]
 ];
@@ -28,69 +30,83 @@ private _oldContainerData = _container getVariable ["cre8ive_data", locationNull
 deleteLocation _oldContainerData;
 
 // Now, let's regenerate the data from scratch
+// Define some variables
 private _index = 0;
 private _items = [];
 
-// Create a temporary namespace
-private _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+// Create some temporary namespaces
+private _slotAreaNamespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+private _itemsListNamespace = createLocation ["NameVillage", [0,0,0], 0, 0];
 
-// Iterate through all items inside the container
+// Iterate through the container
 {
-	_x params ["_classes", "_counts"];
+	private _formatType = _forEachIndex;
 
-	// Add the items to the list
+	// Iterate through the sub-arrays
 	{
-		private _count = _counts select _forEachIndex;
-		private _category = [_x] call cre_fnc_getClassCategory;
-		private _slotSize = [_x, _category] call cre_fnc_getClassSlotSize;
+		private _class = _x;
+		if (_x isEqualType []) then {
+			_class = _x select 0;
+		} else {
+			_x = [_class];
+		};
+
+		private _category = [_class] call cre_fnc_getClassCategory;
+		private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
 		private _slotArea = (_slotSize select 0) * (_slotSize select 1);
 		private _slotAreaStr = format ["%1.0", _slotArea];
 
-		// Get the list of array indexes for this specific slot area
-		private _indexes = _namespace getVariable [_slotAreaStr, []];
+		// Generate a UID for the item
+		private _UID = call cre_fnc_generateUID;
 
-		for "_i" from 1 to _count do {
-			_items pushBack _x;
-			_indexes pushBack _index;
+		// Get the list of indexes for this specific slot area, and add the current one to it
+		private _indexes = _slotAreaNamespace getVariable [_slotAreaStr, []];
+		_slotAreaNamespace setVariable [_slotAreaStr, _indexes + [_index]];
 
-			_index = _index + 1;
-		};
+		// Save the item using its UID so we can find it later, along with an index to classify its data format
+		_itemsListNamespace setVariable [_UID, [_formatType, _x]];
 
-		_namespace setVariable [_slotAreaStr, _indexes];
-		//systemChat format ["Saved indexes for area %1: %2", _slotArea, _indexes];
-	} forEach _classes;
+		// Add the item's UID to the list of items (to be sorted later)
+		_items pushBack _UID;
+
+		// Increase the index
+		_index = _index + 1;
+	} forEach _x;
 
 } forEach [
-	getWeaponCargo _container,
-	getMagazineCargo _container,
-	getItemCargo _container,
-	getBackpackCargo _container
+        magazinesAmmoCargo _container,
+        weaponsItemsCargo _container,
+	itemCargo _container,
+        everyContainer _container
 ];
+
+
+
+
 
 // Fetch the maximum slot area in the list
 private _max = 0;
-private _slotAreaRegions = (allVariables _namespace) apply {
+private _slotAreaGroups = (allVariables _slotAreaNamespace) apply {
 	private _ret = parseNumber _x;
 	_max = _max max _ret;
 	_ret;
 };
 
-// Sort the items using the slot area regions
+// Sort the items using the slot area groups
 private _itemsSorted = [];
-for "_i" from 1 to count _slotAreaRegions do {
-	private _indexes = _namespace getVariable [format ["%1.0", _max], []];
-	//systemChat format ["Fetching indexes for slot area: %1: %2", _max, _indexes];
+for "_i" from 1 to count _slotAreaGroups do {
+	private _indexes = _slotAreaNamespace getVariable [format ["%1.0", _max], []];
 
-	// Added the classes with this slot area to the list
+	// Add the items with this slot area to the list
 	{
 		_itemsSorted pushBack (_items select _x);
 	} forEach _indexes;
 
 	private _maxNew = 0;
-	for "_i" from (count _slotAreaRegions) - 1 to 0 step -1 do {
-		private _slotArea = _slotAreaRegions select _i;
+	for "_i" from (count _slotAreaGroups) - 1 to 0 step -1 do {
+		private _slotArea = _slotAreaGroups select _i;
 		if (_max == _slotArea) then {
-			_slotAreaRegions deleteAt _i;
+			_slotAreaGroups deleteAt _i;
 		} else {
 			_maxNew = _maxNew max _slotArea;
 		};
@@ -99,11 +115,11 @@ for "_i" from 1 to count _slotAreaRegions do {
 	_max = _maxNew;
 };
 
-// Delete the temporary namespace
-deleteLocation _namespace;
+// Delete the temporary slot area namespace
+deleteLocation _slotAreaNamespace;
 
-// Create a namespace for the container (since it doesn't exist yet)
-(call cre_fnc_inventory_createNamespace) params ["_containerData", "_containerUID"];
+// Create a new namespace for the container
+(call cre_fnc_inventory_createNamespace) params ["_containerData"];
 
 // Iterate through the sorted list of items and fit them into the container
 ([typeOf _container] call cre_fnc_getContainerSize) params ["_containerSize", "_containerSlotsCount"];
@@ -115,80 +131,116 @@ _containerData setVariable ["containerSlotsCount", _containerSlotsCount];
 _containerSize params ["_sizeW", "_sizeH"];
 private _lastYSizeW = _containerSlotsCount - (_sizeH - 1) * _sizeW;
 private _lastFreeY = 1;
-isNil {         // Run in unscheduled code
-        {
-        	scopeName "loopItems";
+{
+	scopeName "loopItems";
 
-        	// Fetch the data for this class
-        	private _category = [_x] call cre_fnc_getClassCategory;
-        	private _itemSize = [_x, _category] call cre_fnc_getClassSlotSize;
+	// Fetch the data associated to this UID
+	private _data = _itemsListNamespace getVariable [_x, []];
+	_data params ["_formatType", "_args"];
 
-        	// Generate a namespace for this item and save the item class onto it
-        	(call cre_fnc_inventory_createNamespace) params ["_itemData", "_itemUID"];
-        	_itemData setVariable ["class", _x];
+	// Fetch some information from the item
+	private _class = _args select 0;
+	private _category = [_class] call cre_fnc_getClassCategory;
+	private _itemSize = [_class, _category] call cre_fnc_getClassSlotSize;
 
-        	// Iterate through the container to see where we can fit the item
-        	for "_posY" from _lastFreeY to _sizeH do {
-        		private _yHasFreeSlot = false;
+	// Generate a namespace for this item and save the item class onto it
+	(call cre_fnc_inventory_createNamespace) params ["_itemData"];
+	_itemData setVariable [MACRO_VARNAME_CLASS, _class];
 
-        		_newW = [_sizeW, _lastYSizeW] select (_posY == _sizeH);
-        		for "_posX" from 1 to _newW do {
-        			scopeName "loopSlots";
+	// Iterate through the container to see where we can fit the item
+	for "_posY" from _lastFreeY to _sizeH do {
+		private _yHasFreeSlot = false;
 
-        			private _slotStr = format ["slot_%1_%2", _posX, _posY];
-        			private _slotData = _containerData getVariable [_slotStr, locationNull];
+		_newW = [_sizeW, _lastYSizeW] select (_posY == _sizeH);
+		for "_posX" from 1 to _newW do {
+			scopeName "loopSlots";
 
-        			// If this slot is empty, check if the item can fit in it
-        			if (isNull _slotData) then {
-        				_yhasFreeSlot = true;
+			private _slotStr = format ["slot_%1_%2", _posX, _posY];
+			private _slotData = _containerData getVariable [_slotStr, locationNull];
 
-        				// First of all, test if the item even fits in this position
-        				private _posEndX = _posX + (_itemSize select 0) - 1;
-        				private _posEndY = _posY + (_itemSize select 1) - 1;
-        				if (_posEndX <= _newW and {_posEndY <= _sizeH}) then {
+			// If this slot is empty, check if the item can fit in it
+			if (isNull _slotData) then {
+				_yhasFreeSlot = true;
+
+				// First of all, test if the item even fits in this position
+				private _posEndX = _posX + (_itemSize select 0) - 1;
+				private _posEndY = _posY + (_itemSize select 1) - 1;
+				if (_posEndX <= _newW and {_posEndY <= _sizeH}) then {
 
 
-        					// The dimensions fit, now we check if the required slots are all free
-        					private _requiredSlots = [];
-        					for "_posItemY" from _posY to _posEndY do {
-        						for "_posItemX" from _posX to _posEndX do {
-        							private _requiredSlotStr = format ["slot_%1_%2", _posItemX, _posItemY];
-        							private _requiredSlot = _containerData getVariable [_requiredSlotStr, locationNull];
+					// The dimensions fit, now we check if the required slots are all free
+					private _requiredSlots = [];
+					for "_posItemY" from _posY to _posEndY do {
+						for "_posItemX" from _posX to _posEndX do {
+							private _requiredSlotStr = format ["slot_%1_%2", _posItemX, _posItemY];
+							private _requiredSlot = _containerData getVariable [_requiredSlotStr, locationNull];
 
-        							// If the slot is empty, add it to the list
-        							if (isNull _requiredSlot) then {
-        								_requiredSlots pushBack _requiredSlotStr;
+							// If the slot is empty, add it to the list
+							if (isNull _requiredSlot) then {
+								_requiredSlots pushBack _requiredSlotStr;
 
-        							// Otherwise, abort and look for a new slot
-        							} else {
-        								breakTo "loopSlots";
-        							};
-        						};
-        					};
+							// Otherwise, abort and look for a new slot
+							} else {
+								breakTo "loopSlots";
+							};
+						};
+					};
 
-        					// If we didn't exit the loop yet, then the slots are free
-        					{
-        						_containerData setVariable [_x, _itemData];
-        					} forEach _requiredSlots;
+					// If we didn't exit the loop yet, then the slots are free
+					{
+						_containerData setVariable [_x, _itemData];
+					} forEach _requiredSlots;
 
-        					_itemData setVariable ["slotPos", [_posX, _posY]];
-        					_containerItems pushBack _itemData,
-        					//systemChat format ["Added %1 at pos: %2", _x, [_posX, _posY]];
+					// Now we may fill in the item data
+				        // The provided scripting commands return results in a different format, so we have to choose accordingly
+				        switch (_formatType) do {
 
-        					// Move on to the next item
-        					breakTo "loopItems";
-        				};
-        			};
-        		};
+				                // magazinesAmmoCargo
+				                case 0: {
+							private _ammo = _args select 1;
+							private _maxAmmo = [_class] call cre_fnc_getMagazineMaxAmmo;
 
-        		// If there were no free slots left on this Y-line, ignore it in future searches
-        		if (!_yHasFreeSlot) then {
-        			_lastFreeY = _posY + 1;
-        		};
-        	};
+							_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _ammo];
+							_itemData setVariable [MACRO_VARNAME_MAG_MAXAMMO, _maxAmmo];
+				                };
 
-        } forEach _itemsSorted;
-};
+				                // weaponsItemsCargo
+				                case 1: {
+							[_itemData, _args] call cre_fnc_generateWeaponAccData;
+				                };
+
+						// itemCargo
+						case 2: {
+
+						};
+
+				                // everyContainer
+				                case 3: {
+							private _containerX = _args select 1;
+
+							// Recursively generate the container data for all nested containers
+							[_containerX] call cre_fnc_generateContainerData;
+				                };
+				        };
+
+					_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
+					_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
+					_containerItems pushBack _itemData,
+					//systemChat format ["Added %1 at pos: %2", _class, [_posX, _posY]];
+
+					// Move on to the next item
+					breakTo "loopItems";
+				};
+			};
+		};
+
+		// If there were no free slots left on this Y-line, ignore it in future searches
+		if (!_yHasFreeSlot) then {
+			_lastFreeY = _posY + 1;
+		};
+	};
+
+} forEach _itemsSorted;
 
 // Save the list of items for quick access
 _containerData setVariable ["items", _containerItems];

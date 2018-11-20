@@ -41,10 +41,11 @@ class CfgFunctions {
         		};
                         //class inventory {};
 			class getMass {};
-                        class getContainerSize {};
 
 			class inventory_createNamespace {};
-                        class generateContainerData {};
+                        //class generateContainerData {};
+                        class generateWeaponAccArray {};
+                        class generateWeaponAccData {};
                 };
 
                 class config {
@@ -54,6 +55,11 @@ class CfgFunctions {
                         class getClassIcon {};
                         class getClassMass {};
                         class getClassSlotSize {};
+
+                        class getContainerSize {};
+
+                        class getMagazineMaxAmmo {};
+                        class getWeaponMagazines {};
                 };
         };
 };

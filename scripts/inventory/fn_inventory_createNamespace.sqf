@@ -8,6 +8,9 @@
                 0:      <LOCATION>	New namespace
 -------------------------------------------------------------------------------------------------------------------- */
 
+#include "..\..\res\config\dialogs\macros.hpp"
+
+
 
 
 
@@ -19,7 +22,7 @@ private _data = createLocation ["NameVillage", [0,0,0], 0, 0];
 private _UID = call cre_fnc_generateUID;
 
 // Save the UID onto the namespace
-_data setVariable ["cre8ive_UID", _UID];
+_data setVariable [MACRO_VARNAME_UID, _UID];
 
 // Return both the namespace and the UID
 [_data, _UID];

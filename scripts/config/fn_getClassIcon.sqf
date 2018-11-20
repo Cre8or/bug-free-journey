@@ -3,7 +3,7 @@
         Description:
                 Returns the icon of a specific class.
         Arguments:
-                0:      <STRING>        Classname of item to check
+                0:      <STRING>        Classname of the item to check
                 1:      <NUMBER>        Category of the class (see fn_getClassCategory)
                 2:      <STRING>        Default icon to be used if nothing was found
         Returns:

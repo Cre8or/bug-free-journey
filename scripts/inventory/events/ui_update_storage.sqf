@@ -56,11 +56,8 @@ case "ui_update_storage": {
 
 			// Mark the slot as active
                         _containerFrame setVariable ["active", true];
-                        _containerFrame setVariable ["class", _class];
+                        _containerFrame setVariable [MACRO_VARNAME_CLASS, _class];
                 };
-
-		// Generate the child controls
-		[_containerFrame, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
 
 		// Save the slot's default icon path
 		_containerFrame setVariable ["defaultIconPath", _defaultIconPath];
@@ -68,15 +65,21 @@ case "ui_update_storage": {
 
 		// Fetch the container data
 		private _container = _containers select _forEachIndex;
-		private _containerData = _container getVariable ["cre8ive_data", locationNull];
-		private _containerUID = _containerData getVariable ["cre8ive_UID", ""];
+		private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
+		private _containerUID = _containerData getVariable [MACRO_VARNAME_UID, ""];
 
                 // If the container doesn't have any data yet, generate it
 // ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
                 if (true or _containerUID == "") then {
                         _containerData = [_container] call cre_fnc_generateContainerData;
-        		_containerUID = _containerData getVariable ["cre8ive_UID", ""];
+        		_containerUID = _containerData getVariable [MACRO_VARNAME_UID, ""];
                 };
+
+		// Save the container data on the control
+		_containerFrame setVariable [MACRO_VARNAME_DATA, _containerData];
+
+		// Generate the child controls
+		[_containerFrame, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
 
                 // Fetch the container's dimensions and slots count
 		private _containerSize = _containerData getVariable ["containerSize", [1,1]];
@@ -87,7 +90,7 @@ case "ui_update_storage": {
 
 		// If we previously had a different container, rebuild the controls
 		if (_containerUID != _lastContainerUID) then {
-				_containerSize params ["_sizeW", "_sizeH"];
+			_containerSize params ["_sizeW", "_sizeH"];
 			private _lastYSizeW = _containerSlotsCount - (_sizeH - 1) * _sizeW;
 
 			// Delete all controls of the previous container
@@ -142,8 +145,8 @@ case "ui_update_storage": {
 		{
 			// Only continue if the item is valid
 			if (!isNull _x) then {
-				private _itemClass = _x getVariable ["class", ""];
-				private _itemSlot = _x getVariable ["slotPos", []];
+				private _itemClass = _x getVariable [MACRO_VARNAME_CLASS, ""];
+				private _itemSlot = _x getVariable [MACRO_VARNAME_SLOTPOS, []];
 				private _itemCategory = [_itemClass] call cre_fnc_getClassCategory;
 				private _itemSize = [_itemClass, _itemCategory] call cre_fnc_getClassSlotSize;
 				_itemSlot params ["_posX", "_posY"];
@@ -173,6 +176,9 @@ case "ui_update_storage": {
 				_slotFrame ctrlCommit 0;
 				_slotFrame ctrlShow true;
 
+				// Save the item data onto the control
+                                _slotFrame setVariable [MACRO_VARNAME_DATA, _x];
+
 				// Generate the child controls for this slot
 				[_slotFrame, _itemClass, _itemCategory, _itemSize, MACRO_PICTURE_SLOT_BACKGROUND] call cre_fnc_generateChildControls;
 
@@ -186,7 +192,7 @@ case "ui_update_storage": {
                                 // Save some data onto the control
                                 _slotFrame setVariable ["active", true];
                                 _slotFrame setVariable ["defaultIconPath", _slotIconPath];
-                                _slotFrame setVariable ["class", _itemClass];
+                                _slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
 			};
 		} forEach _items;
 

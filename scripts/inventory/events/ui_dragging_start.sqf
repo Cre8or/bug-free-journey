@@ -26,7 +26,7 @@ case "ui_dragging_start": {
                 if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
 
 			// Fetch the control's item class and its associated size
-			private _class = _ctrl getVariable ["class", ""];
+			private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
 			private _category = [_class] call cre_fnc_getClassCategory;
 			private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
 			private _defaultIconPath = _ctrl getVariable ["defaultIconPath", ""];
@@ -65,10 +65,14 @@ case "ui_dragging_start": {
                         // Change the colour of the original slot frame
                         _ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 
+			// Copy the original control's item data onto the dummy frame
+			private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
+			_ctrlFrameTemp setVariable [MACRO_VARNAME_DATA, _data];
+
 			// Generate additional child controls
 			private _childControls = [_ctrlFrameTemp, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
 
-// -------------------- TODO: Iterate through the new child controls and determine their offset to the temp frame! ------------------------------------------------------------------------
+			// Determine the offset of the child controls in relation to the temporary frame
 			{
 				private _posX = ctrlPosition _x;
 				private _posOffset = [
@@ -98,6 +102,26 @@ case "ui_dragging_start": {
                         // Move the temporary controls in place initially
                         getMousePosition params ["_posX", "_posY"];
                         ["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
+
+			// DEBUG
+			private _str = format ["VARIABLES (%1):\n\n", count allVariables _data];
+			{
+				private _val = _data getVariable [_x, ""];
+
+				if (_val isEqualType locationNull) then {
+					_str = _str + format ["* %1: %2\n[", _x, _val getVariable [MACRO_VARNAME_UID, ""]];
+					{
+						_str = _str + _x;
+						if (_forEachIndex + 1 < count allVariables _val) then {
+							_str = _str + ", ";
+						};
+					} forEach allVariables _val;
+					_str = _str + "]\n";
+				} else {
+					_str = _str + format ["* %1: %2", _x, _val] + "\n";
+				};
+			} forEach allVariables _data;
+			hint _str;
                 };
         };
 };

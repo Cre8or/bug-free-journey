@@ -12,7 +12,8 @@ enableSaving [false, false];
 if (is3DEN) then {createDialog "Rsc_Cre8ive_Inventory"} else {["ui_init"] call cre_fnc_inventory}
 */
 
-
+// TODO: Push these functions to description.ext
 cre_fnc_inventory = compile preprocessFileLineNumbers "scripts\inventory\fn_inventory.sqf";
+cre_fnc_generateContainerData = compile preprocessFileLineNumbers "scripts\inventory\fn_generateContainerData.sqf";
 
 cre_warfare = [] spawn compile preprocessFileLineNumbers "scripts\AI\fn_handleWarfare.sqf";

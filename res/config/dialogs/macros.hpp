@@ -210,6 +210,31 @@
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------
+//      ITEM VARIABLE NAMES
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+	#define MACRO_VARNAME_UID					"UID"
+	#define MACRO_VARNAME_DATA					"data"
+	#define MACRO_VARNAME_CLASS					"class"
+	#define MACRO_VARNAME_SLOTPOS					"slotPos"
+	#define MACRO_VARNAME_PARENT					"parent"
+
+	#define MACRO_VARNAME_MAG_AMMO					"ammo"
+	#define MACRO_VARNAME_MAG_MAXAMMO				"maxAmmo"
+
+	#define MACRO_VARNAME_ACC_MUZZLE				"accMuzzle"
+	#define MACRO_VARNAME_ACC_BIPOD					"accBipod"
+	#define MACRO_VARNAME_ACC_RAIL					"accRail"
+	#define MACRO_VARNAME_ACC_OPTIC					"accOptic"
+	#define MACRO_VARNAME_MAG					"magazine"
+	#define MACRO_VARNAME_MAGALT					"magazineAlt"
+
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
 //      MACRO FUNCTIONS
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 

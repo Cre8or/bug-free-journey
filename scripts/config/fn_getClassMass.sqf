@@ -3,7 +3,7 @@
         Description:
                 Returns the mass of a certain class.
         Arguments:
-                0:      <STRING>        Classname of item to check
+                0:      <STRING>        Classname of the item to check
                 1:      <NUMBER>        Category of the class (see fn_getClassCategory)
         Returns:
                 0:      <NUMBER>        Mass of the class

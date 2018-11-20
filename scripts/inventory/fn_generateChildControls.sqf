@@ -33,13 +33,14 @@ if (isNull _inventory) exitWith {systemChat "ERROR: Inventory isn't open!"};
 
 
 
+
 // If the class or the category wasn't provided, determine them from the control
 if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) then {
 
 	// If the category was intentionally left empty, don't fetch any data and use the provided default path instead
 	// Otherwise, fetch the required information from the class
 	if (_category != MACRO_ENUM_CATEGORY_EMPTY) then {
-		_class = _ctrl getVariable ["class", ""];
+		_class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
 		_category = [_class] call cre_fnc_getClassCategory;
 		_slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
 		_defaultIconPath = _ctrl getVariable ["defaultIconPath", ""];
@@ -122,32 +123,6 @@ private _childControls = [];
 			_childControls pushBack _ctrlNew;
 		};
 
-		// Ammo Fillbar
-		case MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR: {
-
-			// Only create a fillbar if the magazine has more than one round
-			if (([configfile >> "CfgMagazines" >> _class, "count", 0] call BIS_fnc_returnConfigEntry) > 1) then {
-
-				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", -1, _ctrlParent];
-				private _pos = [
-					(_posCtrl select 0) + pixelW * 2,
-					(_posCtrl select 1) + pixelH * 2,
-					pixelW * 3,
-					(_posCtrl select 3) - pixelH * 4
-				];
-				_ctrlNew ctrlSetPosition _pos;
-				_ctrlNew ctrlCommit 0;
-				_ctrlNew ctrlSetBackgroundColor [0,1,0,1];
-
-	                        // Set the box's pixel precision mode to off, disables rounding
-	                        _ctrlNew ctrlSetPixelPrecision 2;
-
-				// Save the new control onto the parent control
-				_ctrl setVariable ["ctrlAmmoFillbar", _ctrlNew];
-				_childControls pushBack _ctrlNew;
-			};
-		};
-
 		// Outline
 		case MACRO_ENUM_CTRL_OUTLINE: {
 			private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedOutline", -1, _ctrlParent];
@@ -183,6 +158,55 @@ private _childControls = [];
 
 			// Save the new control onto the parent control
 			_childControls pushBack _ctrlNew;
+		};
+
+		// Ammo Fillbar
+		case MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR: {
+
+			// Fetch the item's data
+			private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
+			private _maxAmmo = _data getVariable [MACRO_VARNAME_MAG_MAXAMMO, 1];
+
+			// Only create a fillbar if the magazine has more than one round
+			if (_maxAmmo > 1) then {
+
+				private _ammo = _data getVariable [MACRO_VARNAME_MAG_AMMO, 1];
+				private _ratio = _ammo / _maxammo;
+
+				// Create a frame for the ammo bar, and a background
+				private _ctrlBack = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", -1, _ctrlParent];
+				private _ctrlFront = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", -1, _ctrlParent];
+
+				// Position the foreground control
+				private _pos = [
+					(_posCtrl select 0) + pixelW * 2,
+					(_posCtrl select 1) + _sizeH - pixelH * 4,
+					(_sizeW - pixelW * 4) * _ratio,
+					pixelH * 3
+				];
+				_ctrlFront ctrlSetPosition _pos;
+				_ctrlFront ctrlCommit 0;
+				_ctrlFront ctrlSetBackgroundColor [(1 - _ratio) * 2 min 1,_ratio * 2 min 1,0,1];
+
+				// Position the background control
+				_pos set [2, _sizeW - pixelW * 4];
+				_ctrlBack ctrlSetPosition _pos;
+				_ctrlBack ctrlCommit 0;
+				_ctrlBack ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_SEPARATOR);
+
+				{
+		                        // Set the box's pixel precision mode to off, disables rounding
+		                        _x ctrlSetPixelPrecision 2;
+
+					_childControls pushBack _x;
+				} forEach [
+					_ctrlFront,
+					_ctrlBack
+				];
+				// Save the new controls onto the parent control
+				_ctrl setVariable ["ctrlAmmoFillbar", _ctrlFront];
+				_ctrl setVariable ["ctrlAmmoFillbarBack", _ctrlBack];
+			};
 		};
 
 		// Muzzle
