@@ -1,13 +1,13 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Generates the child controls for a given control. Used to populate inventory slots with preview
+	Author:		Cre8or
+	Description:
+		Generates the child controls for a given control. Used to populate inventory slots with preview
 		icons and miscellaneous information, based on the item category (attachments on weapons, fill-bar
 		on consumables, etc.).
-        Arguments:
-                0:      <CONTROL>	Control that needs its child controls generated
-        Returns:
-                0:	<ARRAY>		List of generated child controls
+	Arguments:
+		0:      <CONTROL>	Control that needs its child controls generated
+	Returns:
+		0:	<ARRAY>		List of generated child controls
 -------------------------------------------------------------------------------------------------------------------- */
 
 #include "..\..\res\config\dialogs\macros.hpp"
@@ -135,8 +135,8 @@ private _childControls = [];
 			_ctrlNew ctrlSetPosition _pos;
 			_ctrlNew ctrlCommit 0;
 
-                        // Set the box's pixel precision mode to off, disables rounding
-                        _ctrlNew ctrlSetPixelPrecision 2;
+			// Set the box's pixel precision mode to off, disables rounding
+			_ctrlNew ctrlSetPixelPrecision 2;
 
 			// Paint the outline based on the item category
 			switch (_category) do {
@@ -195,8 +195,8 @@ private _childControls = [];
 				_ctrlBack ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_SEPARATOR);
 
 				{
-		                        // Set the box's pixel precision mode to off, disables rounding
-		                        _x ctrlSetPixelPrecision 2;
+					// Set the box's pixel precision mode to off, disables rounding
+					_x ctrlSetPixelPrecision 2;
 
 					_childControls pushBack _x;
 				} forEach [
@@ -222,7 +222,31 @@ private _childControls = [];
 			_ctrl setVariable ["ctrlWeaponMuzzle", _ctrlNew];
 			_childControls pushBack _ctrlNew;
 */
+
+			private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedOutline", -1, _ctrlParent];
+			private _pos = ctrlPosition _ctrl;
+			_pos params ["", "", "_widthOld", "_heightOld"];
+
+			private _widthNew = (3 / 2) * (_pos select 3);
+
+			_pos set [2, _widthNew];
+			_pos set [0, (_pos select 0) + (_widthOld - _widthNew) / 2];
+
+			_ctrlNew ctrlSetPosition _pos;
+			_ctrlNew ctrlCommit 0;
+
+			// Set the box's pixel precision mode to off, disables rounding
+			_ctrlNew ctrlSetPixelPrecision 2;
+
+			// Paint the outline based on the item category
+			_ctrlNew ctrlSetTextColor [0,1,1,1];
+
+			// Save the new control onto the parent control
+			_childControls pushBack _ctrlNew;
+
 		};
+
+
 
 	};
 } forEach _requiredControls;

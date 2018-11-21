@@ -1,28 +1,28 @@
 // Load the storage menu
 case "ui_update_storage": {
-        _eventExists = true;
+	_eventExists = true;
 
-        // Grab some of our inventory controls
-        private _storageCtrlGrp = _inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP;
-        private _ctrlUniformFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_UNIFORM_FRAME;
-        private _ctrlVestFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_VEST_FRAME;
-        private _ctrlBackpackFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_FRAME;
-        private _ctrlScrollbarDummy = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_SCROLLBAR_DUMMY;
+	// Grab some of our inventory controls
+	private _storageCtrlGrp = _inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP;
+	private _ctrlUniformFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_UNIFORM_FRAME;
+	private _ctrlVestFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_VEST_FRAME;
+	private _ctrlBackpackFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_BACKPACK_FRAME;
+	private _ctrlScrollbarDummy = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_SCROLLBAR_DUMMY;
 
-        // Determine our starting positions
-        (ctrlPosition _ctrlUniformFrame) params ["_startX", "_startY", "_sizeW", "_sizeY"];
-        private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
-        private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
-        private _slotSizeW = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
-        private _slotSizeH = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
-        private _offsetY = 0;
+	// Determine our starting positions
+	(ctrlPosition _ctrlUniformFrame) params ["_startX", "_startY", "_sizeW", "_sizeY"];
+	private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
+	private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
+	private _slotSizeW = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
+	private _slotSizeH = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
+	private _offsetY = 0;
 
-        // Determine our classes array
-        private _classes = [
-                uniform player,
-                vest player,
-                backpack player
-        ];
+	// Determine our classes array
+	private _classes = [
+		uniform player,
+		vest player,
+		backpack player
+	];
 
 	// Determine our containers array
 	private _containers = [
@@ -31,14 +31,14 @@ case "ui_update_storage": {
 		backpackContainer player
 	];
 
-        // Determine the icon paths for the items and weapons that we have
-        {
-                private _containerFrame = _x select 0;
+	// Determine the icon paths for the items and weapons that we have
+	{
+		private _containerFrame = _x select 0;
 		private _defaultIconPath = _x select 1;
-                private _class = _classes param [_forEachIndex, ""];
+		private _class = _classes param [_forEachIndex, ""];
 		private _category = MACRO_ENUM_CATEGORY_EMPTY;
 		private _slotSize = [1,1];
-                private _startYNew = _startY + _sizeY + _offsetY;
+		private _startYNew = _startY + _sizeY + _offsetY;
 
 		// Move the frame
 		private _posFrame = ctrlPosition _containerFrame;
@@ -47,17 +47,17 @@ case "ui_update_storage": {
 		_containerFrame ctrlCommit 0;
 
 		// If the slot has something in it, fetch its data
-                if (_class != "") then {
+		if (_class != "") then {
 			_category = [_class] call cre_fnc_getClassCategory;
 			_slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
 
 			// Change the frame's colour
-                        _containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+			_containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 			// Mark the slot as active
-                        _containerFrame setVariable ["active", true];
-                        _containerFrame setVariable [MACRO_VARNAME_CLASS, _class];
-                };
+			_containerFrame setVariable ["active", true];
+			_containerFrame setVariable [MACRO_VARNAME_CLASS, _class];
+		};
 
 		// Save the slot's default icon path
 		_containerFrame setVariable ["defaultIconPath", _defaultIconPath];
@@ -68,12 +68,12 @@ case "ui_update_storage": {
 		private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
 		private _containerUID = _containerData getVariable [MACRO_VARNAME_UID, ""];
 
-                // If the container doesn't have any data yet, generate it
+		// If the container doesn't have any data yet, generate it
 // ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
-                if (true or _containerUID == "") then {
-                        _containerData = [_container] call cre_fnc_generateContainerData;
-        		_containerUID = _containerData getVariable [MACRO_VARNAME_UID, ""];
-                };
+		if (true or _containerUID == "") then {
+			_containerData = [_container] call cre_fnc_generateContainerData;
+			_containerUID = _containerData getVariable [MACRO_VARNAME_UID, ""];
+		};
 
 		// Save the container data on the control
 		_containerFrame setVariable [MACRO_VARNAME_DATA, _containerData];
@@ -81,7 +81,7 @@ case "ui_update_storage": {
 		// Generate the child controls
 		[_containerFrame, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
 
-                // Fetch the container's dimensions and slots count
+		// Fetch the container's dimensions and slots count
 		private _containerSize = _containerData getVariable ["containerSize", [1,1]];
 		private _containerSlotsCount = _containerData getVariable ["containerSlotsCount", 1];
 
@@ -114,10 +114,10 @@ case "ui_update_storage": {
 					_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 					_slotIcon ctrlSetText MACRO_PICTURE_SLOT_BACKGROUND;
 
-	                                // Set the frame's pixel precision mode to off, disables rounding
-	                                _slotFrame ctrlSetPixelPrecision 2;
+					// Set the frame's pixel precision mode to off, disables rounding
+					_slotFrame ctrlSetPixelPrecision 2;
 
-	                                // Move the slot controls
+					// Move the slot controls
 					private _slotPos = [
 						_startX + _slotSizeW * (_posX - 1),
 						_startYNew + _slotSizeH * (_posY - 1),
@@ -125,8 +125,8 @@ case "ui_update_storage": {
 						_slotSizeH
 					];
 					{
-	                                        _x ctrlSetPosition _slotPos;
-	                                        _x ctrlCommit 0;
+						_x ctrlSetPosition _slotPos;
+						_x ctrlCommit 0;
 					} forEach [_slotFrame, _slotIcon];
 
 					// Save the slot's frame control onto the container
@@ -177,35 +177,35 @@ case "ui_update_storage": {
 				_slotFrame ctrlShow true;
 
 				// Save the item data onto the control
-                                _slotFrame setVariable [MACRO_VARNAME_DATA, _x];
+				_slotFrame setVariable [MACRO_VARNAME_DATA, _x];
 
 				// Generate the child controls for this slot
 				[_slotFrame, _itemClass, _itemCategory, _itemSize, MACRO_PICTURE_SLOT_BACKGROUND] call cre_fnc_generateChildControls;
 
-                                // Change the colour of the frame
-                                _slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+				// Change the colour of the frame
+				_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
-                                // Add event handlers for dragging
-                                _slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_start", _this] call cre_fnc_inventory}];
-                                _slotFrame ctrlAddEventHandler ["MouseButtonUp", {["ui_dragging_stop", _this] call cre_fnc_inventory}];
+				// Add event handlers for dragging
+				_slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_start", _this] call cre_fnc_inventory}];
+				_slotFrame ctrlAddEventHandler ["MouseButtonUp", {["ui_dragging_stop", _this] call cre_fnc_inventory}];
 
-                                // Save some data onto the control
-                                _slotFrame setVariable ["active", true];
-                                _slotFrame setVariable ["defaultIconPath", _slotIconPath];
-                                _slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
+				// Save some data onto the control
+				_slotFrame setVariable ["active", true];
+				_slotFrame setVariable ["defaultIconPath", _slotIconPath];
+				_slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
 			};
 		} forEach _items;
 
 		_offsetY = _offsetY + _sizeY + _safeZoneH * (MACRO_SCALE_SLOT_SIZE_H * (_containerSize select 1) + 0.005);
-        } forEach [
-                [_ctrlUniformFrame,		MACRO_PICTURE_UNIFORM],
-                [_ctrlVestFrame,		MACRO_PICTURE_VEST],
-                [_ctrlBackpackFrame,		MACRO_PICTURE_BACKPACK]
-        ];
+	} forEach [
+		[_ctrlUniformFrame,		MACRO_PICTURE_UNIFORM],
+		[_ctrlVestFrame,		MACRO_PICTURE_VEST],
+		[_ctrlBackpackFrame,		MACRO_PICTURE_BACKPACK]
+	];
 
-        // Move the scrollbar dummy
-        private _pos = ctrlPosition _ctrlScrollbarDummy;
-        _pos set [1, _offsetY];
-        _ctrlScrollbarDummy ctrlSetPosition _pos;
-        _ctrlScrollbarDummy ctrlCommit 0;
+	// Move the scrollbar dummy
+	private _pos = ctrlPosition _ctrlScrollbarDummy;
+	_pos set [1, _offsetY];
+	_ctrlScrollbarDummy ctrlSetPosition _pos;
+	_ctrlScrollbarDummy ctrlCommit 0;
 };

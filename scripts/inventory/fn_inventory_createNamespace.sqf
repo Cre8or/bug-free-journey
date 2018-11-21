@@ -1,11 +1,11 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Creates a new namespace. Used for anything that interacts with inventories (e.g. items, nested containers).
-        Arguments:
-                (none)
-        Returns:
-                0:      <LOCATION>	New namespace
+	Author:		Cre8or
+	Description:
+		Creates a new namespace. Used for anything that interacts with inventories (e.g. items, nested containers).
+	Arguments:
+		(none)
+	Returns:
+		0:      <LOCATION>	New namespace
 -------------------------------------------------------------------------------------------------------------------- */
 
 #include "..\..\res\config\dialogs\macros.hpp"

@@ -1,7 +1,7 @@
 #include "..\..\res\config\dialogs\macros.hpp"
 
 params [
-        ["_event", "", [""]],
+	["_event", "", [""]],
 	"_args"
 ];
 
@@ -16,7 +16,7 @@ disableSerialization;
 private _eventExists = false;
 private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
 if (_event != "ui_init") then {
-        if (isNull _inventory) exitWith {systemChat "Inventory isn't open!"};
+	if (isNull _inventory) exitWith {systemChat "Inventory isn't open!"};
 };
 
 
@@ -25,16 +25,16 @@ if (_event != "ui_init") then {
 
 switch (_event) do {
 
-        #include "events\ui_init.sqf"
-        #include "events\ui_unload.sqf"
-        #include "events\ui_menu_weapons.sqf"
-        #include "events\ui_menu_medical.sqf"
-        #include "events\ui_update_storage.sqf"
-        #include "events\ui_update_weapons.sqf"
-        #include "events\ui_update_medical.sqf"
-        #include "events\ui_dragging_start.sqf"
-        #include "events\ui_dragging.sqf"
-        #include "events\ui_dragging_stop.sqf"
+	#include "events\ui_init.sqf"
+	#include "events\ui_unload.sqf"
+	#include "events\ui_menu_weapons.sqf"
+	#include "events\ui_menu_medical.sqf"
+	#include "events\ui_update_storage.sqf"
+	#include "events\ui_update_weapons.sqf"
+	#include "events\ui_update_medical.sqf"
+	#include "events\ui_dragging_start.sqf"
+	#include "events\ui_dragging.sqf"
+	#include "events\ui_dragging_stop.sqf"
 };
 
 

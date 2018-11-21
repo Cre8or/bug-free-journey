@@ -1,15 +1,15 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Returns the maximum ammo count that a specific magazine class can hold.
-        Arguments:
-                0:      <STRING>	Classname of the magazine to check
-        Returns:
-                0:      <NUMBER>	Amount of bullets that fit into the magazine
+	Author:		 Cre8or
+	Description:
+		Returns the maximum ammo count that a specific magazine class can hold.
+	Arguments:
+		0:      <STRING>	Classname of the magazine to check
+	Returns:
+		0:      <NUMBER>	Amount of bullets that fit into the magazine
 -------------------------------------------------------------------------------------------------------------------- */
 
 params [
-        ["_class", "", [""]]
+	["_class", "", [""]]
 ];
 
 // If no class or no category was provided, exit and return 1 bullet
@@ -30,13 +30,13 @@ if (_maxAmmo == -1) then {
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {
-	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-	        missionNamespace setVariable ["cre8ive_getMagazineMaxAmmo_namespace", _namespace, false];
+		_namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+		missionNamespace setVariable ["cre8ive_getMagazineMaxAmmo_namespace", _namespace, false];
 	};
 
 	_maxAmmo = [configfile >> "CfgMagazines" >> _class, "count", 1] call BIS_fnc_returnConfigEntry;
 
-        // Save the max ammo count on the namespace
+	// Save the max ammo count on the namespace
 	_namespace setVariable [_class, _maxAmmo];
 };
 

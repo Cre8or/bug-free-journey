@@ -1,15 +1,15 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Returns the magazines that a certain weapon class can use.
-        Arguments:
-                0:      <STRING>	Classname of the weapon to check
-        Returns:
-                0:      <ARRAY>		Array containing the classnames of all magazines that can be used
+	Author:		 Cre8or
+	Description:
+		Returns the magazines that a certain weapon class can use.
+	Arguments:
+		0:      <STRING>	Classname of the weapon to check
+	Returns:
+		0:      <ARRAY>		Array containing the classnames of all magazines that can be used
 -------------------------------------------------------------------------------------------------------------------- */
 
 params [
-        ["_class", "", [""]]
+	["_class", "", [""]]
 ];
 
 // If no class or no category was provided, exit and return 1 bullet
@@ -30,8 +30,8 @@ if (_magazines isEqualType 0) then {
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {
-	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-	        missionNamespace setVariable ["cre8ive_getWeaponMagazines_namespace", _namespace, false];
+		_namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+		missionNamespace setVariable ["cre8ive_getWeaponMagazines_namespace", _namespace, false];
 	};
 
 	_magazines = [configfile >> "CfgWeapons" >> _class, "magazines", []] call BIS_fnc_returnConfigEntry;
@@ -39,7 +39,7 @@ if (_magazines isEqualType 0) then {
 	// make sure the magazines are all in lowercase!
 	_magazines = _magazines apply {toLower _x};
 
-        // Save the magazines list on the namespace
+	// Save the magazines list on the namespace
 	_namespace setVariable [_class, _magazines];
 };
 

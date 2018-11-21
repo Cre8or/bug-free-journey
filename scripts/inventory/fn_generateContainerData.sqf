@@ -1,18 +1,18 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Generates the data for a given inventory container, including slot position of items.
+	Author:		Cre8or
+	Description:
+		Generates the data for a given inventory container, including slot position of items.
 		NOTE: Due to how the algorithm works, some items may get lost in the conversion!
-        Arguments:
-                0:      <OBJECT>        Container object to generate data for
-        Returns:
-                0:      <LOCATION>	Generated container data
+	Arguments:
+		0:      <OBJECT>	Container object to generate data for
+	Returns:
+		0:      <LOCATION>	Generated container data
 -------------------------------------------------------------------------------------------------------------------- */
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
 params [
-        ["_container", objNull, [objNull]]
+	["_container", objNull, [objNull]]
 ];
 
 // If no object was provided, exit and return a null location
@@ -25,7 +25,7 @@ if (isNull _container) exitWith {locationNull};
 // Fetch the object's container data and delete it (aswell as all contained item data)
 private _oldContainerData = _container getVariable ["cre8ive_data", locationNull];
 {
-        deleteLocation _x;
+	deleteLocation _x;
 } forEach (_oldContainerData getVariable ["items", []]);
 deleteLocation _oldContainerData;
 
@@ -74,10 +74,10 @@ private _itemsListNamespace = createLocation ["NameVillage", [0,0,0], 0, 0];
 	} forEach _x;
 
 } forEach [
-        magazinesAmmoCargo _container,
-        weaponsItemsCargo _container,
+	magazinesAmmoCargo _container,
+	weaponsItemsCargo _container,
 	itemCargo _container,
-        everyContainer _container
+	everyContainer _container
 ];
 
 
@@ -192,36 +192,36 @@ private _lastFreeY = 1;
 					} forEach _requiredSlots;
 
 					// Now we may fill in the item data
-				        // The provided scripting commands return results in a different format, so we have to choose accordingly
-				        switch (_formatType) do {
+					// The provided scripting commands return results in a different format, so we have to choose accordingly
+					switch (_formatType) do {
 
-				                // magazinesAmmoCargo
-				                case 0: {
+						// magazinesAmmoCargo
+						case 0: {
 							private _ammo = _args select 1;
 							private _maxAmmo = [_class] call cre_fnc_getMagazineMaxAmmo;
 
 							_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _ammo];
 							_itemData setVariable [MACRO_VARNAME_MAG_MAXAMMO, _maxAmmo];
-				                };
+						};
 
-				                // weaponsItemsCargo
-				                case 1: {
+						// weaponsItemsCargo
+						case 1: {
 							[_itemData, _args] call cre_fnc_generateWeaponAccData;
-				                };
+						};
 
 						// itemCargo
 						case 2: {
 
 						};
 
-				                // everyContainer
-				                case 3: {
+						// everyContainer
+						case 3: {
 							private _containerX = _args select 1;
 
 							// Recursively generate the container data for all nested containers
 							[_containerX] call cre_fnc_generateContainerData;
-				                };
-				        };
+						};
+					};
 
 					_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
 					_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];

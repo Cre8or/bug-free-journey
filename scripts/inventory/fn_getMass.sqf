@@ -1,11 +1,11 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Returns the total mass of all items inside a container. Does not include the container's mass.
-        Arguments:
-                0:      <OBJECT>        Container object
-        Returns:
-                0:      <NUMBER>	Mass of all objects inside the container object
+	Author:		Cre8or
+	Description:
+		Returns the total mass of all items inside a container. Does not include the container's mass.
+	Arguments:
+		0:      <OBJECT>	Container object
+	Returns:
+		0:      <NUMBER>	Mass of all objects inside the container object
 -------------------------------------------------------------------------------------------------------------------- */
 
 params [

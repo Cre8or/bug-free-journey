@@ -1,22 +1,22 @@
 /*
-        Name:
-        cre_fnc_addWeaponWithItems
+	Name:
+	cre_fnc_addWeaponWithItems
 
-        Arguments:
-        0: _container [OBJECT]:         Loot container to add weapon to         REQUIRED!
-        1: _weapon [STRING]:            Class of weapon to be added             REQUIRED!
-        2: _magazine [ARRAY]:           Array with class of magazine to be added, aswell as its ammo count - ["MagazineType", AmountOfBullets]          DEFAULT: []
-        3: _items [ARRAY]:              Array of attachment classes that should be attached to the weapon - ["Muzzle", "Rail", "UnderBarrel", "Optic"]          DEFAULT: []
+	Arguments:
+	0: _container [OBJECT]:	 Loot container to add weapon to	 REQUIRED!
+	1: _weapon [STRING]:	    Class of weapon to be added	     REQUIRED!
+	2: _magazine [ARRAY]:	   Array with class of magazine to be added, aswell as its ammo count - ["MagazineType", AmountOfBullets]	  DEFAULT: []
+	3: _items [ARRAY]:	      Array of attachment classes that should be attached to the weapon - ["Muzzle", "Rail", "UnderBarrel", "Optic"]	  DEFAULT: []
 
-        Example:
-        [cursorTarget, "arifle_MX_F", ["30Rnd_65x39_caseless_mag_Tracer", 19], ["muzzle_snds_H","optic_DMS","bipod_01_F_blk"]] spawn cre_fnc_addWeaponWithItems
+	Example:
+	[cursorTarget, "arifle_MX_F", ["30Rnd_65x39_caseless_mag_Tracer", 19], ["muzzle_snds_H","optic_DMS","bipod_01_F_blk"]] spawn cre_fnc_addWeaponWithItems
 */
 
 params [
-        ["_container", objNull, [objNull]],
-        ["_weapon", "", [""]],
-        ["_magazine", [], [[]], 2],
-        ["_items", [], [[]]]
+	["_container", objNull, [objNull]],
+	["_weapon", "", [""]],
+	["_magazine", [], [[]], 2],
+	["_items", [], [[]]]
 ];
 
 // Exit if no loot container or weapon class was provided
@@ -39,11 +39,11 @@ _filler addBackpack "B_Carryall_mcamo";
 
 // Prevent the AI from doing anything stupid
 {_filler disableAI _x} forEach [
-        "ANIM",
-        "MOVE",
-        "FSM",
-        "TARGET",
-        "AUTOTARGET"
+	"ANIM",
+	"MOVE",
+	"FSM",
+	"TARGET",
+	"AUTOTARGET"
 ];
 
 
@@ -70,8 +70,8 @@ systemChat format ["(%1) Waiting for anim change...", time - _start];
 private _oldAnim = animationState _filler;
 private _loop = true;
 while {_loop} do {
-        if (animationState _filler != _oldAnim or (time - _start) > 5) then {_loop = false};
-        sleep 0.01;
+	if (animationState _filler != _oldAnim or (time - _start) > 5) then {_loop = false};
+	sleep 0.01;
 };
 
 systemChat format ["(%1) Switching anim...", time - _start];

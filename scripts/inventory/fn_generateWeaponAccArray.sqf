@@ -1,17 +1,17 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Generates the array containing a unit's weapon's accessories and magazines (primary, secondary
+	Author:	 	Cre8or
+	Description:
+		Generates the array containing a unit's weapon's accessories and magazines (primary, secondary
 		or handgun), for use in fn_generateWeaponAccData.
 		The format is the same the one returned by the "weaponsItems" command.
-        Arguments:
-                0:      <OBJECT>	The unit in question
+	Arguments:
+		0:      <OBJECT>	The unit in question
 		1:	<NUMBER>	Which weapon we want to obtain information about. Possible values are:
 						0:	primary weapon
 						1:	handgun
 						2:	secondary weapon (launcher)
-        Returns:
-                0:	<ARRAY>		The weapon's accessories array.
+	Returns:
+		0:	<ARRAY>		The weapon's accessories array.
 -------------------------------------------------------------------------------------------------------------------- */
 
 params [

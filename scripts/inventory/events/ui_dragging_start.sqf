@@ -1,29 +1,29 @@
 // Start dragging
 case "ui_dragging_start": {
-        _eventExists = true;
+	_eventExists = true;
 
 	// Fetch the parameters
-        _args params [
-                ["_ctrl", controlNull, [controlNull]],
-                ["_button", 0, [0]]
-        ];
+	_args params [
+		["_ctrl", controlNull, [controlNull]],
+		["_button", 0, [0]]
+	];
 
-        // Only register left-clicks
-        if (_button == 0) then {
+	// Only register left-clicks
+	if (_button == 0) then {
 
-	        // Set the focus into the parent group of the passed control, so it moves ontop of everything else
-	        switch (ctrlParentControlsGroup _ctrl) do {
-	                case (_inventory displayCtrl MACRO_IDC_GROUND_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_GROUND_FOCUS_FRAME)};
-	                case (_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_WEAPONS_FOCUS_FRAME)};
-	                case (_inventory displayCtrl MACRO_IDC_MEDICAL_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_MEDICAL_FOCUS_FRAME)};
-	                case (_inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_STORAGE_FOCUS_FRAME)};
-	        };
+		// Set the focus into the parent group of the passed control, so it moves ontop of everything else
+		switch (ctrlParentControlsGroup _ctrl) do {
+			case (_inventory displayCtrl MACRO_IDC_GROUND_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_GROUND_FOCUS_FRAME)};
+			case (_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_WEAPONS_FOCUS_FRAME)};
+			case (_inventory displayCtrl MACRO_IDC_MEDICAL_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_MEDICAL_FOCUS_FRAME)};
+			case (_inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_STORAGE_FOCUS_FRAME)};
+		};
 
-                // Next we shift the focus into the dummy controls group to force the temporary controls to the top
-                ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
+		// Next we shift the focus into the dummy controls group to force the temporary controls to the top
+		ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
 
-                // Move the associated frame and picture to the cursor
-                if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
+		// Move the associated frame and picture to the cursor
+		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
 
 			// Fetch the control's item class and its associated size
 			private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
@@ -33,37 +33,37 @@ case "ui_dragging_start": {
 			private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 			private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
 
-                        // Hide the original child controls
-                        private _childControls = _ctrl getVariable ["childControls", []];
-                        {
+			// Hide the original child controls
+			private _childControls = _ctrl getVariable ["childControls", []];
+			{
 				_x  ctrlShow false;
 			} forEach _childControls;
 
-                        // Create a temporary picture that stays on the slot
+			// Create a temporary picture that stays on the slot
 			private _posCtrl = ctrlPosition _ctrl;
-                        private _ctrlIconTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, ctrlParentControlsGroup _ctrl];
-                        _ctrlIconTemp ctrlSetText _defaultIconPath;
-                        _ctrlIconTemp ctrlSetPosition _posCtrl;
-                        _ctrlIconTemp ctrlCommit 0;
-                        _ctrl setVariable ["ctrlIconTemp", _ctrlIconTemp];
+			private _ctrlIconTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, ctrlParentControlsGroup _ctrl];
+			_ctrlIconTemp ctrlSetText _defaultIconPath;
+			_ctrlIconTemp ctrlSetPosition _posCtrl;
+			_ctrlIconTemp ctrlCommit 0;
+			_ctrl setVariable ["ctrlIconTemp", _ctrlIconTemp];
 
 			// Update the size
 			_posCtrl set [2, (_slotSize select 0) * _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
 			_posCtrl set [3, (_slotSize select 1) * _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
 
-                        // Create a temporary frame that follows the mouse
-                        private _ctrlFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", -1];
-                        _ctrlFrameTemp ctrlSetPosition _posCtrl;
-                        _ctrlFrameTemp ctrlCommit 0;
-                        _ctrlFrameTemp ctrlShow true;
+			// Create a temporary frame that follows the mouse
+			private _ctrlFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", -1];
+			_ctrlFrameTemp ctrlSetPosition _posCtrl;
+			_ctrlFrameTemp ctrlCommit 0;
+			_ctrlFrameTemp ctrlShow true;
 			_ctrlFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 			_ctrl setVariable ["ctrlFrameTemp", _ctrlFrameTemp];
 
 			// Set the frame's pixel precision mode to off, disables rounding
-                        _ctrlFrameTemp ctrlSetPixelPrecision 2;
+			_ctrlFrameTemp ctrlSetPixelPrecision 2;
 
-                        // Change the colour of the original slot frame
-                        _ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+			// Change the colour of the original slot frame
+			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 
 			// Copy the original control's item data onto the dummy frame
 			private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
@@ -82,26 +82,26 @@ case "ui_dragging_start": {
 				_x setVariable ["offset", _posOffset];
 			} forEach _childControls;
 
-                        // Mark the control as being dragged
-                        _ctrl setVariable ["isBeingDragged", true];
+			// Mark the control as being dragged
+			_ctrl setVariable ["isBeingDragged", true];
 
 			// Remember which control we're dragging
 			_inventory setVariable ["draggedControl", _ctrl];
 
-                        // Move the temporary controls if the mouse is moving
-                        _inventory displayAddEventHandler ["MouseMoving", {
+			// Move the temporary controls if the mouse is moving
+			_inventory displayAddEventHandler ["MouseMoving", {
 				params ["_inventory"];
 				private _ctrl = _inventory getVariable ["draggedControl", controlNull];
 
-                                getMousePosition params ["_posX", "_posY"];
+				getMousePosition params ["_posX", "_posY"];
 
-                                // Call the inventory function to handle dragging
-                                ["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
-                        }];
+				// Call the inventory function to handle dragging
+				["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
+			}];
 
-                        // Move the temporary controls in place initially
-                        getMousePosition params ["_posX", "_posY"];
-                        ["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
+			// Move the temporary controls in place initially
+			getMousePosition params ["_posX", "_posY"];
+			["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
 
 			// DEBUG
 			private _str = format ["VARIABLES (%1):\n\n", count allVariables _data];
@@ -122,6 +122,6 @@ case "ui_dragging_start": {
 				};
 			} forEach allVariables _data;
 			hint _str;
-                };
-        };
+		};
+	};
 };

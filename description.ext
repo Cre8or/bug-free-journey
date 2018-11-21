@@ -5,63 +5,63 @@
 
 
 class CfgFunctions {
-        class ca {
-                class AI {
-                        file = "scripts\AI";
+	class ca {
+		class AI {
+			file = "scripts\AI";
 
-                        class unitGuerrillaAI{};
-        		class groupGuerrillaAI{};
+			class unitGuerrillaAI{};
+			class groupGuerrillaAI{};
 
-        		class unitSuppressiveAI{};
-        		class groupSuppressiveAI{};
+			class unitSuppressiveAI{};
+			class groupSuppressiveAI{};
 
-        		class fireWeaponSafe{};
+			class fireWeaponSafe{};
 
-        		class compileVehicleWeapons{};
-                };
-        };
+			class compileVehicleWeapons{};
+		};
+	};
 
-        class cre {
-                class AI {
-                        file = "scripts\AI";
+	class cre {
+		class AI {
+			file = "scripts\AI";
 
-                        class civ_idleAnim {};
+			class civ_idleAnim {};
 
-                        class addAISpawn {};
-                        //class handleWarfare {};
-                };
+			class addAISpawn {};
+			//class handleWarfare {};
+		};
 
-                class inventory {
-                        file = "scripts\inventory";
+		class inventory {
+			file = "scripts\inventory";
 
-                        class addWeaponWithItems {};
-                        class generateUID {};
-        		class interceptInventory {
-                                postInit = 1;
-        		};
-                        //class inventory {};
+			class addWeaponWithItems {};
+			class generateUID {};
+			class interceptInventory {
+				postInit = 1;
+			};
+			//class inventory {};
 			class getMass {};
 
 			class inventory_createNamespace {};
-                        //class generateContainerData {};
-                        class generateWeaponAccArray {};
-                        class generateWeaponAccData {};
-                };
+			//class generateContainerData {};
+			class generateWeaponAccArray {};
+			class generateWeaponAccData {};
+		};
 
-                class config {
-                        file = "scripts\config";
+		class config {
+			file = "scripts\config";
 
-                        class getClassCategory {};
-                        class getClassIcon {};
-                        class getClassMass {};
-                        class getClassSlotSize {};
+			class getClassCategory {};
+			class getClassIcon {};
+			class getClassMass {};
+			class getClassSlotSize {};
 
-                        class getContainerSize {};
+			class getContainerSize {};
 
-                        class getMagazineMaxAmmo {};
-                        class getWeaponMagazines {};
-                };
-        };
+			class getMagazineMaxAmmo {};
+			class getWeaponMagazines {};
+		};
+	};
 };
 
 

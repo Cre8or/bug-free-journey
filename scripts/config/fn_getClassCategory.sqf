@@ -1,23 +1,23 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Returns the category of an item. Used to determine which config class to look it up in.
-                Possible return values:
-                        MACRO_ENUM_CATEGORY_ITEM                ( -> CfgWeapons)
-                        MACRO_ENUM_CATEGORY_WEAPON              ( -> CfgWeapons)
-                        MACRO_ENUM_CATEGORY_MAGAZINE            ( -> CfgMagazines)
-                        MACRO_ENUM_CATEGORY_VEHICLE             ( -> CfgVehicles)
-                        MACRO_ENUM_CATEGORY_GLASSES             ( -> CfgGlasses)
-        Arguments:
-                0:      <STRING>        Classname the of item to check
-        Returns:
-                0:      <NUMBER>        Category of the class (see above)
+	Author:	 Cre8or
+	Description:
+		Returns the category of an item. Used to determine which config class to look it up in.
+		Possible return values:
+			MACRO_ENUM_CATEGORY_ITEM		( -> CfgWeapons)
+			MACRO_ENUM_CATEGORY_WEAPON	      ( -> CfgWeapons)
+			MACRO_ENUM_CATEGORY_MAGAZINE	    ( -> CfgMagazines)
+			MACRO_ENUM_CATEGORY_VEHICLE	     ( -> CfgVehicles)
+			MACRO_ENUM_CATEGORY_GLASSES	     ( -> CfgGlasses)
+	Arguments:
+		0:      <STRING>	Classname the of item to check
+	Returns:
+		0:      <NUMBER>	Category of the class (see above)
 -------------------------------------------------------------------------------------------------------------------- */
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
 params [
-        ["_class", "", [""]]
+	["_class", "", [""]]
 ];
 
 // If no class was provided, exit and return an invalid category
@@ -38,26 +38,26 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {
-	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-	        missionNamespace setVariable ["cre8ive_getClassCategory_namespace", _namespace, false];
+		_namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+		missionNamespace setVariable ["cre8ive_getClassCategory_namespace", _namespace, false];
 	};
 
 	// Iterate through the usual config paths and look for the class
 	{
 		scopeName "loop";
 
-	        // If the class exists, inspect it
-	        if (isClass (configFile >> _x >> _class)) then {
+		// If the class exists, inspect it
+		if (isClass (configFile >> _x >> _class)) then {
 
-	                // Pick the matching category
-	                switch (_forEachIndex) do {
+			// Pick the matching category
+			switch (_forEachIndex) do {
 
 				// CfgWeapons
 				case 0: {
 
 					// If the class has a "type" entry in its ItemInfo subclass, it might be a piece of clothing
 					private _type = [configfile >> "CfgWeapons" >> _class >> "ItemInfo", "type", 0] call BIS_fnc_returnConfigEntry;
-		                        switch (_type) do {
+					switch (_type) do {
 						case 605: {
 							// It's a helmet
 							_category = MACRO_ENUM_CATEGORY_HEADGEAR;
@@ -75,18 +75,18 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 						};
 					};
 
-		                        // If the class has a WeaponSlotsInfo subclass, it's a weapon
-		                        if (isClass (configFile >> _x >> _class >> "WeaponSlotsInfo")) then {
-		                                _category = MACRO_ENUM_CATEGORY_WEAPON;
+					// If the class has a WeaponSlotsInfo subclass, it's a weapon
+					if (isClass (configFile >> _x >> _class >> "WeaponSlotsInfo")) then {
+						_category = MACRO_ENUM_CATEGORY_WEAPON;
 						breakTo "loop";
 					};
 
 					// Otherwise, it's an item
-		                        _category = MACRO_ENUM_CATEGORY_ITEM;
-		                };
+					_category = MACRO_ENUM_CATEGORY_ITEM;
+				};
 
 				// CfgVehicles
-	                        case 1: {
+				case 1: {
 
 					// If the class inherits from "Bag_Base", it's a backpack
 					if (_class isKindOf "Bag_Base") then {
@@ -105,16 +105,16 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 				};
 
 				// CfgGlasses
-	                        case 3: {
+				case 3: {
 					_category = MACRO_ENUM_CATEGORY_GLASSES;
 				};
 			};
-	        };
+		};
 
-	        // If we determined the category, save it onto the namespace
-	        if (_category != MACRO_ENUM_CATEGORY_INVALID) exitWith {
-	                _namespace setVariable [_class, _category];
-	        };
+		// If we determined the category, save it onto the namespace
+		if (_category != MACRO_ENUM_CATEGORY_INVALID) exitWith {
+			_namespace setVariable [_class, _category];
+		};
 	} forEach ["CfgWeapons", "CfgVehicles", "CfgMagazines", "CfgGlasses"];
 };
 

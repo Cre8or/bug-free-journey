@@ -1,5 +1,5 @@
 params [
-        ["_obj", objNull, [objNull]]
+	["_obj", objNull, [objNull]]
 ];
 
 // Exit if the object doesn't exist

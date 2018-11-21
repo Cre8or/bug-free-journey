@@ -19,138 +19,138 @@ __EXEC(uiNamespace setVariable ["Cre8ive_Inventory_SafeZoneH", _safeZoneH])
 
 
 class MACRO_GUI_NAME {
-        idd = -1;
-        name = STR(MACRO_GUI_NAME);
-        onLoad = "uiNamespace setVariable ['cre8ive_dialog_inventory', _this select 0]";
+	idd = -1;
+	name = STR(MACRO_GUI_NAME);
+	onLoad = "uiNamespace setVariable ['cre8ive_dialog_inventory', _this select 0]";
 
-        class Controls {
-                class Ground_Frame : RscBox {
-                        idc = -1;
-                        x = _safeZoneX;
-                        y = _safeZoneY;
-                        w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
-                        h = _safeZoneH;
-                        colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
-                };
-
-                class Player_Frame : Ground_Frame {
-                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
-                        w = _safeZoneW * (0.3 - 0.004);
+	class Controls {
+		class Ground_Frame : RscBox {
+			idc = -1;
+			x = _safeZoneX;
+			y = _safeZoneY;
+			w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
+			h = _safeZoneH;
+			colorBackground[] = CURLY(MACRO_COLOUR_BACKGROUND);
 		};
 
-                class Storage_Frame : Ground_Frame {
-                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_STORAGE + 0.002);
-                };
+		class Player_Frame : Ground_Frame {
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
+			w = _safeZoneW * (0.3 - 0.004);
+		};
 
-                // ------------------------------------------------------------------------------------------------------------------------------------------------
-                // Player Info
-                class Player_Name_Frame : RscBox {
-                        idc = -1;
-                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
-                        y = _safeZoneY;
-                        w = _safeZoneW * (0.3 - 0.004);
-                        h = _safeZoneH * 0.03;
-                        colorBackground[] = CURLY(MACRO_COLOUR_SEPARATOR);
-                };
-
-                class Player_Name : RscText {
-                        idc = MACRO_IDC_PLAYER_NAME;
-                        font = "PuristaLight";
-                        text = "";
-                        sizeEx = _safeZoneW * 0.025;
-                        style = ST_LEFT;
-                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
-                        y = _safeZoneY;
-                        w = _safeZoneW * (0.278 - 0.002);
-                        h = _safeZoneH * 0.03;
-                        colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
-                };
-
-                class Exit_Button_Picture : RscPicture {
-                        idc = -1;
-                        text = MACRO_PICTURE_EXIT_BUTTON;
-                        style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 + 0.278);
-                        y = _safeZoneY;
-                        w = _safeZoneW * (0.022 - 0.004);
-                        h = _safeZoneH * 0.03;
-                };
-
-                class Exit_Button : RscButton {
-                        idc = MACRO_IDC_WEAPONS_BUTTON;
-                        period = 0;
-                        offsetX = 0;
-                        offsetY = 0;
-                        offsetPressedX = 0;
-                        offsetPressedY = 0;
-                        shadow = 0;
-                        x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 + 0.278);
-                        y = _safeZoneY;
-                        w = _safeZoneW * (0.022 - 0.004);
-                        h = _safeZoneH * 0.03;
-                        colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
-                        colorBackgroundActive[] = {1,0,0,0.2};
-                        colorShadow[] = CURLY(MACRO_COLOUR_INVISIBLE);
-                        colorText[] = {1,1,1,1};
-                        action = "(uiNamespace getVariable ['cre8ive_dialog_inventory', displayNull]) closeDisplay 0";
-                };
+		class Storage_Frame : Ground_Frame {
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_STORAGE + 0.002);
+		};
 
 		// ------------------------------------------------------------------------------------------------------------------------------------------------
-                // Weapons / Medical buttons
-                        // Weapons
-                        class Weapons_Button_Frame : RscText {
-                                idc = MACRO_IDC_WEAPONS_BUTTON_FRAME;
-                                x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 3);
-                                y = _safeZoneY + _safeZoneH * (0.03 + 0.005);
-                                w = _safeZoneW * 0.143;
-                                h = _safeZoneH * 0.06;		// 0.075
-                                colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_ACTIVE);
-                        };
+		// Player Info
+		class Player_Name_Frame : RscBox {
+			idc = -1;
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
+			y = _safeZoneY;
+			w = _safeZoneW * (0.3 - 0.004);
+			h = _safeZoneH * 0.03;
+			colorBackground[] = CURLY(MACRO_COLOUR_SEPARATOR);
+		};
 
-                        class Weapons_Button : RscButton {
-                                idc = MACRO_IDC_WEAPONS_BUTTON;
-                                font = "PuristaMedium";
-                                period = 0;
-                                offsetX = 0;
-                                offsetY = 0;
-                                offsetPressedX = _safeZoneW * 0.001;
-                                offsetPressedY = _safeZoneH * 0.002;
-                                shadow = 0;
-                                sizeEx = _safeZoneW * 0.03;
-                                text = "WEAPONS";
-                                x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 3);
-                                y = _safeZoneY + _safeZoneH * (0.03 + 0.005);
-                                w = _safeZoneW * 0.143;
-                                h = _safeZoneH * 0.06;	// 0.075
-                                colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
-                                colorBackgroundActive[] = CURLY(MACRO_COLOUR_INVISIBLE);
-                                colorShadow[] = CURLY(MACRO_COLOUR_INVISIBLE);
-                                colorText[] = {1,1,1,1};
-                                action = "['ui_menu_weapons'] call cre_fnc_inventory";
-                        };
+		class Player_Name : RscText {
+			idc = MACRO_IDC_PLAYER_NAME;
+			font = "PuristaLight";
+			text = "";
+			sizeEx = _safeZoneW * 0.025;
+			style = ST_LEFT;
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
+			y = _safeZoneY;
+			w = _safeZoneW * (0.278 - 0.002);
+			h = _safeZoneH * 0.03;
+			colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
+		};
 
-                        // Medical
-                        class Medical_Button_Frame : Weapons_Button_Frame {
-                                idc = MACRO_IDC_MEDICAL_BUTTON_FRAME;
-                                x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 4 + 0.143);
-                                colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-                        };
+		class Exit_Button_Picture : RscPicture {
+			idc = -1;
+			text = MACRO_PICTURE_EXIT_BUTTON;
+			style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 + 0.278);
+			y = _safeZoneY;
+			w = _safeZoneW * (0.022 - 0.004);
+			h = _safeZoneH * 0.03;
+		};
 
-                        class Medical_Button : Weapons_Button {
-                                idc = MACRO_IDC_MEDICAL_BUTTON;
-                                text = "MEDICAL";
-                                x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 4 + 0.143);
-                                action = "['ui_menu_medical'] call cre_fnc_inventory";
-                        };
+		class Exit_Button : RscButton {
+			idc = MACRO_IDC_WEAPONS_BUTTON;
+			period = 0;
+			offsetX = 0;
+			offsetY = 0;
+			offsetPressedX = 0;
+			offsetPressedY = 0;
+			shadow = 0;
+			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 + 0.278);
+			y = _safeZoneY;
+			w = _safeZoneW * (0.022 - 0.004);
+			h = _safeZoneH * 0.03;
+			colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
+			colorBackgroundActive[] = {1,0,0,0.2};
+			colorShadow[] = CURLY(MACRO_COLOUR_INVISIBLE);
+			colorText[] = {1,1,1,1};
+			action = "(uiNamespace getVariable ['cre8ive_dialog_inventory', displayNull]) closeDisplay 0";
+		};
 
 		// ------------------------------------------------------------------------------------------------------------------------------------------------
-                // Weapons Control Group
+		// Weapons / Medical buttons
+			// Weapons
+			class Weapons_Button_Frame : RscText {
+				idc = MACRO_IDC_WEAPONS_BUTTON_FRAME;
+				x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 3);
+				y = _safeZoneY + _safeZoneH * (0.03 + 0.005);
+				w = _safeZoneW * 0.143;
+				h = _safeZoneH * 0.06;		// 0.075
+				colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_ACTIVE);
+			};
+
+			class Weapons_Button : RscButton {
+				idc = MACRO_IDC_WEAPONS_BUTTON;
+				font = "PuristaMedium";
+				period = 0;
+				offsetX = 0;
+				offsetY = 0;
+				offsetPressedX = _safeZoneW * 0.001;
+				offsetPressedY = _safeZoneH * 0.002;
+				shadow = 0;
+				sizeEx = _safeZoneW * 0.03;
+				text = "WEAPONS";
+				x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 3);
+				y = _safeZoneY + _safeZoneH * (0.03 + 0.005);
+				w = _safeZoneW * 0.143;
+				h = _safeZoneH * 0.06;	// 0.075
+				colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
+				colorBackgroundActive[] = CURLY(MACRO_COLOUR_INVISIBLE);
+				colorShadow[] = CURLY(MACRO_COLOUR_INVISIBLE);
+				colorText[] = {1,1,1,1};
+				action = "['ui_menu_weapons'] call cre_fnc_inventory";
+			};
+
+			// Medical
+			class Medical_Button_Frame : Weapons_Button_Frame {
+				idc = MACRO_IDC_MEDICAL_BUTTON_FRAME;
+				x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 4 + 0.143);
+				colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
+			};
+
+			class Medical_Button : Weapons_Button {
+				idc = MACRO_IDC_MEDICAL_BUTTON;
+				text = "MEDICAL";
+				x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 4 + 0.143);
+				action = "['ui_menu_medical'] call cre_fnc_inventory";
+			};
+
+		// ------------------------------------------------------------------------------------------------------------------------------------------------
+		// Weapons Control Group
 		class Weapons_CtrlGrp : RscControlsGroupNoScrollbars {
 			idc = MACRO_IDC_WEAPONS_CTRLGRP;
 			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
 			y = _safeZoneY + _safeZoneH * 0.1;
-                        w = _safeZoneW * (0.3 - 0.004);
-                        h = _safeZoneH * 0.9;
+			w = _safeZoneW * (0.3 - 0.004);
+			h = _safeZoneH * 0.9;
 
 			class controls {
 				// Focus frame
@@ -274,13 +274,13 @@ class MACRO_GUI_NAME {
 		};
 
 		// ------------------------------------------------------------------------------------------------------------------------------------------------
-                // Medical Control Group
+		// Medical Control Group
 		class Medical_CtrlGrp : RscControlsGroupNoScrollbars {
 			idc = MACRO_IDC_MEDICAL_CTRLGRP;
 			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002);
 			y = _safeZoneY + _safeZoneH * 0.1;
-                        w = _safeZoneW * (0.3 - 0.004);
-                        h = _safeZoneH * 0.9;
+			w = _safeZoneW * (0.3 - 0.004);
+			h = _safeZoneH * 0.9;
 
 			class controls {
 				// Focus frame
@@ -307,13 +307,13 @@ class MACRO_GUI_NAME {
 		};
 
 		// ------------------------------------------------------------------------------------------------------------------------------------------------
-                // Storage Frame
+		// Storage Frame
 		class Storage_CtrlGrp : RscControlsGroupNoHScrollbars {
 			idc = MACRO_IDC_STORAGE_CTRLGRP;
 			x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_STORAGE + 0.002);
-                        y = _safeZoneY;
-                        w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
-                        h = _safeZoneH;
+			y = _safeZoneY;
+			w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
+			h = _safeZoneH;
 
 			class controls {
 				// Focus frame
@@ -329,9 +329,9 @@ class MACRO_GUI_NAME {
 				class Storage_Uniform_Frame : RscText {
 					idc = MACRO_IDC_UNIFORM_FRAME;
 					x = _safeZoneW * 0.002 * 2;
-		                        y = _safeZoneH * 0.005;
-		                        w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5; //0.33
-		                        h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
+					y = _safeZoneH * 0.005;
+					w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5; //0.33
+					h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
 					colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
 					onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
 					onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
@@ -340,35 +340,35 @@ class MACRO_GUI_NAME {
 				// Vest
 				class Storage_Vest_Frame : Storage_Uniform_Frame {
 					idc = MACRO_IDC_VEST_FRAME;
-		                        y = _safeZoneH * (0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
+					y = _safeZoneH * (0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 1.5);
 				};
 
 				// Backpack
 				class Storage_Backpack_Frame : Storage_Uniform_Frame {
 					idc = MACRO_IDC_BACKPACK_FRAME;
-		                        y = _safeZoneH * (0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 3);
+					y = _safeZoneH * (0.005 * 3 + MACRO_SCALE_SLOT_SIZE_H * 3);
 				};
 
 				// Scrollbar Dummy
 				class Storage_Scrollbar_Dummy : RscBox {
 					idc = MACRO_IDC_SCROLLBAR_DUMMY;
 					x = _safeZoneW * 0.002 * 2;
-		                        y = _safeZoneH * 0.005;
-		                        w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
-		                        h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
+					y = _safeZoneH * 0.005;
+					w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
+					h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
 					colorBackground[] = {0,0,0,0};
 				};
 			};
 		};
 
 		// ------------------------------------------------------------------------------------------------------------------------------------------------
-                // Ground Frame
+		// Ground Frame
 		class Ground_CtrlGrp : RscControlsGroupNoHScrollbars {
 			idc = MACRO_IDC_GROUND_CTRLGRP;
 			x = _safeZoneX;
-                        y = _safeZoneY;
-                        w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
-                        h = _safeZoneH;
+			y = _safeZoneY;
+			w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
+			h = _safeZoneH;
 
 			class controls {
 				// Focus frame
@@ -383,13 +383,13 @@ class MACRO_GUI_NAME {
 		};
 
 		// ------------------------------------------------------------------------------------------------------------------------------------------------
-                // Empty control group (for focus)
+		// Empty control group (for focus)
 		class Empty_CtrlGrp : RscControlsGroupNoScrollbars {
 			idc = MACRO_IDC_EMPTY_CTRLGROUP;
 			x = 0;
-                        y = 0;
-                        w = 0;
-                        h = 0;
+			y = 0;
+			w = 0;
+			h = 0;
 
 			class controls {
 				// Focus frame
@@ -402,7 +402,7 @@ class MACRO_GUI_NAME {
 				};
 			};
 		};
-        };
+	};
 };
 
 

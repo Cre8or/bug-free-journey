@@ -1,10 +1,10 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Determines the UI size of an inventory container. Result is returned in format [[x,y], slotsCount].
-        Arguments:
-                0:	<STRING>	Classname of the container to check
-        Returns:
+	Author:		 Cre8or
+	Description:
+		Determines the UI size of an inventory container. Result is returned in format [[x,y], slotsCount].
+	Arguments:
+		0:	<STRING>	Classname of the container to check
+	Returns:
 		0: 	<ARRAY>		UI size in format [x, y], where x and y represent an amount of slots
 		1:	<NUMBER>	Total slots count
 -------------------------------------------------------------------------------------------------------------------- */
@@ -33,8 +33,8 @@ if (_res isEqualTo []) then {
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {
-	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-	        missionNamespace setVariable ["cre8ive_getContainerSize_namespace", _namespace, false];
+		_namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+		missionNamespace setVariable ["cre8ive_getContainerSize_namespace", _namespace, false];
 	};
 
 	// Determine how much load this container can carry

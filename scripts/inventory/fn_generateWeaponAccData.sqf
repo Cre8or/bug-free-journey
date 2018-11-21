@@ -1,14 +1,14 @@
 /* --------------------------------------------------------------------------------------------------------------------
-        Author:         Cre8or
-        Description:
-                Generates the item data for a weapon's attached items (accessories and loaded magazines).
-        Arguments:
-                0:      <LOCATION>	Item data of the weapon
+	Author:		Cre8or
+	Description:
+		Generates the item data for a weapon's attached items (accessories and loaded magazines).
+	Arguments:
+		0:      <LOCATION>	Item data of the weapon
 		1:	<ARRAY>		Data array of the weapon (NOTE: This array is in the same format as the
 					returned values from the "weaponsItems" command, or the
 					fn_generateWeaponAccArray function)
-        Returns:
-                (nothing)
+	Returns:
+		(nothing)
 -------------------------------------------------------------------------------------------------------------------- */
 
 #include "..\..\res\config\dialogs\macros.hpp"
