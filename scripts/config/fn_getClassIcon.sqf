@@ -29,12 +29,6 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {_defau
 // Get our namespace
 private _namespace = missionNamespace getVariable ["cre8ive_getClassIcon_namespace", locationNull];
 
-// If the namespace doesn't exist yet, create it
-if (isNull _namespace) then {
-        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-        missionNamespace setVariable ["cre8ive_getClassIcon_namespace", _namespace, false];
-};
-
 // Fetch the icon path from the namespace
 private _iconPath = _namespace getVariable [_class, " "];
 
@@ -42,6 +36,13 @@ private _iconPath = _namespace getVariable [_class, " "];
 if (_iconPath == " ") then {
 	_iconPath = "";
 
+	// If the namespace doesn't exist yet, create it
+	if (isNull _namespace) then {
+	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+	        missionNamespace setVariable ["cre8ive_getClassIcon_namespace", _namespace, false];
+	};
+
+	// Fetch the icon from the proper config path, based on the category
         switch (_category) do {
                 case MACRO_ENUM_CATEGORY_ITEM;
                 case MACRO_ENUM_CATEGORY_WEAPON;

@@ -22,17 +22,18 @@ if (_class == "") exitWith {1};
 // Get our namespace
 private _namespace = missionNamespace getVariable ["cre8ive_getMagazineMaxAmmo_namespace", locationNull];
 
-// If the namespace doesn't exist yet, create it
-if (isNull _namespace) then {
-        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-        missionNamespace setVariable ["cre8ive_getMagazineMaxAmmo_namespace", _namespace, false];
-};
-
 // Fetch the max ammo count from the namespace
 private _maxAmmo = _namespace getVariable [_class, -1];
 
 // If the max ammo count doesn't exist yet, try to determine it
-if (_maxAmmo < 0) then {
+if (_maxAmmo == -1) then {
+
+	// If the namespace doesn't exist yet, create it
+	if (isNull _namespace) then {
+	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+	        missionNamespace setVariable ["cre8ive_getMagazineMaxAmmo_namespace", _namespace, false];
+	};
+
 	_maxAmmo = [configfile >> "CfgMagazines" >> _class, "count", 1] call BIS_fnc_returnConfigEntry;
 
         // Save the max ammo count on the namespace

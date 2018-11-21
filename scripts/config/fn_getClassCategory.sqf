@@ -30,89 +30,93 @@ if (_class == "") exitWith {MACRO_ENUM_CATEGORY_INVALID};
 // Get our namespace
 private _namespace = missionNamespace getVariable ["cre8ive_getClassCategory_namespace", locationNull];
 
-// If the namespace doesn't exist yet, create it
-if (isNull _namespace) then {
-        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-        missionNamespace setVariable ["cre8ive_getClassCategory_namespace", _namespace, false];
-};
-
 // Fetch the category from the namespace
 private _category = _namespace getVariable [_class, MACRO_ENUM_CATEGORY_INVALID];
 
-// Iterate through the usual config paths and look for the class
-{
-	scopeName "loop";
+// If the class doesn't have a category yet, determine it
+if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 
-        // If the class exists, inspect it
-        if (isClass (configFile >> _x >> _class)) then {
+	// If the namespace doesn't exist yet, create it
+	if (isNull _namespace) then {
+	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+	        missionNamespace setVariable ["cre8ive_getClassCategory_namespace", _namespace, false];
+	};
 
-                // Pick the matching category
-                switch (_forEachIndex) do {
+	// Iterate through the usual config paths and look for the class
+	{
+		scopeName "loop";
 
-			// CfgWeapons
-			case 0: {
+	        // If the class exists, inspect it
+	        if (isClass (configFile >> _x >> _class)) then {
 
-				// If the class has a "type" entry in its ItemInfo subclass, it might be a piece of clothing
-				private _type = [configfile >> "CfgWeapons" >> _class >> "ItemInfo", "type", 0] call BIS_fnc_returnConfigEntry;
-	                        switch (_type) do {
-					case 605: {
-						// It's a helmet
-						_category = MACRO_ENUM_CATEGORY_HEADGEAR;
+	                // Pick the matching category
+	                switch (_forEachIndex) do {
+
+				// CfgWeapons
+				case 0: {
+
+					// If the class has a "type" entry in its ItemInfo subclass, it might be a piece of clothing
+					private _type = [configfile >> "CfgWeapons" >> _class >> "ItemInfo", "type", 0] call BIS_fnc_returnConfigEntry;
+		                        switch (_type) do {
+						case 605: {
+							// It's a helmet
+							_category = MACRO_ENUM_CATEGORY_HEADGEAR;
+							breakTo "loop";
+						};
+						case 701: {
+							// It's a vest
+							_category = MACRO_ENUM_CATEGORY_VEST;
+							breakTo "loop";
+						};
+						case 801: {
+							// It's a uniform
+							_category = MACRO_ENUM_CATEGORY_UNIFORM;
+							breakTo "loop";
+						};
+					};
+
+		                        // If the class has a WeaponSlotsInfo subclass, it's a weapon
+		                        if (isClass (configFile >> _x >> _class >> "WeaponSlotsInfo")) then {
+		                                _category = MACRO_ENUM_CATEGORY_WEAPON;
 						breakTo "loop";
 					};
-					case 701: {
-						// It's a vest
-						_category = MACRO_ENUM_CATEGORY_VEST;
+
+					// Otherwise, it's an item
+		                        _category = MACRO_ENUM_CATEGORY_ITEM;
+		                };
+
+				// CfgVehicles
+	                        case 1: {
+
+					// If the class inherits from "Bag_Base", it's a backpack
+					if (_class isKindOf "Bag_Base") then {
+						_category = MACRO_ENUM_CATEGORY_BACKPACK;
 						breakTo "loop";
 					};
-					case 801: {
-						// It's a uniform
-						_category = MACRO_ENUM_CATEGORY_UNIFORM;
-						breakTo "loop";
-					};
+
+					// Otherwise, it's a vehicle
+					_category = MACRO_ENUM_CATEGORY_VEHICLE;
 				};
 
-	                        // If the class has a WeaponSlotsInfo subclass, it's a weapon
-	                        if (isClass (configFile >> _x >> _class >> "WeaponSlotsInfo")) then {
-	                                _category = MACRO_ENUM_CATEGORY_WEAPON;
-					breakTo "loop";
+
+				// CfgMagazines
+				case 2: {
+					_category = MACRO_ENUM_CATEGORY_MAGAZINE;
 				};
 
-				// Otherwise, it's an item
-	                        _category = MACRO_ENUM_CATEGORY_ITEM;
-	                };
-
-			// CfgVehicles
-                        case 1: {
-
-				// If the class inherits from "Bag_Base", it's a backpack
-				if (_class isKindOf "Bag_Base") then {
-					_category = MACRO_ENUM_CATEGORY_BACKPACK;
-					breakTo "loop";
+				// CfgGlasses
+	                        case 3: {
+					_category = MACRO_ENUM_CATEGORY_GLASSES;
 				};
-
-				// Otherwise, it's a vehicle
-				_category = MACRO_ENUM_CATEGORY_VEHICLE;
 			};
+	        };
 
-
-			// CfgMagazines
-			case 2: {
-				_category = MACRO_ENUM_CATEGORY_MAGAZINE;
-			};
-
-			// CfgGlasses
-                        case 3: {
-				_category = MACRO_ENUM_CATEGORY_GLASSES;
-			};
-		};
-        };
-
-        // If we determined the category, save it onto the namespace
-        if (_category != MACRO_ENUM_CATEGORY_INVALID) exitWith {
-                _namespace setVariable [_class, _category];
-        };
-} forEach ["CfgWeapons", "CfgVehicles", "CfgMagazines", "CfgGlasses"];
+	        // If we determined the category, save it onto the namespace
+	        if (_category != MACRO_ENUM_CATEGORY_INVALID) exitWith {
+	                _namespace setVariable [_class, _category];
+	        };
+	} forEach ["CfgWeapons", "CfgVehicles", "CfgMagazines", "CfgGlasses"];
+};
 
 // Return the category
 _category;

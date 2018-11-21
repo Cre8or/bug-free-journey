@@ -26,17 +26,17 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {[1,1]}
 // Get our namespace
 private _namespace = missionNamespace getVariable ["cre8ive_getClassSlotSize_namespace", locationNull];
 
-// If the namespace doesn't exist yet, create it
-if (isNull _namespace) then {
-        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-        missionNamespace setVariable ["cre8ive_getClassSlotSize_namespace", _namespace, false];
-};
-
 // Fetch the slot size from the namespace
 private _slotSize = _namespace getVariable [_class, []];
 
 // If the slot size doesn't exist yet, try to determine it
 if (_slotSize isEqualTo []) then {
+
+	// If the namespace doesn't exist yet, create it
+	if (isNull _namespace) then {
+	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+	        missionNamespace setVariable ["cre8ive_getClassSlotSize_namespace", _namespace, false];
+	};
 
         // Determine the config path based on the category
         private _configPath = "";

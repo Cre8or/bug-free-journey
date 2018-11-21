@@ -12,6 +12,7 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Optimise the functions that use namespaces by only checking for the namespace if the result wasn't found
 - Make a generateWeaponAccData function to generate the item data for weapon accessories (and loaded magazines)
 - Generate data on items in the weapons menu (assigned items, weapons, NVGs, binoculars, etc.)
 - Unify namespace variable names using macros

@@ -22,17 +22,18 @@ if (_class == "") exitWith {1};
 // Get our namespace
 private _namespace = missionNamespace getVariable ["cre8ive_getWeaponMagazines_namespace", locationNull];
 
-// If the namespace doesn't exist yet, create it
-if (isNull _namespace) then {
-        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-        missionNamespace setVariable ["cre8ive_getWeaponMagazines_namespace", _namespace, false];
-};
-
 // Fetch the max ammo count from the namespace
 private _magazines = _namespace getVariable [_class, 0];
 
 // If there is no magazines list for this weapon yet, try to determine it
 if (_magazines isEqualType 0) then {
+
+	// If the namespace doesn't exist yet, create it
+	if (isNull _namespace) then {
+	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+	        missionNamespace setVariable ["cre8ive_getWeaponMagazines_namespace", _namespace, false];
+	};
+
 	_magazines = [configfile >> "CfgWeapons" >> _class, "magazines", []] call BIS_fnc_returnConfigEntry;
 
 	// make sure the magazines are all in lowercase!

@@ -27,17 +27,17 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {0};
 // Get our namespace
 private _namespace = missionNamespace getVariable ["cre8ive_getClassMass_namespace", locationNull];
 
-// If the namespace doesn't exist yet, create it
-if (isNull _namespace) then {
-        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-        missionNamespace setVariable ["cre8ive_getClassMass_namespace", _namespace, false];
-};
-
 // Fetch the icon path from the namespace
 private _mass = _namespace getVariable [_class, -1];
 
 // If the mass doesn't exist yet, we determine it
-if (_mass <= 0) then {
+if (_mass == -1) then {
+
+	// If the namespace doesn't exist yet, create it
+	if (isNull _namespace) then {
+	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+	        missionNamespace setVariable ["cre8ive_getClassMass_namespace", _namespace, false];
+	};
 
         private _configPath = "";
         private _configPathAlt = "";

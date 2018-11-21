@@ -25,17 +25,17 @@ if (_class == "") exitWith {};
 // Get our namespace
 private _namespace = missionNamespace getVariable ["cre8ive_getContainerSize_namespace", locationNull];
 
-// If the namespace doesn't exist yet, create it
-if (isNull _namespace) then {
-        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-        missionNamespace setVariable ["cre8ive_getContainerSize_namespace", _namespace, false];
-};
-
 // Fetch the icon path from the namespace
 private _res = _namespace getVariable [_class, []];
 
 // If the icon path doesn't exist yet, fetch it from the config
 if (_res isEqualTo []) then {
+
+	// If the namespace doesn't exist yet, create it
+	if (isNull _namespace) then {
+	        _namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
+	        missionNamespace setVariable ["cre8ive_getContainerSize_namespace", _namespace, false];
+	};
 
 	// Determine how much load this container can carry
 	_maxLoad = getContainerMaxLoad _class;
