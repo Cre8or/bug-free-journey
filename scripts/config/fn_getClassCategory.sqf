@@ -63,6 +63,11 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 							_category = MACRO_ENUM_CATEGORY_HEADGEAR;
 							breakTo "loop";
 						};
+						case 616: {	// NVGs
+							// It's an item
+							_category = MACRO_ENUM_CATEGORY_ITEM;
+							breakTo "loop";
+						};
 						case 701: {
 							// It's a vest
 							_category = MACRO_ENUM_CATEGORY_VEST;
@@ -75,10 +80,14 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 						};
 					};
 
-					// If the class has a WeaponSlotsInfo subclass, it's a weapon
-					if (isClass (configFile >> _x >> _class >> "WeaponSlotsInfo")) then {
-						_category = MACRO_ENUM_CATEGORY_WEAPON;
-						breakTo "loop";
+					// If the class has a WeaponSlotsInfo subclass, it might be a weapon
+					if (isClass (configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo")) then {
+
+						// If the class is not of type 4096 (binoculars), it's definitely a weapon
+						if (getNumber (configFile >> "CfgWeapons" >> _class >> "type") != 4096) then {
+							_category = MACRO_ENUM_CATEGORY_WEAPON;
+							breakTo "loop";
+						};
 					};
 
 					// Otherwise, it's an item

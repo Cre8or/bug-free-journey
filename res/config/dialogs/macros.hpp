@@ -53,8 +53,7 @@
 
 	// Weapon accessories
 	#define MACRO_PICTURE_WEAPON_ACC_MUZZLE				"a3\weapons_f\Data\UI\attachment_muzzle.paa"
-	#define MACRO_PICTURE_WEAPON_ACC_BIPOD				"a3\weapons_f\Data\UI\attachment_muzzle.paa"
-// ---- TODO: Find a proper icon for the bipod! ---------------------------------------------------------------------------------------------------------
+	#define MACRO_PICTURE_WEAPON_ACC_BIPOD				"a3\weapons_f_mark\Data\UI\attachment_under.paa"
 	#define MACRO_PICTURE_WEAPON_ACC_SIDE				"a3\weapons_f\Data\UI\attachment_side.paa"
 	#define MACRO_PICTURE_WEAPON_ACC_OPTIC				"a3\weapons_f\Data\UI\attachment_top.paa"
 
@@ -74,7 +73,7 @@
 	#define MACRO_PICTURE_CHARACTER_OUTLINE				"res\ui\inventory\character.paa"
 
 	// Slot background
-	#define MACRO_PICTURE_SLOT_BACKGROUND				"res\ui\inventory\Slot background.paa"
+	#define MACRO_PICTURE_SLOT_BACKGROUND				"res\ui\inventory\slot_background.paa"
 
 
 
@@ -161,7 +160,7 @@
 	#define MACRO_ENUM_CTRL_OUTLINE					1
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_MUZZLE			10
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_BIPOD			11
-	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_RAIL			12
+	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_SIDE			12
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_OPTIC			13
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_MAGAZINE			14
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_ALTMAGAZINE		15
@@ -203,8 +202,10 @@
 
 	#define MACRO_ENUM_CATEGORY_GLASSES				6
 	#define MACRO_ENUM_CATEGORY_HEADGEAR				7
-	#define MACRO_ENUM_CATEGORY_VEHICLE				8
+	#define MACRO_ENUM_CATEGORY_NVG					8
+	#define MACRO_ENUM_CATEGORY_BINOCULAR				9
 
+	#define MACRO_ENUM_CATEGORY_VEHICLE				10
 
 
 
@@ -224,7 +225,7 @@
 
 	#define MACRO_VARNAME_ACC_MUZZLE				"accMuzzle"
 	#define MACRO_VARNAME_ACC_BIPOD					"accBipod"
-	#define MACRO_VARNAME_ACC_RAIL					"accRail"
+	#define MACRO_VARNAME_ACC_SIDE					"accSide"
 	#define MACRO_VARNAME_ACC_OPTIC					"accOptic"
 	#define MACRO_VARNAME_MAG					"magazine"
 	#define MACRO_VARNAME_MAGALT					"magazineAlt"

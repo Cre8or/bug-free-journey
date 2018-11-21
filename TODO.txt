@@ -1,7 +1,5 @@
 TODO:
-- NVGs/Binoculars should be counted as part of the item category
 - Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
-- Add child controls support for weapon attachments
 - Fully implement dragging functionality so it actually works (actually moving things around in inventories)
 - Add a global scale multiplier (macro) for slot pictures?
 - Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
@@ -12,6 +10,8 @@ TODO:
 
 
 DONE:	(top: most recent)
+- NVGs/Binoculars should be counted as part of the item category
+- Add child controls support for weapon attachments
 - Optimise the functions that use namespaces by only checking for the namespace if the result wasn't found
 - Make a generateWeaponAccData function to generate the item data for weapon accessories (and loaded magazines)
 - Generate data on items in the weapons menu (assigned items, weapons, NVGs, binoculars, etc.)

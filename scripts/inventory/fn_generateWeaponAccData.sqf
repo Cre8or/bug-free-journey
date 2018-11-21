@@ -22,7 +22,7 @@ params [
 _args params [
 	["_class", "", [""]],
 	["_accMuzzle", "", [""]],
-	["_accRail", "", [""]],
+	["_accSide", "", [""]],
 	["_accOptic", "", [""]],
 	["_magazine", [], ["", []]],
 	["_magazineAlt", [], ["", []]],
@@ -101,7 +101,7 @@ if (_magClass != "") then {
 } forEach [
 	[_accMuzzle,		MACRO_VARNAME_ACC_MUZZLE],
 	[_accBipod,		MACRO_VARNAME_ACC_BIPOD],
-	[_accRail,		MACRO_VARNAME_ACC_RAIL],
+	[_accSide,		MACRO_VARNAME_ACC_SIDE],
 	[_accOptic,		MACRO_VARNAME_ACC_OPTIC]
 ];
 

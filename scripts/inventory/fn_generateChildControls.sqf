@@ -62,7 +62,7 @@ switch (_category) do {
 			MACRO_ENUM_CTRL_OUTLINE,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_MUZZLE,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_BIPOD,
-			MACRO_ENUM_CTRL_PICTURE_WEAPON_RAIL,
+			MACRO_ENUM_CTRL_PICTURE_WEAPON_SIDE,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_OPTIC,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_MAGAZINE,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_ALTMAGAZINE
@@ -92,9 +92,12 @@ switch (_category) do {
 // Fetch some more information from our parent control and from the UI namespace
 private _ctrlParent = ctrlParentControlsGroup _ctrl;
 private _posCtrl = ctrlPosition _ctrl;
+private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
+
 _posCtrl params ["", "", "_sizeW", "_sizeH"];
 private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
+private _posIconAR = [];
 
 // If we're supposed to use the control's dimensions, recalculate the sizes
 if (_useFrameSize) then {
@@ -112,8 +115,36 @@ private _childControls = [];
 		// Class icon
 		case MACRO_ENUM_CTRL_PICTURE_ICON: {
 			private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
-			_ctrlNew ctrlSetPosition _posCtrl;
-			_ctrlNew ctrlCommit 0;
+
+			// Determine the scale of the icon, with regard to the fixed aspect ratio
+			switch (_category) do {
+
+				// Weapon icons are 2x1
+				case MACRO_ENUM_CATEGORY_WEAPON: {
+					_posCtrl params ["_posX", "_posY", "_widthOld", "_heightOld"];
+					private _widthNew = _widthOld;
+					private _heightNew = _widthOld * 2 / 3;
+
+					if (_heightOld > _heightNew) then {
+						_posY = _posY + (_heightOld - _heightNew) / 2;
+					} else {
+						_widthNew = _heightOld * 3 / 2;
+						_heightNew = _heightOld;
+						_posX = _posX + (_widthOld - _widthNew) / 2;
+					};
+
+					_posIconAR = [_posX, _posY, _widthNew, _heightNew];
+					_ctrlNew ctrlSetPosition _posIconAR;
+					_ctrlNew ctrlCommit 0;
+				};
+
+				// Everything else should be 1x1
+				default {
+					_posIconAR = +_posCtrl;
+					_ctrlNew ctrlSetPosition _posCtrl;
+					_ctrlNew ctrlCommit 0;
+				};
+			};
 
 			private _iconPath = [_class, _category, _defaultIconPath] call cre_fnc_getClassIcon;
 			_ctrlNew ctrlSetText _iconPath;
@@ -164,7 +195,6 @@ private _childControls = [];
 		case MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR: {
 
 			// Fetch the item's data
-			private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
 			private _maxAmmo = _data getVariable [MACRO_VARNAME_MAG_MAXAMMO, 1];
 
 			// Only create a fillbar if the magazine has more than one round
@@ -211,42 +241,132 @@ private _childControls = [];
 
 		// Muzzle
 		case MACRO_ENUM_CTRL_PICTURE_WEAPON_MUZZLE: {
-/*
-			private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
-			_ctrlNew ctrlSetPosition _posCtrl;
-			_ctrlNew ctrlCommit 0;
 
-			_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_MUZZLE;
+			// Only continue if the weapon has this attachment
+			if (!isNull (_data getVariable [MACRO_VARNAME_ACC_MUZZLE, locationNull])) then {
+				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
+				private _accSizeMul = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "MuzzleSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry;
+				private _pos = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "MuzzleSlot", "iconPosition", [0, 0]] call BIS_fnc_returnConfigEntry;
 
-			// Save the new control onto the parent control
-			_ctrl setVariable ["ctrlWeaponMuzzle", _ctrlNew];
-			_childControls pushBack _ctrlNew;
-*/
+				_pos params ["_posX", "_posY"];
+				_posIconAR params ["_posIconX", "_posIconY", "_widthIcon", "_heightIcon"];
 
-			private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedOutline", -1, _ctrlParent];
-			private _pos = ctrlPosition _ctrl;
-			_pos params ["", "", "_widthOld", "_heightOld"];
+				private _width = _accSizeMul * _widthIcon;
+				private _height = _accSizeMul * _heightIcon;
 
-			private _widthNew = (3 / 2) * (_pos select 3);
+				_pos = [
+					_posIconX + _posX * _widthIcon - _width / 2,
+					_posIconY + _posY * _heightIcon - _height / 2,
+					_width,
+					_height
+				];
+				_ctrlNew ctrlSetPosition _pos;
+				_ctrlNew ctrlCommit 0;
 
-			_pos set [2, _widthNew];
-			_pos set [0, (_pos select 0) + (_widthOld - _widthNew) / 2];
+				_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_MUZZLE;
 
-			_ctrlNew ctrlSetPosition _pos;
-			_ctrlNew ctrlCommit 0;
+				// Save the new control onto the parent control
+				_ctrl setVariable ["ctrlWeaponMuzzle", _ctrlNew];
+				_childControls pushBack _ctrlNew;
+			};
+		};
 
-			// Set the box's pixel precision mode to off, disables rounding
-			_ctrlNew ctrlSetPixelPrecision 2;
+		// Bipod
+		case MACRO_ENUM_CTRL_PICTURE_WEAPON_BIPOD: {
 
-			// Paint the outline based on the item category
-			_ctrlNew ctrlSetTextColor [0,1,1,1];
+			// Only continue if the weapon has this attachment
+			if (!isNull (_data getVariable [MACRO_VARNAME_ACC_BIPOD, locationNull])) then {
+				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
+				private _accSizeMul = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "UnderBarrelSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry;
+				private _pos = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "UnderBarrelSlot", "iconPosition", [0, 0]] call BIS_fnc_returnConfigEntry;
 
-			// Save the new control onto the parent control
-			_childControls pushBack _ctrlNew;
+				_pos params ["_posX", "_posY"];
+				_posIconAR params ["_posIconX", "_posIconY", "_widthIcon", "_heightIcon"];
 
+				private _width = _accSizeMul * _widthIcon;
+				private _height = _accSizeMul * _heightIcon;
+
+				_pos = [
+					_posIconX + _posX * _widthIcon - _width / 2,
+					_posIconY + _posY * _heightIcon - _height,	// Apparently BI set the center on the top for this attachment
+					_width,
+					_height
+				];
+				_ctrlNew ctrlSetPosition _pos;
+				_ctrlNew ctrlCommit 0;
+
+				_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_BIPOD;
+
+				// Save the new control onto the parent control
+				_ctrl setVariable ["ctrlWeaponBipod", _ctrlNew];
+				_childControls pushBack _ctrlNew;
+			};
+		};
+
+		// Side
+		case MACRO_ENUM_CTRL_PICTURE_WEAPON_SIDE: {
+
+			// Only continue if the weapon has this attachment
+			if (!isNull (_data getVariable [MACRO_VARNAME_ACC_SIDE, locationNull])) then {
+				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
+				private _accSizeMul = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "PointerSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry;
+				private _pos = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "PointerSlot", "iconPosition", [0, 0]] call BIS_fnc_returnConfigEntry;
+
+				_pos params ["_posX", "_posY"];
+				_posIconAR params ["_posIconX", "_posIconY", "_widthIcon", "_heightIcon"];
+
+				private _width = _accSizeMul * _widthIcon;
+				private _height = _accSizeMul * _heightIcon;
+
+				_pos = [
+					_posIconX + _posX * _widthIcon - _width / 2,
+					_posIconY + _posY * _heightIcon - _height / 2,
+					_width,
+					_height
+				];
+				_ctrlNew ctrlSetPosition _pos;
+				_ctrlNew ctrlCommit 0;
+
+				_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_SIDE;
+
+				// Save the new control onto the parent control
+				_ctrl setVariable ["ctrlWeaponSide", _ctrlNew];
+				_childControls pushBack _ctrlNew;
+			};
 		};
 
 
+		// Optic
+		case MACRO_ENUM_CTRL_PICTURE_WEAPON_OPTIC: {
+
+			// Only continue if the weapon has this attachment
+			if (!isNull (_data getVariable [MACRO_VARNAME_ACC_OPTIC, locationNull])) then {
+				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
+				private _accSizeMul = 2 * ([configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "CowsSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry);
+				private _pos = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "CowsSlot", "iconPosition", [0, 0]] call BIS_fnc_returnConfigEntry;
+
+				_pos params ["_posX", "_posY"];
+				_posIconAR params ["_posIconX", "_posIconY", "_widthIcon", "_heightIcon"];
+
+				private _width = _accSizeMul * _widthIcon;
+				private _height = _accSizeMul * _heightIcon;
+
+				_pos = [
+					_posIconX + _posX * _widthIcon - _width / 2,
+					_posIconY + _posY * _heightIcon - _height * 3 / 4,
+					_width,
+					_height
+				];
+				_ctrlNew ctrlSetPosition _pos;
+				_ctrlNew ctrlCommit 0;
+
+				_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_OPTIC;
+
+				// Save the new control onto the parent control
+				_ctrl setVariable ["ctrlWeaponOptic", _ctrlNew];
+				_childControls pushBack _ctrlNew;
+			};
+		};
 
 	};
 } forEach _requiredControls;
