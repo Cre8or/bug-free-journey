@@ -184,8 +184,8 @@ class MACRO_GUI_NAME {
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-						onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
-						onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
+						onMouseButtonDown = "['ui_dragging_init', _this] call cre_fnc_inventory";
+						//onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
 					};
 
 					// Headgear
@@ -217,8 +217,8 @@ class MACRO_GUI_NAME {
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 6;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 2.5;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-						onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
-						onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
+						onMouseButtonDown = "['ui_dragging_init', _this] call cre_fnc_inventory";
+						//onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
 					};
 					// Handgun weapon
 					class HandgunWeapon_Frame : PrimaryWeapon_Frame {
@@ -242,8 +242,8 @@ class MACRO_GUI_NAME {
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
 						h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
 						colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-						onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
-						onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
+						onMouseButtonDown = "['ui_dragging_init', _this] call cre_fnc_inventory";
+						//onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
 					};
 
 					// GPS
@@ -330,11 +330,11 @@ class MACRO_GUI_NAME {
 					idc = MACRO_IDC_UNIFORM_FRAME;
 					x = _safeZoneW * 0.002 * 2;
 					y = _safeZoneH * 0.005;
-					w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5; //0.33
+					w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
 					h = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H * 1.5;
 					colorBackground[] = CURLY(MACRO_COLOUR_ELEMENT_INACTIVE);
-					onMouseButtonDown = "['ui_dragging_start', _this] call cre_fnc_inventory";
-					onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
+					onMouseButtonDown = "['ui_dragging_init', _this] call cre_fnc_inventory";
+					//onMouseButtonUp = "['ui_dragging_stop', _this] call cre_fnc_inventory";
 				};
 
 				// Vest

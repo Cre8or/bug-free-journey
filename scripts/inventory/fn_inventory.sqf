@@ -29,12 +29,16 @@ switch (_event) do {
 	#include "events\ui_unload.sqf"
 	#include "events\ui_menu_weapons.sqf"
 	#include "events\ui_menu_medical.sqf"
-	#include "events\ui_update_storage.sqf"
 	#include "events\ui_update_weapons.sqf"
 	#include "events\ui_update_medical.sqf"
+	#include "events\ui_update_storage.sqf"
+	#include "events\ui_dragging_init.sqf"
 	#include "events\ui_dragging_start.sqf"
 	#include "events\ui_dragging.sqf"
 	#include "events\ui_dragging_stop.sqf"
+	#include "events\ui_dragging_abort.sqf"
+	#include "events\ui_mouse_enter.sqf"
+	#include "events\ui_mouse_exit.sqf"
 };
 
 

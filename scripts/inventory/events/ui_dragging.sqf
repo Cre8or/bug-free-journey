@@ -10,7 +10,7 @@ case "ui_dragging": {
 	];
 
 	// Position the dragged controls
-	private _ctrlFrameTemp = _ctrl getVariable ["ctrlFrameTemp", controlNull];
+	private _ctrlFrameTemp = _ctrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
 	private _posCtrl = ctrlPosition _ctrlFrameTemp;
 	{
 		// Fetch the offset
@@ -23,5 +23,5 @@ case "ui_dragging": {
 
 		_x ctrlSetPosition _pos;
 		_x ctrlCommit 0;
-	} forEach ((_ctrlFrameTemp getVariable ["childControls", []]) + [_ctrlFrameTemp]);
+	} forEach ((_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_ctrlFrameTemp]);
 };

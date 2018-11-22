@@ -80,7 +80,6 @@ case "ui_init": {
 					_inventory displayCtrl MACRO_IDC_BACKPACK_FRAME
 				];
 
-
 				// Set the focus on something unimportant (to avoid triggering the close button with space)
 				ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
 			};

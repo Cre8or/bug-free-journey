@@ -7,17 +7,22 @@
 
 	#ifdef COLOUR_SCHEME
 		#define MACRO_COLOUR_BACKGROUND				0.11, 0.095, 0.06, 0.8
-		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.8, 0.72, 0.55, 0.15
 		#define MACRO_COLOUR_ELEMENT_ACTIVE			0.8, 0.72, 0.55, 0.5
+		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.8, 0.72, 0.55, 0.15
 		#define MACRO_COLOUR_SEPARATOR				0.08, 0.07, 0.045, 0.8
 //		#define MACRO_COLOUR_BACKGROUND				0.095, 0.11, 0.06, 0.8
-//		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.72, 0.8, 0.55, 0.15
 //		#define MACRO_COLOUR_ELEMENT_ACTIVE			0.72, 0.8, 0.55, 0.4
+//		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.72, 0.8, 0.55, 0.15
 //		#define MACRO_COLOUR_SEPARATOR				0.07, 0.08, 0.045, 0.8
 	#else
 		#define MACRO_COLOUR_BACKGROUND				0.1, 0.1, 0.1, 0.8
-		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.7, 0.7, 0.7, 0.15
 		#define MACRO_COLOUR_ELEMENT_ACTIVE			0.7, 0.7, 0.7, 0.6
+		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.7, 0.7, 0.7, 0.15
+		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER		0.7, 0.7, 0.7, 0.8
+		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER		0.7, 0.7, 0.7, 0.3
+		#define MACRO_COLOUR_ELEMENT_DRAGGING_ORIGIN		0.3, 0.3, 0.3, 0.3
+		#define MACRO_COLOUR_ELEMENT_DRAGGING_GREEN		0.2, 1, 0.2, 0.5
+		#define MACRO_COLOUR_ELEMENT_DRAGGING_RED		1, 0.2, 0.2, 0.5
 		#define MACRO_COLOUR_SEPARATOR				0.05, 0.05, 0.05, 0.8
 	#endif
 
@@ -210,10 +215,24 @@
 
 
 
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------
-//	ITEM VARIABLE NAMES
+//	VARIABLE NAMES
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
+	// UI
+	#define MACRO_VARNAME_UI_DRAGGEDCTRL				"draggedControl"
+	#define MACRO_VARNAME_UI_ISBEINGDRAGGED				"draggedControl"
+	#define MACRO_VARNAME_UI_FRAMETEMP				"ctrlFrameTemp"
+	#define MACRO_VARNAME_UI_ICONTEMP				"ctrlIconTemp"
+	#define MACRO_VARNAME_UI_CHILDCONTROLS				"childControls"
+	#define MACRO_VARNAME_UI_CTRLICON				"ctrlIcon"
+	#define MACRO_VARNAME_UI_CTRLOUTLINE				"ctrlOutline"
+
+	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONUP			"EH_mouseButtonUp"
+	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			"EH_mouseButtonDown"
+
+	// Items
 	#define MACRO_VARNAME_UID					"UID"
 	#define MACRO_VARNAME_DATA					"data"
 	#define MACRO_VARNAME_CLASS					"class"
@@ -229,7 +248,6 @@
 	#define MACRO_VARNAME_ACC_OPTIC					"accOptic"
 	#define MACRO_VARNAME_MAG					"magazine"
 	#define MACRO_VARNAME_MAGALT					"magazineAlt"
-
 
 
 

@@ -150,7 +150,7 @@ private _childControls = [];
 			_ctrlNew ctrlSetText _iconPath;
 
 			// Save the new control onto the parent control
-			_ctrl setVariable ["ctrlIcon", _ctrlNew];
+			_ctrl setVariable [MACRO_VARNAME_UI_CTRLICON, _ctrlNew];
 			_childControls pushBack _ctrlNew;
 		};
 
@@ -189,6 +189,8 @@ private _childControls = [];
 
 			// Save the new control onto the parent control
 			_childControls pushBack _ctrlNew;
+			_ctrl setVariable [MACRO_VARNAME_UI_CTRLOUTLINE, _ctrlNew];
+
 		};
 
 		// Ammo Fillbar
@@ -372,7 +374,7 @@ private _childControls = [];
 } forEach _requiredControls;
 
 // Save the child controls onto the parent control
-_ctrl setVariable ["childControls", _childControls];
+_ctrl setVariable [MACRO_VARNAME_UI_CHILDCONTROLS, _childControls];
 
 // Return the child controls
 _childControls;

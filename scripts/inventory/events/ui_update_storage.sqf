@@ -99,7 +99,7 @@ case "ui_update_storage": {
 				// Delete all child controls of the slot controls
 				{
 					ctrlDelete _x;
-				} forEach (_x getVariable ["childControls", []]);
+				} forEach (_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 				ctrlDelete (_x getVariable ["slotControl", controlNull]);
 				ctrlDelete _x;
 			} forEach _allSlotFrames;
@@ -128,6 +128,10 @@ case "ui_update_storage": {
 						_x ctrlSetPosition _slotPos;
 						_x ctrlCommit 0;
 					} forEach [_slotFrame, _slotIcon];
+
+					// Add some event handlers for mouse entering/exiting the controls
+					_slotFrame ctrlAddEventHandler ["MouseEnter", {["ui_mouse_enter", _this] call cre_fnc_inventory}];
+					_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
 
 					// Save the slot's frame control onto the container
 					_containerFrame setVariable [format ["slot_%1_%2", _posX, _posY], _slotFrame];
@@ -186,8 +190,8 @@ case "ui_update_storage": {
 				_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 				// Add event handlers for dragging
-				_slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_start", _this] call cre_fnc_inventory}];
-				_slotFrame ctrlAddEventHandler ["MouseButtonUp", {["ui_dragging_stop", _this] call cre_fnc_inventory}];
+				_slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_inventory}];
+				//_slotFrame ctrlAddEventHandler ["MouseButtonUp", {["ui_dragging_stop", _this] call cre_fnc_inventory}];
 
 				// Save some data onto the control
 				_slotFrame setVariable ["active", true];

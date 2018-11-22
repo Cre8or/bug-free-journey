@@ -1,5 +1,6 @@
 TODO:
 - Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
+- Find a way to determine which control the mouse cursor is currently on
 - Fully implement dragging functionality so it actually works (actually moving things around in inventories)
 - Add a global scale multiplier (macro) for slot pictures?
 - Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
@@ -38,7 +39,7 @@ DONE:	(top: most recent)
 		+ classname
 		+ slot position
 	* Generate inventory slots layout automatically (for not-yet-processed containers)
-- Make use of getClassSlotSize in ui_dragging_start event to scale the controls accordingly when dragging
+- Make use of getClassSlotSize in ui_dragging_init event to scale the controls accordingly when dragging
 - Figure out why weapon controls can't be dragged further than the bottom of the inventoy screen (and get stuck)
 
 
