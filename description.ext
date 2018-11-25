@@ -43,7 +43,9 @@ class CfgFunctions {
 			class getMass {};
 
 			class inventory_createNamespace {};
-			//class generateContainerData {};
+			class generateContainerData {};
+			class generateChildControls {};
+
 			class generateWeaponAccArray {};
 			class generateWeaponAccData {};
 		};

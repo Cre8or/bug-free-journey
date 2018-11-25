@@ -3,20 +3,22 @@ case "ui_dragging_stop": {
 	_eventExists = true;
 
 	// Fetch the control
-	private _ctrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
+	private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
 
 	// Only continue if the control still exists and isn't already being dragged
-	if (!isNull _ctrl) then {
+	if (!isNull _draggedCtrl) then {
 
-		// Set the focus into the parent group of the passed control, so it moves ontop of everything else
-		switch (ctrlParentControlsGroup _ctrl) do {
-			case (_inventory displayCtrl MACRO_IDC_GROUND_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_GROUND_FOCUS_FRAME)};
-			case (_inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_WEAPONS_FOCUS_FRAME)};
-			case (_inventory displayCtrl MACRO_IDC_MEDICAL_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_MEDICAL_FOCUS_FRAME)};
-			case (_inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP): {ctrlSetFocus (_inventory displayCtrl MACRO_IDC_STORAGE_FOCUS_FRAME)};
-		};
+		// Reset the focus (NOTE: scheduled environment, because it needs to execute *after* the MouseDown event
+		["ui_focus_reset", [_draggedCtrl]] spawn cre_fnc_inventory;
 
-		// Next we shift the focus into the dummy controls group to force the temporary controls to the top
-		ctrlSetFocus (_inventory displayCtrl MACRO_IDC_EMPTY_FOCUS_FRAME);
+		private _cursorCtrl = _inventory getVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
+		private _slotPos = _inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, [0,0]];
+		private _slotSize = _draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
+		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
+		private _containerData = _cursorCtrl getVariable [MACRO_VARNAME_PARENT, locationNull];
+
+		// Try to fit the item on the slot
+		private _canFit = [_containerData, _slotPos, _slotSize] call cre_fnc_canFitItem;
+		systemChat format ["(%1) - pos: %2 - size: %3 - canFit: %4", time, _slotPos, _slotSize, _canFit];
 	};
 };

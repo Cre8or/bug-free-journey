@@ -228,15 +228,23 @@
 	#define MACRO_VARNAME_UI_CHILDCONTROLS				"childControls"
 	#define MACRO_VARNAME_UI_CTRLICON				"ctrlIcon"
 	#define MACRO_VARNAME_UI_CTRLOUTLINE				"ctrlOutline"
+	#define MACRO_VARNAME_UI_CTRLPARENT				"ctrlParent"
+
+	#define MACRO_VARNAME_UI_CURSORCTRL				"cursorCtrl"
+	#define MACRO_VARNAME_UI_CURSORPOSREL				"cursorPosRel"
+	#define MACRO_VARNAME_UI_CURSORPOSNEW				"cursorPosNew"
+	#define MACRO_VARNAME_UI_HIGHLITCONTROLS			"dragging_oldControls"
 
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONUP			"EH_mouseButtonUp"
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			"EH_mouseButtonDown"
 
-	// Items
+	// Items and containers
 	#define MACRO_VARNAME_UID					"UID"
 	#define MACRO_VARNAME_DATA					"data"
 	#define MACRO_VARNAME_CLASS					"class"
+	#define MACRO_VARNAME_SLOTSIZE					"slotSize"
 	#define MACRO_VARNAME_SLOTPOS					"slotPos"
+	#define MACRO_VARNAME_SLOT_X_Y					"slot_%1_%2"
 	#define MACRO_VARNAME_PARENT					"parent"
 
 	#define MACRO_VARNAME_MAG_AMMO					"ammo"

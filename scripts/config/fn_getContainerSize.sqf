@@ -6,7 +6,7 @@
 		0:	<STRING>	Classname of the container to check
 	Returns:
 		0: 	<ARRAY>		UI size in format [x, y], where x and y represent an amount of slots
-		1:	<NUMBER>	Total slots count
+		1:	<NUMBER>	Amount of slots in the last line (at: y = yMax)
 -------------------------------------------------------------------------------------------------------------------- */
 
 #include "..\..\res\config\dialogs\macros.hpp"
@@ -56,8 +56,13 @@ if (_res isEqualTo []) then {
 	_maxLoad = floor (MACRO_STORAGE_CAPACITY_MULTIPLIER * _maxLoad);
 	private _slotsCountPerLine = ((ceil (_maxLoad / 3)) min MACRO_SCALE_SLOT_COUNT_PER_LINE) max 1;
 
+	private _sizeH = ceil (_maxLoad / _slotsCountPerLine);
+
 	// Save the results
-	_res = [[_slotsCountPerLine, ceil (_maxLoad / _slotsCountPerLine)], _maxLoad];
+	_res = [
+		[_slotsCountPerLine, _sizeH],
+		_maxLoad - (_sizeH - 1) * _slotsCountPerLine
+	];
 	_namespace setVariable [_class, _res];
 };
 

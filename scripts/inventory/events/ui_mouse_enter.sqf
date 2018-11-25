@@ -34,4 +34,7 @@ case "ui_mouse_enter": {
 			};
 		};
 	};
+
+	// Save the control onto the inventory
+	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, _ctrl];
 };

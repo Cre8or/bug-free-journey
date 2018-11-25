@@ -27,6 +27,7 @@ switch (_event) do {
 
 	#include "events\ui_init.sqf"
 	#include "events\ui_unload.sqf"
+	#include "events\ui_focus_reset.sqf"
 	#include "events\ui_menu_weapons.sqf"
 	#include "events\ui_menu_medical.sqf"
 	#include "events\ui_update_weapons.sqf"
@@ -39,11 +40,24 @@ switch (_event) do {
 	#include "events\ui_dragging_abort.sqf"
 	#include "events\ui_mouse_enter.sqf"
 	#include "events\ui_mouse_exit.sqf"
+	#include "events\ui_mouse_moving.sqf"
 };
 
 
 
 
+/*
+// DEBUG: Print the event name
+private _filteredEvents = [
+	"ui_mouse_enter",
+	"ui_mouse_exit",
+	"ui_mouse_moving",
+	"ui_dragging"
+];
+if !(_event in _filteredEvents) then {
+	systemChat format ["(%1) %2", time, _event];
+};
+*/
 
 // DEBUG: Check if the event was recognised - if not, print a message
 if (!_eventExists) then {

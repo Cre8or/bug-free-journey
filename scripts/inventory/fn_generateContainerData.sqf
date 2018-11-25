@@ -122,14 +122,13 @@ deleteLocation _slotAreaNamespace;
 (call cre_fnc_inventory_createNamespace) params ["_containerData"];
 
 // Iterate through the sorted list of items and fit them into the container
-([typeOf _container] call cre_fnc_getContainerSize) params ["_containerSize", "_containerSlotsCount"];
+([typeOf _container] call cre_fnc_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
 private _containerItems = [];
 _containerData setVariable ["containerSize", _containerSize];
-_containerData setVariable ["containerSlotsCount", _containerSlotsCount];
+_containerData setVariable ["containerSlotsOnLastY", _containerSlotsOnLastY];
 
 // Fetch the width and height of the container
 _containerSize params ["_sizeW", "_sizeH"];
-private _lastYSizeW = _containerSlotsCount - (_sizeH - 1) * _sizeW;
 private _lastFreeY = 1;
 {
 	scopeName "loopItems";
@@ -151,11 +150,11 @@ private _lastFreeY = 1;
 	for "_posY" from _lastFreeY to _sizeH do {
 		private _yHasFreeSlot = false;
 
-		_newW = [_sizeW, _lastYSizeW] select (_posY == _sizeH);
+		_newW = [_sizeW, _containerSlotsOnLastY] select (_posY == _sizeH);
 		for "_posX" from 1 to _newW do {
 			scopeName "loopSlots";
 
-			private _slotStr = format ["slot_%1_%2", _posX, _posY];
+			private _slotStr = format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY];
 			private _slotData = _containerData getVariable [_slotStr, locationNull];
 
 			// If this slot is empty, check if the item can fit in it
@@ -167,12 +166,11 @@ private _lastFreeY = 1;
 				private _posEndY = _posY + (_itemSize select 1) - 1;
 				if (_posEndX <= _newW and {_posEndY <= _sizeH}) then {
 
-
 					// The dimensions fit, now we check if the required slots are all free
 					private _requiredSlots = [];
 					for "_posItemY" from _posY to _posEndY do {
 						for "_posItemX" from _posX to _posEndX do {
-							private _requiredSlotStr = format ["slot_%1_%2", _posItemX, _posItemY];
+							private _requiredSlotStr = format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
 							private _requiredSlot = _containerData getVariable [_requiredSlotStr, locationNull];
 
 							// If the slot is empty, add it to the list

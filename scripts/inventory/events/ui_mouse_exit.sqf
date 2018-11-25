@@ -15,4 +15,7 @@ case "ui_mouse_exit": {
 			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 		};
 	};
+
+	// Reset the last highlighted control
+	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
 };

@@ -57,11 +57,11 @@ case "ui_update_storage": {
 			// Mark the slot as active
 			_containerFrame setVariable ["active", true];
 			_containerFrame setVariable [MACRO_VARNAME_CLASS, _class];
+			_containerFrame setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
 		};
 
 		// Save the slot's default icon path
 		_containerFrame setVariable ["defaultIconPath", _defaultIconPath];
-
 
 		// Fetch the container data
 		private _container = _containers select _forEachIndex;
@@ -81,9 +81,9 @@ case "ui_update_storage": {
 		// Generate the child controls
 		[_containerFrame, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
 
-		// Fetch the container's dimensions and slots count
+		// Fetch the container's dimensions
 		private _containerSize = _containerData getVariable ["containerSize", [1,1]];
-		private _containerSlotsCount = _containerData getVariable ["containerSlotsCount", 1];
+		private _containerSlotsOnLastY = _containerData getVariable ["containerSlotsOnLastY", [1,1]];
 
 		// Fetch the control's last container UID
 		private _lastContainerUID = _containerFrame getVariable ["lastContainerUID", ""];
@@ -91,7 +91,6 @@ case "ui_update_storage": {
 		// If we previously had a different container, rebuild the controls
 		if (_containerUID != _lastContainerUID) then {
 			_containerSize params ["_sizeW", "_sizeH"];
-			private _lastYSizeW = _containerSlotsCount - (_sizeH - 1) * _sizeW;
 
 			// Delete all controls of the previous container
 			private _allSlotFrames = _containerFrame getVariable ["allSlotFrames", []];
@@ -107,7 +106,7 @@ case "ui_update_storage": {
 
 			// Create the new slots
 			for "_posY" from 1 to _sizeH do {
-				_newW = [_sizeW, _lastYSizeW] select (_posY == _sizeH);
+				_newW = [_sizeW, _containerSlotsOnLastY] select (_posY == _sizeH);
 				for "_posX" from 1 to _newW do {
 					private _slotFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", -1, _storageCtrlGrp];
 					private _slotIcon = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _storageCtrlGrp];
@@ -129,12 +128,18 @@ case "ui_update_storage": {
 						_x ctrlCommit 0;
 					} forEach [_slotFrame, _slotIcon];
 
-					// Add some event handlers for mouse entering/exiting the controls
-					_slotFrame ctrlAddEventHandler ["MouseEnter", {["ui_mouse_enter", _this] call cre_fnc_inventory}];
-					_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
+					// Add some event handlers for mouse entering/exiting the controls, and moving across it
+					//_slotFrame ctrlAddEventHandler ["MouseEnter", {["ui_mouse_enter", _this] call cre_fnc_inventory}];
+					//_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
+					_slotFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_inventory}];
+
+					// Save some data onto the slot
+					_slotFrame setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
+					_slotFrame setVariable [MACRO_VARNAME_PARENT, _containerData];
+					_slotFrame setVariable [MACRO_VARNAME_UI_CTRLPARENT, _containerFrame];
 
 					// Save the slot's frame control onto the container
-					_containerFrame setVariable [format ["slot_%1_%2", _posX, _posY], _slotFrame];
+					_containerFrame setVariable [format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY], _slotFrame];
 					_allSlotFrames pushBack _slotFrame;
 				};
 			};
@@ -160,7 +165,7 @@ case "ui_update_storage": {
 				private _slotsStr = [];
 				for "_posItemY" from _posY to (_posY + (_itemSize select 1) - 1) do {
 					for "_posItemX" from _posX to (_posX + (_itemSize select 0) - 1) do {
-						_slotsStr pushBack format ["slot_%1_%2", _posItemX, _posItemY];
+						_slotsStr pushBack format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
 					};
 				};
 				_slotsStr deleteAt 0;
@@ -172,7 +177,7 @@ case "ui_update_storage": {
 				} forEach _slotsStr;
 
 				// Scale the slot controls
-				private _slotFrame = _containerFrame getVariable [format ["slot_%1_%2", _posX, _posY], controlNull];
+				private _slotFrame = _containerFrame getVariable [format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY], controlNull];
 				private _slotPos = ctrlPosition _slotFrame;
 				_slotPos set [2, _slotSizeW * _sizeW];
 				_slotPos set [3, _slotSizeH * _sizeH];
@@ -182,6 +187,7 @@ case "ui_update_storage": {
 
 				// Save the item data onto the control
 				_slotFrame setVariable [MACRO_VARNAME_DATA, _x];
+				_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _itemSize];
 
 				// Generate the child controls for this slot
 				[_slotFrame, _itemClass, _itemCategory, _itemSize, MACRO_PICTURE_SLOT_BACKGROUND] call cre_fnc_generateChildControls;
