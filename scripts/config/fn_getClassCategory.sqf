@@ -2,12 +2,7 @@
 	Author:	 Cre8or
 	Description:
 		Returns the category of an item. Used to determine which config class to look it up in.
-		Possible return values:
-			MACRO_ENUM_CATEGORY_ITEM		( -> CfgWeapons)
-			MACRO_ENUM_CATEGORY_WEAPON	      ( -> CfgWeapons)
-			MACRO_ENUM_CATEGORY_MAGAZINE	    ( -> CfgMagazines)
-			MACRO_ENUM_CATEGORY_VEHICLE	     ( -> CfgVehicles)
-			MACRO_ENUM_CATEGORY_GLASSES	     ( -> CfgGlasses)
+		For possible return values, see "macros.hpp".
 	Arguments:
 		0:      <STRING>	Classname the of item to check
 	Returns:
@@ -115,7 +110,7 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 
 				// CfgGlasses
 				case 3: {
-					_category = MACRO_ENUM_CATEGORY_GLASSES;
+					_category = MACRO_ENUM_CATEGORY_GOGGLES;
 				};
 			};
 		};

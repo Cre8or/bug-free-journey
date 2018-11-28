@@ -6,10 +6,11 @@
 		returns false, along with an array of controls that are preventing the item from fitting.
 		NOTE: The load of the container will NOT be checked, merely the slots matter!
 	Arguments:
-		0:      <LOCATION>	The data of the container to insert into
+		0:      <LOCATION>	The data of the item to be inserted
+		1:      <LOCATION>	The data of the container to insert into
 		2:	<ARRAY>		Slot position of the container (in format [x,y])
-		1:	<ARRAY>		Slot size of the item in format [w,h]
-		3:	<BOOL>		Whether we should perform a simple check (true - faster) or a full
+		3:	<ARRAY>		Slot size of the item in format [w,h]
+		4:	<BOOL>		Whether we should perform a simple check (true - faster) or a full
 					check (false - slower)
 	Returns:
 		0:	<BOOL>		Whether or not the item fits
@@ -21,6 +22,7 @@
 #include "..\..\res\config\dialogs\macros.hpp"
 
 params [
+	["_itemData", locationNull, [locationNull]],
 	["_containerData", locationNull, [locationNull]],
 	["_slotPos", [1,1], [[]]],
 	["_slotSize", [1,1], [[]]],
@@ -45,8 +47,8 @@ _slotSize params ["_itemW", "_itemH"];
 _slotPos params ["_slotStartX", "_slotStartY"];
 
 // Fetch the size of the container
-(_containerData getVariable ["containerSize", [1,1]]) params ["_containerW", "_containerH"];
-private _containerSlotsOnLastY = _containerData getVariable ["containerSlotsOnLastY", 0];
+(_containerData getVariable [MACRO_VARNAME_CONTAINERSIZE, [1,1]]) params ["_containerW", "_containerH"];
+private _containerSlotsOnLastY = _containerData getVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, 0];
 
 // Define the scope name
 scopeName "main";
@@ -63,6 +65,7 @@ if (_doSimpleCheck) then {
 		or {_slotStartY < 1}
 		or {_slotEndX > _containerW}
 		or {_slotEndY > _containerH}
+		or {_itemData == _containerData}
 	) then {
 		systemChat "(canFitItem) FAIL: Item does not fit in the container!";
 		breakTo "main"
@@ -92,12 +95,12 @@ if (_doSimpleCheck) then {
 	// If we got this far, everything went well, so we return true
 	_res = [true, []];
 
-
 // Otherwise (if we're performing a full check), we need to gather additional information
 } else {
 
 	private _slotEndX = _slotStartX + _itemW - 1;
 	private _slotEndY = _slotStartY + _itemH - 1;
+	private _canFit = true;
 
 	// If the item would be out of boundaries at the given slot position, abort
 	if (
@@ -105,20 +108,18 @@ if (_doSimpleCheck) then {
 		or {_slotStartY < 1}
 		or {_slotEndX > _containerW}
 		or {_slotEndY > _containerH}
+		or {_itemData == _containerData}
 	) then {
-		systemChat "(canFitItem) FAIL: Item does not fit in the container!";
-		breakTo "main";
+		_canFit = false;
 	};
 
 	// Exception handling for the last line in the inventory (which might have less slots)
 	if (_slotEndY == _containerH and {_slotEndX > _containerSlotsOnLastY}) then {
-		systemChat format ["(canFitItem) FAIL: Item does not fit in the container's last line! (%1 > %2)", _slotStartX + _itemW - 1, _containerSlotsOnLastY];
-		breakTo "main"
+		_canFit = false;
 	};
 
 	// Define some variables
 	private _slots = [];
-	private _canFit = true;
 
 	// Iterate through the required slots
 	for "_y" from _slotStartY to _slotEndY do {
@@ -128,12 +129,15 @@ if (_doSimpleCheck) then {
 
 			// Fetch the slot data
 			private _slotData = _containerData getVariable [format [MACRO_VARNAME_SLOT_X_Y, _x, _y], locationNull];
+			private _slotPos = _slotData getVariable [MACRO_VARNAME_SLOTPOS, [_x, _y]];
 
-			if (!isNull _slotData) then {
+			if (isNull _slotData or {_slotData == _itemData}) then {
+				_slots pushBack [_x, _y];
+			} else {
 				_canFit = false;
+				_slots pushBack _slotPos;
 			};
 
-			_slots pushBack [_x, _y];
 		};
 	};
 

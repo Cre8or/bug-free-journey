@@ -66,13 +66,11 @@ case "ui_update_storage": {
 		// Fetch the container data
 		private _container = _containers select _forEachIndex;
 		private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
-		private _containerUID = _containerData getVariable [MACRO_VARNAME_UID, ""];
 
 		// If the container doesn't have any data yet, generate it
 // ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
-		if (true or _containerUID == "") then {
+		if (true or isNull _containerData) then {
 			_containerData = [_container] call cre_fnc_generateContainerData;
-			_containerUID = _containerData getVariable [MACRO_VARNAME_UID, ""];
 		};
 
 		// Save the container data on the control
@@ -82,13 +80,14 @@ case "ui_update_storage": {
 		[_containerFrame, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
 
 		// Fetch the container's dimensions
-		private _containerSize = _containerData getVariable ["containerSize", [1,1]];
-		private _containerSlotsOnLastY = _containerData getVariable ["containerSlotsOnLastY", [1,1]];
+		private _containerSize = _containerData getVariable [MACRO_VARNAME_CONTAINERSIZE, [1,1]];
+		private _containerSlotsOnLastY = _containerData getVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, [1,1]];
 
 		// Fetch the control's last container UID
 		private _lastContainerUID = _containerFrame getVariable ["lastContainerUID", ""];
 
 		// If we previously had a different container, rebuild the controls
+		private _containerUID = _containerData getVariable [MACRO_VARNAME_UID, ""];
 		if (_containerUID != _lastContainerUID) then {
 			_containerSize params ["_sizeW", "_sizeH"];
 
@@ -128,9 +127,9 @@ case "ui_update_storage": {
 						_x ctrlCommit 0;
 					} forEach [_slotFrame, _slotIcon];
 
-					// Add some event handlers for mouse entering/exiting the controls, and moving across it
+					// Add some event handlers to the slot controls
 					//_slotFrame ctrlAddEventHandler ["MouseEnter", {["ui_mouse_enter", _this] call cre_fnc_inventory}];
-					//_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
+					_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
 					_slotFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_inventory}];
 
 					// Save some data onto the slot
@@ -162,19 +161,18 @@ case "ui_update_storage": {
 				_itemSize params ["_sizeW", "_sizeH"];
 
 				// Fetch the occupied slots
-				private _slotsStr = [];
+				private _slotsStrArray = [];
 				for "_posItemY" from _posY to (_posY + (_itemSize select 1) - 1) do {
 					for "_posItemX" from _posX to (_posX + (_itemSize select 0) - 1) do {
-						_slotsStr pushBack format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
+						_slotsStrArray pushBack format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
 					};
 				};
-				_slotsStr deleteAt 0;
+				_slotsStrArray deleteAt 0;
 
 				// Hide the occupied slots
 				{
-					private _slotFrame = _containerFrame getVariable [_x, controlNull];
-					_slotFrame ctrlShow false;
-				} forEach _slotsStr;
+					(_containerFrame getVariable [_x, controlNull]) ctrlShow false;
+				} forEach _slotsStrArray;
 
 				// Scale the slot controls
 				private _slotFrame = _containerFrame getVariable [format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY], controlNull];
@@ -205,6 +203,10 @@ case "ui_update_storage": {
 				_slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
 			};
 		} forEach _items;
+
+		// Add some event handlers to the container controls
+		_containerFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
+		_containerFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_inventory}];
 
 		_offsetY = _offsetY + _sizeY + _safeZoneH * (MACRO_SCALE_SLOT_SIZE_H * (_containerSize select 1) + 0.005);
 	} forEach [

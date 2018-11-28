@@ -1,4 +1,4 @@
-// Cursor exits the control area
+// Cursor is exiting the control area
 case "ui_mouse_exit": {
 	_eventExists = true;
 
@@ -7,15 +7,30 @@ case "ui_mouse_exit": {
 		["_ctrl", controlNull, [controlNull]]
 	];
 
-	// Only continue if the control is visible
-	if (ctrlShown _ctrl and {_ctrl != (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull])}) then {
-		if (_ctrl getVariable ["active", false]) then {
-			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-		} else {
-			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+	// Restore the dragged control's icon colour
+	private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
+	private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
+
+	// Reset the temporary frame's colour
+	(_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull]) ctrlSetTextColor [1,1,1,1];
+
+	// If the control was an allowed reserved slot, paint it in the inactive (hover) colour
+	if (_ctrl in (_inventory getVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []])) then {
+		_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);
+	} else {;
+
+		// If the control was a forbidden reserved slot, don't modify the colour
+		if !(_ctrl in (_inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []])) then {
+
+			// Restore the original colour on the highlighted controls
+			{
+				if (_x getVariable ["active", false] and {_x != _draggedCtrl}) then {
+					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+				} else {
+					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+				};
+			} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
+			_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
 		};
 	};
-
-	// Reset the last highlighted control
-	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
 };

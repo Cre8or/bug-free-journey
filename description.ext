@@ -43,7 +43,7 @@ class CfgFunctions {
 			class getMass {};
 
 			class inventory_createNamespace {};
-			class generateContainerData {};
+			//class generateContainerData {};
 			class generateChildControls {};
 
 			class generateWeaponAccArray {};
@@ -54,6 +54,7 @@ class CfgFunctions {
 			file = "scripts\config";
 
 			class getClassCategory {};
+			class getClassSubCategory {};
 			class getClassIcon {};
 			class getClassMass {};
 			class getClassSlotSize {};

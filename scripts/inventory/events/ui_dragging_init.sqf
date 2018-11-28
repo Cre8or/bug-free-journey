@@ -11,11 +11,11 @@ case "ui_dragging_init": {
 	// Only register left-clicks
 	if (_button == 0) then {
 
+		// Reset the focus
+		["ui_focus_reset", [_ctrl]] call cre_fnc_inventory;
+
 		// If we're not dragging anything yet, set everything up (phase 1)
 		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
-
-			// Reset the focus
-			["ui_focus_reset", [_ctrl]] call cre_fnc_inventory;
 
 			if (isNull (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull])) then {
 

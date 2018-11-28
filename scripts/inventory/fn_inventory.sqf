@@ -38,18 +38,17 @@ switch (_event) do {
 	#include "events\ui_dragging.sqf"
 	#include "events\ui_dragging_stop.sqf"
 	#include "events\ui_dragging_abort.sqf"
-	#include "events\ui_mouse_enter.sqf"
-	#include "events\ui_mouse_exit.sqf"
 	#include "events\ui_mouse_moving.sqf"
+	#include "events\ui_mouse_exit.sqf"
 };
 
 
 
 
-/*
+
 // DEBUG: Print the event name
 private _filteredEvents = [
-	"ui_mouse_enter",
+	"ui_focus_reset",
 	"ui_mouse_exit",
 	"ui_mouse_moving",
 	"ui_dragging"
@@ -57,7 +56,7 @@ private _filteredEvents = [
 if !(_event in _filteredEvents) then {
 	systemChat format ["(%1) %2", time, _event];
 };
-*/
+
 
 // DEBUG: Check if the event was recognised - if not, print a message
 if (!_eventExists) then {

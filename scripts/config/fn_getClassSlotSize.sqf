@@ -55,7 +55,7 @@ if (_slotSize isEqualTo []) then {
 		case MACRO_ENUM_CATEGORY_MAGAZINE: {
 			_configPath = "CfgMagazines"
 		};
-		case MACRO_ENUM_CATEGORY_GLASSES: {
+		case MACRO_ENUM_CATEGORY_GOGGLES: {
 			_configPath = "CfgGlasses"
 		};
 		default {
@@ -89,7 +89,7 @@ if (_slotSize isEqualTo []) then {
 			case MACRO_ENUM_CATEGORY_UNIFORM;
 			case MACRO_ENUM_CATEGORY_VEST;
 			case MACRO_ENUM_CATEGORY_BACKPACK;
-			case MACRO_ENUM_CATEGORY_GLASSES;
+			case MACRO_ENUM_CATEGORY_GOGGLES;
 			case MACRO_ENUM_CATEGORY_HEADGEAR;
 			case MACRO_ENUM_CATEGORY_VEHICLE: {
 				private _x = round (1.0 * _mass ^ (1/3));     // Cubic root

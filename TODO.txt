@@ -1,7 +1,4 @@
 TODO:
-- Make a function to detect whether an item can fit in a specific container slot
-	* Have a fast mode for performance that just returns true or false
-	* have a detailed mode that also returns the controls that are required/blocking the item
 - Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
 - Fully implement dragging functionality so it actually works (actually moving things around in inventories)
 - Add a global scale multiplier (macro) for slot pictures?
@@ -13,6 +10,12 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Find a way to represent the origin slots of an item as "free" when dragging, without breaking anything else
+- Fix vests and uniforms getting picked up twice in genrateContainerData
+- Find a way to identify whether an item can go in the assigned slots/weapon slots
+- Make a function to detect whether an item can fit in a specific container slot
+	* Have a fast mode for performance that just returns true or false
+	* have a detailed mode that also returns the controls that are required/blocking the item
 - Find a way to determine which control the mouse cursor is currently on
 - NVGs/Binoculars should be counted as part of the item category
 - Add child controls support for weapon attachments

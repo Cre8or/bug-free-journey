@@ -61,7 +61,7 @@ if (_mass == -1) then {
 			_configPath = configFile >> "CfgMagazines" >> _class >> "mass";
 			_configPathAlt = _configPath;
 		};
-		case MACRO_ENUM_CATEGORY_GLASSES: {
+		case MACRO_ENUM_CATEGORY_GOGGLES: {
 			_configPath = configFile >> "CfgGlasses" >> _class >> "mass";
 			_configPathAlt = configFile >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
 		};

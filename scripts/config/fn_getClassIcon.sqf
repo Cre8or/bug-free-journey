@@ -70,7 +70,7 @@ if (_iconPath == " ") then {
 				systemChat format ["(getClassIcon) Item is a vehicle - Icon: %1)", _iconPath];
 			#endif
 		};
-		case MACRO_ENUM_CATEGORY_GLASSES: {
+		case MACRO_ENUM_CATEGORY_GOGGLES: {
 			_iconPath = [configfile >> "CfgGlasses" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
 
 			#ifdef MACRO_DEBUG_GETCLASSICON
