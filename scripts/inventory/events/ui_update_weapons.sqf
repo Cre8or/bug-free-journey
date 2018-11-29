@@ -5,12 +5,6 @@ case "ui_update_weapons": {
 	// Fetch the player's container data
 	private _containerData = player getVariable [MACRO_VARNAME_DATA, locationNull];
 
-	// If the player doesn't have any data yet, generate it
-// ---- DEBUG: Remove "true"! v --------------------------------------------------------------------------------
-	if (true or isNull _containerData) then {
-		_containerData = [player, false] call cre_fnc_generateContainerData;
-	};
-
 	// Determine the icon paths for the items and weapons that we have
 	{
 		_x params ["_varName", "_ctrlFrame", "_defaultIconPath"];
@@ -52,8 +46,8 @@ case "ui_update_weapons": {
 	} forEach [
 		[MACRO_VARNAME_UNIT_NVGS,		_inventory displayCtrl MACRO_IDC_NVGS_FRAME,			MACRO_PICTURE_NVGS],
 		[MACRO_VARNAME_UNIT_HEADGEAR,		_inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME,		MACRO_PICTURE_HEADGEAR],
-		[MACRO_VARNAME_UNIT_GOGGLES,		_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME,			MACRO_PICTURE_GOGGLES],
 		[MACRO_VARNAME_UNIT_BINOCULARS,		_inventory displayCtrl MACRO_IDC_BINOCULARS_FRAME, 		MACRO_PICTURE_BINOCULARS],
+		[MACRO_VARNAME_UNIT_GOGGLES,		_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME,			MACRO_PICTURE_GOGGLES],
 		[MACRO_VARNAME_UNIT_PRIMARYWEAPON,	_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME, 		MACRO_PICTURE_PRIMARYWEAPON],
 		[MACRO_VARNAME_UNIT_HANDGUNWEAPON,	_inventory displayCtrl MACRO_IDC_HANDGUNWEAPON_FRAME,		MACRO_PICTURE_HANDGUNWEAPON],
 		[MACRO_VARNAME_UNIT_SECONDARYWEAPON,	_inventory displayCtrl MACRO_IDC_SECONDARYWEAPON_FRAME,	MACRO_PICTURE_SECONDARYWEAPON],

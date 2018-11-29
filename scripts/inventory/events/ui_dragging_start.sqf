@@ -96,8 +96,8 @@ case "ui_dragging_start": {
 				private _forbiddenCtrlsIDCs = [
 					MACRO_IDC_NVGS_FRAME,
 					MACRO_IDC_HEADGEAR_FRAME,
-					MACRO_IDC_GOGGLES_FRAME,
 					MACRO_IDC_BINOCULARS_FRAME,
+					MACRO_IDC_GOGGLES_FRAME,
 					MACRO_IDC_MAP_FRAME,
 					MACRO_IDC_GPS_FRAME,
 					MACRO_IDC_RADIO_FRAME,
@@ -194,27 +194,30 @@ case "ui_dragging_start": {
 					(_ctrl getVariable [MACRO_VARNAME_SLOTPOS, [0,0]]) params ["_posSlotX", "_posSlotY"];
 
 					// Fetch the occupied slots
+					private _itemData = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
+					private _occupiedSlots = +(_itemData getVariable [MACRO_VARNAME_OCCUPIEDSLOTS, []]);
 					private _hiddenSlots = [];
-					for "_posY" from _posSlotY to (_posSlotY + _slotHeight - 1) do {
-						for "_posX" from _posSlotX to (_posSlotX + _slotWidth - 1) do {
-							_hiddenSlots pushBack (_containerCtrl getVariable [format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY], controlNull]);
-						};
-					};
-					_hiddenSlots deleteAt 0;
+					_occupiedSlots deleteAt 0;
 
 					// Unhide the occupied slot controls
-					{
-						_x ctrlShow true;
-					} forEach _hiddenSlots;
+					if (_hiddenSlots isEqualType []) then {
+						{
+							private _slot = _containerCtrl getVariable [format [MACRO_VARNAME_SLOT_X_Y, _x select 0, _x select 1], controlNull];
+							_hiddenSlots pushback _slot;
+							_slot ctrlShow true;
+						} forEach _occupiedSlots;
+
+						// Save the hidden controls
+						_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, _hiddenSlots];
+					} else {
+						_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, []];
+					};
 
 					// Rescale the original slot control
 					_posCtrl set [2, _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
 					_posCtrl set [3, _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
 					_ctrl ctrlSetPosition _posCtrl;
 					_ctrl ctrlCommit 0;
-
-					// Save the hidden controls
-					_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, _hiddenSlots];
 
 				} else {
 					_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, []];

@@ -1,4 +1,5 @@
 TODO:
+- Fix being unable to drag reserved items/weapons from containers into their slots (if they are empty)
 - Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
 - Fully implement dragging functionality so it actually works (actually moving things around in inventories)
 - Add a global scale multiplier (macro) for slot pictures?
@@ -29,7 +30,7 @@ DONE:	(top: most recent)
 	* Unifoms
 	* Vests
 	* Backpacks
-- Convert weapons menu to use generateChildCOntrols
+- Convert weapons menu to use generateChildControls
 	* Remove built-in icon controls and associated macros
 	* Modify weapons/medical menu events to hide the new child controls correctly
 - Add a fillbar to magazine items if they have more than one bullet

@@ -28,7 +28,7 @@ class CfgFunctions {
 			class civ_idleAnim {};
 
 			class addAISpawn {};
-			//class handleWarfare {};
+			class handleWarfare {};
 		};
 
 		class inventory {
@@ -40,11 +40,13 @@ class CfgFunctions {
 				postInit = 1;
 			};
 			//class inventory {};
+			class inventory_createNamespace {};
+			class canFitItem {};
+
 			class getMass {};
 
-			class inventory_createNamespace {};
 			//class generateContainerData {};
-			class generateChildControls {};
+			//class generateChildControls {};
 
 			class generateWeaponAccArray {};
 			class generateWeaponAccData {};

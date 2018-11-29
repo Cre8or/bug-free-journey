@@ -434,9 +434,19 @@ class Cre8ive_Inventory_ScriptedPicture : RscPicture {
 };
 
 class Cre8ive_Inventory_ScriptedOutline : RscBox {
+	style = ST_WITH_RECT;
 	x = 0;
 	y = 0;
 	w = 0;
 	h = 0;
-	style = ST_WITH_RECT;
+};
+
+class Cre8ive_Inventory_ScriptedText : RscText {
+	style = ST_LEFT;
+	font = "PuristaLight";
+	sizeEx = _safeZoneW * 0.025;
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
 };

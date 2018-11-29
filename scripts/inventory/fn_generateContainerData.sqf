@@ -64,6 +64,11 @@ if (_container isKindOf "Man") then {
 	} forEach assignedItems _container;
 
 	// Handle the unit's weapons
+	private _varNames = [
+		MACRO_VARNAME_UNIT_PRIMARYWEAPON,
+		MACRO_VARNAME_UNIT_HANDGUNWEAPON,
+		MACRO_VARNAME_UNIT_SECONDARYWEAPON
+	];
 	private _weaponDataArray = [];
 	{
 		// Only continue if we have a weapon
@@ -78,10 +83,12 @@ if (_container isKindOf "Man") then {
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
 			_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
 
-			// Generate the accessories data
-			_weaponDataArray pushBack (_itemData);
-		} else {
-			_weaponDataArray pushBack locationNull;
+			// Save the variable name as the slot position
+			private _varName = _varNames select _forEachIndex;
+			_itemData setVariable [MACRO_VARNAME_SLOTPOS, _varName];
+
+			// Save the item onto the unit's container data
+			_containerData setVariable [_varName, _itemData];
 		};
 	} forEach [
 		primaryWeapon _container,
@@ -89,17 +96,12 @@ if (_container isKindOf "Man") then {
 		secondaryWeapon _container
 	];
 
-	// Save the weapon data onto the unit's container data
-	_containerData setVariable [MACRO_VARNAME_UNIT_PRIMARYWEAPON, _weaponDataArray select 0];
-	_containerData setVariable [MACRO_VARNAME_UNIT_HANDGUNWEAPON, _weaponDataArray select 1];
-	_containerData setVariable [MACRO_VARNAME_UNIT_SECONDARYWEAPON, _weaponDataArray select 2];
-
 	// Handle the unit's assigned items
 	_varNames = [
 		MACRO_VARNAME_UNIT_NVGS,
 		MACRO_VARNAME_UNIT_HEADGEAR,
-		MACRO_VARNAME_UNIT_GOGGLES,
 		MACRO_VARNAME_UNIT_BINOCULARS,
+		MACRO_VARNAME_UNIT_GOGGLES,
 		MACRO_VARNAME_UNIT_MAP,
 		MACRO_VARNAME_UNIT_GPS,
 		MACRO_VARNAME_UNIT_RADIO,
@@ -117,14 +119,18 @@ if (_container isKindOf "Man") then {
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
 			_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
 
+			// Save the variable name as the slot position
+			private _varName = _varNames select _forEachIndex;
+			_itemData setVariable [MACRO_VARNAME_SLOTPOS, _varName];
+
 			// Save the item onto the unit's container data
-			_containerData setVariable [_varNames select _forEachIndex, _itemData];
+			_containerData setVariable [_varName, _itemData];
 		};
 	} forEach [
 		hmd _container,
 		headgear _container,
-		goggles _container,
 		binocular _container,
+		goggles _container,
 		_map,
 		_GPS,
 		_radio,
@@ -134,8 +140,16 @@ if (_container isKindOf "Man") then {
 
 	// If required, recursively run this function on the unit's uniform, vest and backpack containers
 	if (_recursiveOnUnits) then {
+		_varNames = [
+			MACRO_VARNAME_UNIT_UNIFORM,
+			MACRO_VARNAME_UNIT_VEST,
+			MACRO_VARNAME_UNIT_BACKPACK
+		];
 		{
-			[_x] call cre_fnc_generateContainerData;
+			private _subContainerData = [_x] call cre_fnc_generateContainerData;
+
+			_subContainerData setVariable [MACRO_VARNAME_PARENT, _containerData];
+			_containerData setVariable [_varNames select _forEachIndex, _subContainerData];
 		} forEach [
 			uniformContainer _container,
 			vestContainer _container,
@@ -303,6 +317,7 @@ if (_container isKindOf "Man") then {
 
 						// The dimensions fit, now we check if the required slots are all free
 						private _requiredSlots = [];
+						private _requiredSlotsStrArray = [];
 						for "_posItemY" from _posY to _posEndY do {
 							for "_posItemX" from _posX to _posEndX do {
 								private _requiredSlotStr = format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
@@ -310,7 +325,8 @@ if (_container isKindOf "Man") then {
 
 								// If the slot is empty, add it to the list
 								if (isNull _requiredSlot) then {
-									_requiredSlots pushBack _requiredSlotStr;
+									_requiredSlotsStrArray pushBack _requiredSlotStr;
+									_requiredSlots pushBack [_posItemX, _posItemY];
 
 								// Otherwise, abort and look for a new slot
 								} else {
@@ -322,7 +338,7 @@ if (_container isKindOf "Man") then {
 						// If we didn't exit the loop yet, then the slots are free
 						{
 							_containerData setVariable [_x, _itemData];
-						} forEach _requiredSlots;
+						} forEach _requiredSlotsStrArray;
 
 						// Now we may fill in the item data
 						// The provided scripting commands return results in a different format, so we have to choose accordingly
@@ -356,8 +372,11 @@ if (_container isKindOf "Man") then {
 							};
 						};
 
-						_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
+						// Save some more info onto the item data
 						_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
+						_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
+						_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
+
 						_containerItems pushBack _itemData,
 						//systemChat format ["Added %1 at pos: %2", _class, [_posX, _posY]];
 

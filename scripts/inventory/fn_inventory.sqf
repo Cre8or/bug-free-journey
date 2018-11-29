@@ -45,7 +45,7 @@ switch (_event) do {
 
 
 
-
+/*
 // DEBUG: Print the event name
 private _filteredEvents = [
 	"ui_focus_reset",
@@ -56,7 +56,7 @@ private _filteredEvents = [
 if !(_event in _filteredEvents) then {
 	systemChat format ["(%1) %2", time, _event];
 };
-
+*/
 
 // DEBUG: Check if the event was recognised - if not, print a message
 if (!_eventExists) then {

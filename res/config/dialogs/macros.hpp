@@ -4,16 +4,22 @@
 
 	//#define COLOUR_SCHEME
 
-
 	#ifdef COLOUR_SCHEME
-		#define MACRO_COLOUR_BACKGROUND				0.11, 0.095, 0.06, 0.8
+
+		#define MACRO_COLOUR_BACKGROUND				0.11, 0.09, 0.06, 0.8
 		#define MACRO_COLOUR_ELEMENT_ACTIVE			0.8, 0.72, 0.55, 0.5
 		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.8, 0.72, 0.55, 0.15
+		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER		0.8, 0.72, 0.55, 0.7
+		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER		0.8, 0.72, 0.55, 0.3
 		#define MACRO_COLOUR_SEPARATOR				0.08, 0.07, 0.045, 0.8
-//		#define MACRO_COLOUR_BACKGROUND				0.095, 0.11, 0.06, 0.8
-//		#define MACRO_COLOUR_ELEMENT_ACTIVE			0.72, 0.8, 0.55, 0.4
-//		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.72, 0.8, 0.55, 0.15
-//		#define MACRO_COLOUR_SEPARATOR				0.07, 0.08, 0.045, 0.8
+/*
+		#define MACRO_COLOUR_BACKGROUND				0.095, 0.11, 0.06, 0.8
+		#define MACRO_COLOUR_ELEMENT_ACTIVE			0.72, 0.8, 0.55, 0.4
+		#define MACRO_COLOUR_ELEMENT_INACTIVE			0.72, 0.8, 0.55, 0.15
+		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER		0.72, 0.8, 0.55, 0.6
+		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER		0.72, 0.8, 0.55, 0.3
+		#define MACRO_COLOUR_SEPARATOR				0.07, 0.08, 0.045, 0.8
+*/
 	#else
 		#define MACRO_COLOUR_BACKGROUND				0.1, 0.1, 0.1, 0.8
 		#define MACRO_COLOUR_ELEMENT_ACTIVE			0.7, 0.7, 0.7, 0.6
@@ -21,12 +27,12 @@
 		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER		0.7, 0.7, 0.7, 0.8
 		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER		0.7, 0.7, 0.7, 0.3
 		#define MACRO_COLOUR_ELEMENT_DRAGGING_ORIGIN		0.3, 0.3, 0.3, 0.3
-		#define MACRO_COLOUR_ELEMENT_DRAGGING_GREEN		0.2, 1, 0.2, 0.5
-		#define MACRO_COLOUR_ELEMENT_DRAGGING_RED		1, 0.2, 0.2, 0.5
 		#define MACRO_COLOUR_SEPARATOR				0.05, 0.05, 0.05, 0.8
 	#endif
 
 	#define MACRO_COLOUR_INVISIBLE					0, 0, 0, 0
+	#define MACRO_COLOUR_ELEMENT_DRAGGING_GREEN			0.2, 1, 0.2, 0.5
+	#define MACRO_COLOUR_ELEMENT_DRAGGING_RED			1, 0.2, 0.2, 0.5
 
 
 
@@ -40,8 +46,8 @@
 	// NVGs, binoculars, headgear and goggles
 	#define MACRO_PICTURE_NVGS					"a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_nvg_gs.paa"
 	#define MACRO_PICTURE_HEADGEAR					"a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_helmet_gs.paa"
-	#define MACRO_PICTURE_GOGGLES					"a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_glasses_gs.paa"
 	#define MACRO_PICTURE_BINOCULARS				"a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_binocular_gs.paa"
+	#define MACRO_PICTURE_GOGGLES					"a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_glasses_gs.paa"
 
 	// Weapons
 	#define MACRO_PICTURE_PRIMARYWEAPON				"a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_primary_gs.paa"
@@ -113,8 +119,8 @@
 	// NVGs, binoculars, headgear and goggles
 	#define MACRO_IDC_NVGS_FRAME					2202
 	#define MACRO_IDC_HEADGEAR_FRAME				2203
-	#define MACRO_IDC_GOGGLES_FRAME					2204
-	#define MACRO_IDC_BINOCULARS_FRAME				2205
+	#define MACRO_IDC_BINOCULARS_FRAME				2204
+	#define MACRO_IDC_GOGGLES_FRAME					2205
 
 	// Primary Weapon
 	#define MACRO_IDC_PRIMARYWEAPON_FRAME				2211
@@ -163,12 +169,15 @@
 
 	#define MACRO_ENUM_CTRL_PICTURE_ICON				0
 	#define MACRO_ENUM_CTRL_OUTLINE					1
+	#define MACRO_ENUM_CTRL_TEXT_DISPLAYNAME			2
+
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_MUZZLE			10
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_BIPOD			11
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_SIDE			12
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_OPTIC			13
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_MAGAZINE			14
 	#define MACRO_ENUM_CTRL_PICTURE_WEAPON_ALTMAGAZINE		15
+
 	#define MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR			20
 
 
@@ -270,6 +279,7 @@
 	#define MACRO_VARNAME_SLOTSIZE					"slotSize"
 	#define MACRO_VARNAME_SLOTPOS					"slotPos"
 	#define MACRO_VARNAME_SLOT_X_Y					"slot_%1_%2"
+	#define MACRO_VARNAME_OCCUPIEDSLOTS				"occupiedSlots"
 	#define MACRO_VARNAME_PARENT					"parent"
 
 	#define MACRO_VARNAME_CONTAINERSIZE				"containerSize"
@@ -281,13 +291,17 @@
 
 	#define MACRO_VARNAME_UNIT_NVGS					"unitNVGs"
 	#define MACRO_VARNAME_UNIT_HEADGEAR				"unitHeadgear"
-	#define MACRO_VARNAME_UNIT_GOGGLES				"unitGoggles"
 	#define MACRO_VARNAME_UNIT_BINOCULARS				"unitBinoculars"
+	#define MACRO_VARNAME_UNIT_GOGGLES				"unitGoggles"
 	#define MACRO_VARNAME_UNIT_MAP					"unitMap"
 	#define MACRO_VARNAME_UNIT_GPS					"unitGPS"
 	#define MACRO_VARNAME_UNIT_RADIO				"unitRadio"
 	#define MACRO_VARNAME_UNIT_COMPASS				"unitCompass"
 	#define MACRO_VARNAME_UNIT_WATCH				"unitWatch"
+
+	#define MACRO_VARNAME_UNIT_UNIFORM				"unitUniform"
+	#define MACRO_VARNAME_UNIT_VEST					"unitVest"
+	#define MACRO_VARNAME_UNIT_BACKPACK				"unitBackpack"
 
 	#define MACRO_VARNAME_MAG_AMMO					"ammo"
 	#define MACRO_VARNAME_MAG_MAXAMMO				"maxAmmo"
@@ -299,7 +313,13 @@
 	#define MACRO_VARNAME_MAG					"magazine"
 	#define MACRO_VARNAME_MAGALT					"magazineAlt"
 
-
+	#define MACRO_VARNAME_UI_ACC_MUZZLE				"ctrlAccMuzzle"
+	#define MACRO_VARNAME_UI_ACC_BIPOD				"ctrlAccBipod"
+	#define MACRO_VARNAME_UI_ACC_SIDE				"ctrlAccSide"
+	#define MACRO_VARNAME_UI_ACC_OPTIC				"ctrlAccOptic"
+	#define MACRO_VARNAME_UI_MAG					"ctrlMagazine"
+	#define MACRO_VARNAME_UI_MAGALT					"ctrlMagazineAlt"
+	#define MACRO_VARNAME_UI_DISPLAYNAME				"ctrlDisplayName"
 
 
 

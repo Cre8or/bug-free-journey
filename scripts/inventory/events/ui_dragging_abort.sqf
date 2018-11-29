@@ -85,5 +85,9 @@ case "ui_dragging_abort": {
 			_ctrl ctrlSetPosition _posCtrl;
 			_ctrl ctrlCommit 0;
 		};
+
+		// Reset the cursor variables
+		_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
+		_inventory setVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []];
 	};
 };

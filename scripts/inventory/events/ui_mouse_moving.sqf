@@ -17,11 +17,14 @@ case "ui_mouse_moving": {
 	// Save the mouse position relative to the control onto the inventory
 	_inventory setVariable [MACRO_VARNAME_UI_CURSORPOSREL, [_posRelX, _posRelY]];
 
-	// Check if the control has changed
-	private _ctrlOld = _inventory getVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
+	// Update the cursor control on the inventory
+	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, _ctrl];
+
+	// Fetch the dragged control
 	private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
 
-	if (!isNull _draggedCtrl) then {
+	// If the control is not null, and is being dragged...
+	if (_draggedCtrl getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
 
 		// Fetch the temporary frame
 		private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
@@ -51,13 +54,15 @@ case "ui_mouse_moving": {
 				_ctrlIconTemp ctrlSetTextColor [1,0,0,1];
 			};
 
+			// Reset the slot position
+			_inventory setVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []];
+
 		// Otherwise, determine whether the item can fit via its size
 		} else {
 
 			// Fetch the dragged control's slot size
 			(_draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]]) params ["_slotSizeW", "_slotSizeH"];
 			_slotPos params ["_slotPosX", "_slotPosY"];
-
 
 			// Offset the slot by 50% of the size of the control, so it's centered
 			_slotPosX = _slotPosX - ceil (_slotSizeW / 2) + 1;
@@ -129,29 +134,31 @@ case "ui_mouse_moving": {
 
 	// Otherwise, if we're not dragging anything, highlight the control under the cursor
 	} else {
-		// Paint the old controls in whichever colour they were before
-		private _ctrlsOld = _inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
-		{
-			if (ctrlShown _x) then {
-				if (_x getVariable ["active", false]) then {
-					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-				} else {
-					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+
+		// Make sure the control isn't one that's about to be dragged
+		if (!isNull _ctrl and {_ctrl != _draggedCtrl}) then {
+
+			// Paint the old controls in whichever colour they were before
+			private _ctrlsOld = _inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
+			{
+				if (ctrlShown _x) then {
+					if (_x getVariable ["active", false]) then {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+					} else {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+					};
 				};
+			} forEach _ctrlsOld;
+
+			// Paint the control under the cursor
+			if (_ctrl getVariable ["active", false]) then {
+				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE_HOVER);
+			} else {
+				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);
 			};
-		} forEach _ctrlsOld;
 
-		// Paint the control under the cursor
-		if (_ctrl getVariable ["active", false]) then {
-			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE_HOVER);
-		} else {
-			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);
+			// Update the list of highlighted controls
+			_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, [_ctrl]];
 		};
-
-		// Update the list of highlighted controls
-		_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, [_ctrl]];
 	};
-
-	// Update the control on the inventory
-	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, _ctrl];
 };

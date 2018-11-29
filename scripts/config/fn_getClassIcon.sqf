@@ -50,32 +50,16 @@ if (_iconPath == " ") then {
 		case MACRO_ENUM_CATEGORY_VEST;
 		case MACRO_ENUM_CATEGORY_HEADGEAR: {
 			_iconPath = [configfile >> "CfgWeapons" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
-
-			#ifdef MACRO_DEBUG_GETCLASSICON
-				systemChat format ["(getClassIcon) Item is a weapon - Icon: %1)", _iconPath];
-			#endif
 		};
 		case MACRO_ENUM_CATEGORY_MAGAZINE: {
 			_iconPath = [configfile >> "CfgMagazines" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
-
-			#ifdef MACRO_DEBUG_GETCLASSICON
-				systemChat format ["(getClassIcon) Item is a magazine - Icon: %1)", _iconPath];
-			#endif
 		};
 		case MACRO_ENUM_CATEGORY_BACKPACK;
 		case MACRO_ENUM_CATEGORY_VEHICLE: {
 			_iconPath = [configfile >> "CfgVehicles" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
-
-			#ifdef MACRO_DEBUG_GETCLASSICON
-				systemChat format ["(getClassIcon) Item is a vehicle - Icon: %1)", _iconPath];
-			#endif
 		};
 		case MACRO_ENUM_CATEGORY_GOGGLES: {
 			_iconPath = [configfile >> "CfgGlasses" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
-
-			#ifdef MACRO_DEBUG_GETCLASSICON
-				systemChat format ["(getClassIcon) Item is a pair of glasses - Icon: %1)", _iconPath];
-			#endif
 		};
 		default {
 			private _str = format ["ERROR [cre_fnc_getClassIcon]: No rule for category '%1' (%2)!", _category, _class];

@@ -15,19 +15,62 @@ case "ui_dragging_stop": {
 		private _slotPos = _inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, [0,0]];
 		private _slotSize = _draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
 		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
+		private _containerCtrl = _ctrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];
 		private _containerData = _cursorCtrl getVariable [MACRO_VARNAME_PARENT, locationNull];
 
 		// Try to fit the item on the slot
-		//private _canFit = [_itemData, _containerData, _slotPos, _slotSize] call cre_fnc_canFitItem;
+		([_itemData, _containerData, _slotPos, _slotSize] call cre_fnc_canFitItem) params ["_canFit"];
 		//systemChat format ["(%1) - pos: %2 - size: %3 - canFit: %4", time, _slotPos, _slotSize, _canFit];
 
-		([_itemData, _containerData, _slotPos, _slotSize, false] call cre_fnc_canFitItem) params ["_canFit", "_slots"];
-		systemChat format ["(%1) - pos: %2 - size: %3 - canFit: %4 - sots: %5", time, _slotPos, _slotSize, _canFit, _slots];
+		// If the item can fit there, move it
+		if (_canFit) then {
 
+			// Fetch the item's occupied slot(s)
+			private _slotPosOld = _itemData getVariable [MACRO_VARNAME_SLOTPOS, []];
+			private _occupiedSlots = _itemData getVariable [MACRO_VARNAME_OCCUPIEDSLOTS, []];
 
-/*
+			// If the position is an array, the item might have multiple occupied slots
+			if (_slotPosOld isEqualType []) then {
+
+				// First, we reset the occupied slots on the container
+				{
+					_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _x select 0, _x select 1], locationNull];
+				} forEach _occupiedSlots;
+				_occupiedSlots = [];
+
+				// Next, we check where the item has gone
+				// If the new position is an array, then it must be going into a container
+				if (_slotPos isEqualType []) then {
+
+					// Determine the new list of slots at the new position
+					_slotPos params ["_slotPosX", "_slotPosY"];
+					for "_posY" from _slotPosY to (_slotPosY + (_slotSize select 1) - 1) do {
+						for "_posX" from _slotPosX to (_slotPosX + (_slotSize select 0) - 1) do {
+							_occupiedSlots pushBack [_posX, _posY];
+
+							// Link the container's slot at this position towards the item
+							_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY], _itemData];
+						};
+					};
+
+				// Otherwise, the item must be going into a reserved slot
+				} else {
+					_containerData setVariable [_slotPos, _itemData];
+				};
+
+				// Finally, update the item's occupied slots and its slot position
+				_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _occupiedSlots];
+				_itemData setVariable [MACRO_VARNAME_SLOTPOS, _slotPos];
+
+			// Otherwise, the slot position variable is just the varname for the item's slot
+			} else {
+
+				// Reset the item data at the given slot
+				_containerData setVariable [_slotPosOld, locationNull];
+			};
+		};
+
 		// If the control is a slot, handle the hidden slot controls
-		private _containerCtrl = _ctrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];
 		if (!isNull _containerCtrl and {_ctrl != _containerCtrl}) then {
 
 			// Rehide the hidden slot controls
@@ -42,6 +85,5 @@ case "ui_dragging_stop": {
 			_ctrl ctrlSetPosition _posCtrl;
 			_ctrl ctrlCommit 0;
 		};
-*/
 	};
 };

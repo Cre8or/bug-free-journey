@@ -17,20 +17,36 @@ case "ui_mouse_exit": {
 	// If the control was an allowed reserved slot, paint it in the inactive (hover) colour
 	if (_ctrl in (_inventory getVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []])) then {
 		_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);
-	} else {;
+
+	// Otherwise, reset its colour
+	} else {
 
 		// If the control was a forbidden reserved slot, don't modify the colour
 		if !(_ctrl in (_inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []])) then {
 
-			// Restore the original colour on the highlighted controls
-			{
-				if (_x getVariable ["active", false] and {_x != _draggedCtrl}) then {
-					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-				} else {
-					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-				};
-			} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
-			_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
+			// If the control is not being dragged
+			if (_draggedCtrl getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
+
+				// Restore the original colour on the highlighted controls
+				{
+					if (_x getVariable ["active", false] and {_x != _draggedCtrl}) then {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+					} else {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+					};
+				} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
+				_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
+
+			} else {
+				{
+					if (_x getVariable ["active", false]) then {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+					} else {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+					};
+				} forEach ((_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]) - [_draggedCtrl]);
+				_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
+			};
 		};
 	};
 };

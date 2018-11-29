@@ -85,7 +85,7 @@ if (_doSimpleCheck) then {
 			private _slotData = _containerData getVariable [format [MACRO_VARNAME_SLOT_X_Y, _x, _y], locationNull];
 
 			// If any of the slots is occupied, break and exit
-			if (!isNull _slotData) then {
+			if (!isNull _slotData and {_slotData != _itemData}) then {
 				systemChat format ["(canFitItem) FAIL: Found a non-null slot at: %1,%2", _x, _y];
 				breakTo "main";
 			};

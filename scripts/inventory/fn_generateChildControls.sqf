@@ -60,6 +60,7 @@ switch (_category) do {
 		_requiredControls = [
 			MACRO_ENUM_CTRL_PICTURE_ICON,
 			MACRO_ENUM_CTRL_OUTLINE,
+			MACRO_ENUM_CTRL_TEXT_DISPLAYNAME,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_MUZZLE,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_BIPOD,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_SIDE,
@@ -73,6 +74,7 @@ switch (_category) do {
 		_requiredControls = [
 			MACRO_ENUM_CTRL_PICTURE_ICON,
 			MACRO_ENUM_CTRL_OUTLINE,
+			MACRO_ENUM_CTRL_TEXT_DISPLAYNAME,
 			MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR
 		];
 	};
@@ -193,6 +195,51 @@ private _childControls = [];
 
 		};
 
+		// Display name
+		case MACRO_ENUM_CTRL_TEXT_DISPLAYNAME: {
+
+			private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
+			private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedText", -1, _ctrlParent];
+			private _pos = [
+				(_posCtrl select 0) - pixelW * 4,
+				(_posCtrl select 1) + pixelH * 2,
+				(_posCtrl select 2),
+				_safeZoneH * 0.01
+			];
+			_ctrlNew ctrlSetPosition _pos;
+			_ctrlNew ctrlCommit 0;
+
+			// Fetch the display name from the proper config path, based on the category
+			private _displayName = "";
+			switch (_category) do {
+				case MACRO_ENUM_CATEGORY_ITEM;
+				case MACRO_ENUM_CATEGORY_WEAPON;
+				case MACRO_ENUM_CATEGORY_UNIFORM;
+				case MACRO_ENUM_CATEGORY_VEST;
+				case MACRO_ENUM_CATEGORY_HEADGEAR: {
+					_displayName = [configfile >> "CfgWeapons" >> _class, "displayName", ""] call BIS_fnc_returnConfigEntry;
+				};
+				case MACRO_ENUM_CATEGORY_MAGAZINE: {
+					_displayName = [configfile >> "CfgMagazines" >> _class, "displayName", ""] call BIS_fnc_returnConfigEntry;
+				};
+				case MACRO_ENUM_CATEGORY_BACKPACK;
+				case MACRO_ENUM_CATEGORY_VEHICLE: {
+					_displayName = [configfile >> "CfgVehicles" >> _class, "displayName", ""] call BIS_fnc_returnConfigEntry;
+				};
+				case MACRO_ENUM_CATEGORY_GOGGLES: {
+					_displayName = [configfile >> "CfgGlasses" >> _class, "displayName", ""] call BIS_fnc_returnConfigEntry;
+				};
+			};
+
+			_ctrlNew ctrlSetText _displayName;
+			_ctrlNew ctrlSetTextColor [1,1,1,1];
+			_ctrlNew ctrlSetFontHeight (0.018 * _safeZoneH);
+
+			// Save the new control onto the parent control
+			_ctrl setVariable [MACRO_VARNAME_UI_DISPLAYNAME, _ctrlNew];
+			_childControls pushBack _ctrlNew;
+		};
+
 		// Ammo Fillbar
 		case MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR: {
 
@@ -268,7 +315,7 @@ private _childControls = [];
 				_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_MUZZLE;
 
 				// Save the new control onto the parent control
-				_ctrl setVariable ["ctrlWeaponMuzzle", _ctrlNew];
+				_ctrl setVariable [MACRO_VARNAME_UI_ACC_MUZZLE, _ctrlNew];
 				_childControls pushBack _ctrlNew;
 			};
 		};
@@ -300,7 +347,7 @@ private _childControls = [];
 				_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_BIPOD;
 
 				// Save the new control onto the parent control
-				_ctrl setVariable ["ctrlWeaponBipod", _ctrlNew];
+				_ctrl setVariable [MACRO_VARNAME_UI_ACC_BIPOD, _ctrlNew];
 				_childControls pushBack _ctrlNew;
 			};
 		};
@@ -332,7 +379,7 @@ private _childControls = [];
 				_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_SIDE;
 
 				// Save the new control onto the parent control
-				_ctrl setVariable ["ctrlWeaponSide", _ctrlNew];
+				_ctrl setVariable [MACRO_VARNAME_UI_ACC_SIDE, _ctrlNew];
 				_childControls pushBack _ctrlNew;
 			};
 		};
@@ -365,7 +412,7 @@ private _childControls = [];
 				_ctrlNew ctrlSetText MACRO_PICTURE_WEAPON_ACC_OPTIC;
 
 				// Save the new control onto the parent control
-				_ctrl setVariable ["ctrlWeaponOptic", _ctrlNew];
+				_ctrl setVariable [MACRO_VARNAME_UI_ACC_OPTIC, _ctrlNew];
 				_childControls pushBack _ctrlNew;
 			};
 		};
