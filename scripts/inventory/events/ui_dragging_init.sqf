@@ -15,7 +15,7 @@ case "ui_dragging_init": {
 		["ui_focus_reset", [_ctrl]] call cre_fnc_inventory;
 
 		// If we're not dragging anything yet, set everything up (phase 1)
-		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {ctrlShown _ctrl}) then {
+		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {isNull (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull])} and {ctrlShown _ctrl}) then {
 
 			if (isNull (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull])) then {
 
@@ -33,24 +33,46 @@ case "ui_dragging_init": {
 
 				// DEBUG
 				private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
-				private _str = format ["VARIABLES (%1):\n\n", count allVariables _data];
+				private _namespaceToDebug = _data;
+				private _maxDepth = 5;
+				private _str = format ["<t color='#00aaff'>VARIABLES</t> (%1)<br /><br />", count allVariables _namespaceToDebug];
 				{
-					private _val = _data getVariable [_x, ""];
+					private _val = _namespaceToDebug getVariable [_x, ""];
 
 					if (_val isEqualType locationNull) then {
-						_str = _str + format ["* %1: %2\n[", _x, _val getVariable [MACRO_VARNAME_UID, ""]];
+						private _colourVal = "fffffff";
+						switch (typeName (_val getVariable [MACRO_VARNAME_UID, ""])) do {
+							case typeName locationNull;
+							case typeName 0: {_colourVal = "eda765"};
+							case typeName "": {_colourVal = "a3d87d"};
+						};
+						_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%3'>%4</t><br />    [</t>", _forEachIndex + 1, _x, _colourVal, _val getVariable [MACRO_VARNAME_UID, ""]];
 						{
-							_str = _str + _x;
-							if (_forEachIndex + 1 < count allVariables _val) then {
-								_str = _str + ", ";
+							if (_forEachIndex + 1 <= _maxDepth) then {
+								_str = _str + format ["<t align='left'><t color='#44dddd'>%1</t>", _x];
+								if (_forEachIndex + 1 == _maxDepth) then {
+									if (count allVariables _val > _maxDepth) then {
+										_str = _str + format [", ... <t color='#888888'>(%1 more)</t>", (count allVariables _val) - _maxDepth];
+									};
+								} else {
+									if (_forEachIndex + 1 < count allVariables _val) then {
+										_str = _str + ",   ";
+									};
+								};
 							};
 						} forEach allVariables _val;
-						_str = _str + "]\n";
+						_str = _str + "]</t><br />";
 					} else {
-						_str = _str + format ["* %1: %2", _x, _val] + "\n";
+						private _colourVal = "fffffff";
+						switch (typeName _val) do {
+							case typeName locationNull;
+							case typeName 0: {_colourVal = "eda765"};
+							case typeName "": {_colourVal = "a3d87d"};
+						};
+						_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%3'>%4</t></t><br />", _forEachIndex + 1, _x, _colourVal, _val];
 					};
-				} forEach allVariables _data;
-				hint _str;
+				} forEach allVariables _namespaceToDebug;
+				hint parseText _str;
 			};
 		};
 	};

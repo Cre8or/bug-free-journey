@@ -32,7 +32,7 @@ case "ui_dragging_start": {
 				private _subCategory = [_class, _category] call cre_fnc_getClassSubCategory;
 				private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
 				_slotSize params ["_slotWidth", "_slotHeight"];
-				private _defaultIconPath = _ctrl getVariable ["defaultIconPath", ""];
+				private _defaultIconPath = _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
 				private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 				private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
 				private _posCtrl = ctrlPosition _ctrl;
@@ -72,8 +72,8 @@ case "ui_dragging_start": {
 				private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
 				_ctrlFrameTemp setVariable [MACRO_VARNAME_DATA, _data];
 
-				// Generate additional child controls
-				private _childControls = [_ctrlFrameTemp, _class, _category, _slotSize, _defaultIconPath] call cre_fnc_generateChildControls;
+				// Generate additional temporary child controls
+				private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_generateChildControls;
 
 				// Determine the offset of the child controls in relation to the temporary frame
 				{
@@ -83,7 +83,7 @@ case "ui_dragging_start": {
 						(_posX select 1) - _posCtrlY
 					];
 					_x setVariable ["offset", _posOffset];
-				} forEach _childControls;
+				} forEach _tempChildControls;
 
 				// Mark the control as being dragged
 				_ctrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, true];
@@ -254,6 +254,10 @@ case "ui_dragging_start": {
 					};
 				}];
 				_inventory setVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN, _EH];
+
+			// If something went wrong, reset the dragged control (fallback)
+			} else {
+				_inventory setVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
 			};
 		};
 	};

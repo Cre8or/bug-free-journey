@@ -9,7 +9,7 @@ case "ui_menu_medical": {
 	// Change the button colours
 	(_inventory displayCtrl MACRO_IDC_WEAPONS_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 	(_inventory displayCtrl MACRO_IDC_MEDICAL_BUTTON_FRAME) ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-	_inventory setVariable ["isMedicalMenuOpen", true];
+	//_inventory setVariable ["isMedicalMenuOpen", true];
 
 	// Reset the focus
 	["ui_focus_reset"] call cre_fnc_inventory;

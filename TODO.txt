@@ -1,7 +1,10 @@
 TODO:
-- Fix being unable to drag reserved items/weapons from containers into their slots (if they are empty)
+
 - Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
 - Fully implement dragging functionality so it actually works (actually moving things around in inventories)
+	* Modify the player/object's container data
+	* Modify the player/object's inventory
+	* Detect discrepancies and synchronise the actual inventory with the UI?
 - Add a global scale multiplier (macro) for slot pictures?
 - Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
 - Search for "TODO" and "DEBUG" comments and address them
@@ -11,6 +14,16 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Fix child controls not getting deleted when dragging a reserved slot item onto its own slot
+- Fix incorrect slot colouring when calling ui_dragging_start after the mouse has moved outside of the dragged control
+- Figure out why dragging items into their exact original slot causes them to become undraggable
+- Improve the debug hint to make the data more readable
+- Fix dragging items/containers from reserved slots into regular slots causing errors (in ui_dragging_stop)
+- Redefine slotPos variable to always be an array of numbers (X, Y)
+	* First entry (X) can be negative, to indicate that the item/container is in a reserved slot
+	* In this case, the first entry must match the reserved slot via an enumerations list
+	* Adapt all events and functions that use the slot position to accomodate for the enums
+- Fix being unable to drag reserved items/weapons from containers into their slots (if they are empty)
 - Find a way to represent the origin slots of an item as "free" when dragging, without breaking anything else
 - Fix vests and uniforms getting picked up twice in genrateContainerData
 - Find a way to identify whether an item can go in the assigned slots/weapon slots

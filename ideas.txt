@@ -1,0 +1,78 @@
+-----------------------------------------------------------------------------------------------------------------------
+MAGAZINE PRIORITY
+-----------------------------------------------------------------------------------------------------------------------
+
+A system that allows the player to define the order in which his weapon's magazines will get loaded when pressing
+the reload key, aswell as complimentary magazine status display when reloading.
+
+By default, the game should pick the magazine with the remaining bullets from the uniform/vest (not backpack - because
+of this, a custom system is required where magazines are spawned in on-demand, as there is no way to override the
+default reload action).
+There should be an action in the inventory screen (on every weapon, and for every muzzle) which, when pressed,
+highlights all matching magazines in the uniform/vest. By clicking on them, the player can set the order in which
+he wants the magazines to be reloaded.
+
+Alongside this, a small HUD element should come up whenever the player is reloading (similar to ACE3's magazine check
+UI) showing all magazines for the current muzzle and their ammo status.
+Independently from the magazine priority, holding down the reload key for longer than ~0.5 seconds should enable the
+player to scroll through this list of magazines, always highlighting the currently selected one. When releasing R,
+the weapon should then load that specific magazine.
+
+Possible issues:
+- What if the player has 3 magazines but only selected 2 for the reoading priority? Auto-assign the remaining ones
+	based on their ammo capacity?
+- Showing the magazine ammo status could be considered as OP, since it gives you more information than vanilla A3;
+	is this a valid concern? If so, how to balance it?
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+INDEPENDENT INVENTORY SYNCHRONISER
+-----------------------------------------------------------------------------------------------------------------------
+
+A system that detects differences between the custom inventory data and the actual inventory, and irons them out.
+
+Something that's needed for various reasons, such as mod interaction, scripting support and handling hardcoded engine
+actions (reloading, healing, putting explosives, etc.). Essentially a script that runs in scheduled environment and
+repeatedly iterates through the player's inventory data and matches entries to the actual inventory.
+
+If the *custom* inventory is missing something (best case), we simply generate the item data for the new item.
+However, if the *actual* inventory is missing something (worst case), we need to get rid of an item from our custom
+inventory, aswell as all the unique data that's saved on it - but which one do we delete?
+
+We can't use the indexes as assigned by e.g. 'weaponsItemsCargo' because there are ways to modify those
+(delete all items and re-add them in a different order, all in one game tick).
+For magazines, we can iterate through the ammo counts to minimise the losses (still not exact if there is more than
+one match).
+For weapons, we can iterate through the attachments and loaded magazines. Still not exact, but good enough.
+For items, we're essentially screwed, because there is no way to tell them apart. Simply delete the first/last one?
+For clothing and similar items, same as above.
+
+Also, when iterating through containers (vests, uniform, backpack) - how do we go about adding just *one* item?
+We can't use 'generateContainerData' because that would destroy existing data, so we need a custom function,
+e.g. 'updateContainerData' or 'refreshContainerData' that considers existing item data.
+Also, what if - assuming the "best case" scenario from before - the new item doesn't fit in the container (due
+to unlucky placement of items)? Delete it from the actual inventory?
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+CRAYON CANDLES
+-----------------------------------------------------------------------------------------------------------------------
+
+Crayons are made of wax. Stuck in the dark? Pop a crayon and you can see for about half an hour!
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+RENAMING ITEMS
+-----------------------------------------------------------------------------------------------------------------------
+
+Using a sharpie or a thick marker of some kind, it's possible to rename any item (except for the marker itself).
+Maybe implement a size limit, and/or scale the durability consumption to the slot size of the item?

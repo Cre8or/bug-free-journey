@@ -15,9 +15,6 @@ case "ui_dragging_abort": {
 		private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
 		private _category = [_class] call cre_fnc_getClassCategory;
 		private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
-		private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
-		private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
-		private _posCtrl = ctrlPosition _ctrl;
 
 		// Mark the control as no longer being dragged
 		_ctrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false];
@@ -69,7 +66,7 @@ case "ui_dragging_abort": {
 		_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
 		_inventory setVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []];
 
-		// If the control is a slot, handle the hidden slot controls
+		// If the control is a container slot, handle the hidden slot controls
 		private _containerCtrl = _ctrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];
 		if (!isNull _containerCtrl and {_ctrl != _containerCtrl}) then {
 
@@ -78,6 +75,11 @@ case "ui_dragging_abort": {
 				_x ctrlShow false;
 			} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, []]);
 			_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, []];
+
+			// Fetch some additional data
+			private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
+			private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
+			private _posCtrl = ctrlPosition _ctrl;
 
 			// Rescale the control
 			_posCtrl set [2, (_slotSize select 0) * _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];

@@ -18,4 +18,7 @@ cre_fnc_generateContainerData = compile preprocessFileLineNumbers "scripts\inven
 cre_fnc_generateChildControls = compile preprocessFileLineNumbers "scripts\inventory\fn_generateChildControls.sqf";
 cre_fnc_canFitItem = compile preprocessFileLineNumbers "scripts\inventory\fn_canFitItem.sqf";
 
+cre_inventory_synchroniser = [] spawn compile preprocessFileLineNumbers "scripts\inventory\fn_inventory_synchroniser.sqf";
+
+// Bonus stuff
 cre_warfare = [] spawn compile preprocessFileLineNumbers "scripts\AI\fn_handleWarfare.sqf";

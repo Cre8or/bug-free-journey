@@ -214,8 +214,8 @@
 	#define MACRO_ENUM_CATEGORY_VEST				4
 	#define MACRO_ENUM_CATEGORY_BACKPACK				5
 
-	#define MACRO_ENUM_CATEGORY_GOGGLES				6
-	#define MACRO_ENUM_CATEGORY_HEADGEAR				7
+	#define MACRO_ENUM_CATEGORY_HEADGEAR				6
+	#define MACRO_ENUM_CATEGORY_GOGGLES				7
 
 	#define MACRO_ENUM_CATEGORY_VEHICLE				8
 
@@ -229,19 +229,48 @@
 
 	#define MACRO_ENUM_SUBCATEGORY_INVALID				-1
 
-	// Item sub-categories
-	#define MACRO_ENUM_SUBCATEGORY_NVGS				0
-	#define MACRO_ENUM_SUBCATEGORY_BINOCULARS			1
-	#define MACRO_ENUM_SUBCATEGORY_MAP				2
-	#define MACRO_ENUM_SUBCATEGORY_GPS				3
-	#define MACRO_ENUM_SUBCATEGORY_RADIO				4
-	#define MACRO_ENUM_SUBCATEGORY_COMPASS				5
-	#define MACRO_ENUM_SUBCATEGORY_WATCH				6
-
 	// Weapon sub-categories
-	#define MACRO_ENUM_SUBCATEGORY_PRIMARYWEAPON			10
-	#define MACRO_ENUM_SUBCATEGORY_HANDGUNWEAPON			11
-	#define MACRO_ENUM_SUBCATEGORY_SECONDARYWEAPON			12
+	#define MACRO_ENUM_SUBCATEGORY_PRIMARYWEAPON			0
+	#define MACRO_ENUM_SUBCATEGORY_HANDGUNWEAPON			1
+	#define MACRO_ENUM_SUBCATEGORY_SECONDARYWEAPON			2
+
+	// Item sub-categories
+	#define MACRO_ENUM_SUBCATEGORY_NVGS				10
+	#define MACRO_ENUM_SUBCATEGORY_BINOCULARS			11
+	#define MACRO_ENUM_SUBCATEGORY_MAP				12
+	#define MACRO_ENUM_SUBCATEGORY_GPS				13
+	#define MACRO_ENUM_SUBCATEGORY_RADIO				14
+	#define MACRO_ENUM_SUBCATEGORY_COMPASS				15
+	#define MACRO_ENUM_SUBCATEGORY_WATCH				16
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//	SLOT POSITIONS
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+	// Default:							[0,0]
+	#define MACRO_ENUM_SLOTPOS_INVALID				-1
+
+	#define MACRO_ENUM_SLOTPOS_PRIMARYWEAPON			-10
+	#define MACRO_ENUM_SLOTPOS_HANDGUNWEAPON			-11
+	#define MACRO_ENUM_SLOTPOS_SECONDARYWEAPON			-12
+
+	#define MACRO_ENUM_SLOTPOS_NVGS					-20
+	#define MACRO_ENUM_SLOTPOS_HEADGEAR				-21
+	#define MACRO_ENUM_SLOTPOS_BINOCULARS				-22
+	#define MACRO_ENUM_SLOTPOS_GOGGLES				-23
+	#define MACRO_ENUM_SLOTPOS_MAP					-24
+	#define MACRO_ENUM_SLOTPOS_GPS					-25
+	#define MACRO_ENUM_SLOTPOS_RADIO				-26
+	#define MACRO_ENUM_SLOTPOS_COMPASS				-27
+	#define MACRO_ENUM_SLOTPOS_WATCH				-28
+
+	#define MACRO_ENUM_SLOTPOS_UNIFORM				-30
+	#define MACRO_ENUM_SLOTPOS_VEST					-31
+	#define MACRO_ENUM_SLOTPOS_BACKPACK				-32
 
 
 
@@ -254,6 +283,7 @@
 	// UI
 	#define MACRO_VARNAME_UI_DRAGGEDCTRL				"draggedControl"
 	#define MACRO_VARNAME_UI_ISBEINGDRAGGED				"isBeingDragged"
+	#define MACRO_VARNAME_UI_DEFAULTICONPATH			"defaultIconPath"
 	#define MACRO_VARNAME_UI_FRAMETEMP				"ctrlFrameTemp"
 	#define MACRO_VARNAME_UI_ICONTEMP				"ctrlIconTemp"
 	#define MACRO_VARNAME_UI_CHILDCONTROLS				"childControls"
@@ -262,7 +292,7 @@
 	#define MACRO_VARNAME_UI_CTRLPARENT				"ctrlParent"
 
 	#define MACRO_VARNAME_UI_CURSORCTRL				"cursorCtrl"
-	#define MACRO_VARNAME_UI_CURSORPOSREL				"cursorPosRel"
+	//#define MACRO_VARNAME_UI_CURSORPOSREL				"cursorPosRel"
 	#define MACRO_VARNAME_UI_CURSORPOSNEW				"cursorPosNew"
 	#define MACRO_VARNAME_UI_HIGHLITCONTROLS			"dragging_highlitControls"
 	#define MACRO_VARNAME_UI_ALLOWEDCONTROLS			"dragging_allowedControls"
@@ -281,13 +311,10 @@
 	#define MACRO_VARNAME_SLOT_X_Y					"slot_%1_%2"
 	#define MACRO_VARNAME_OCCUPIEDSLOTS				"occupiedSlots"
 	#define MACRO_VARNAME_PARENT					"parent"
+	#define MACRO_VARNAME_ITEMS					"items"
 
 	#define MACRO_VARNAME_CONTAINERSIZE				"containerSize"
 	#define MACRO_VARNAME_CONTAINERSLOTSONLASTY			"containerSlotsOnLastY"
-
-	#define MACRO_VARNAME_UNIT_PRIMARYWEAPON			"unitPrimaryWeapon"
-	#define MACRO_VARNAME_UNIT_HANDGUNWEAPON			"unitHandgunWeapon"
-	#define MACRO_VARNAME_UNIT_SECONDARYWEAPON			"unitSecondaryWeapon"
 
 	#define MACRO_VARNAME_UNIT_NVGS					"unitNVGs"
 	#define MACRO_VARNAME_UNIT_HEADGEAR				"unitHeadgear"
@@ -298,6 +325,10 @@
 	#define MACRO_VARNAME_UNIT_RADIO				"unitRadio"
 	#define MACRO_VARNAME_UNIT_COMPASS				"unitCompass"
 	#define MACRO_VARNAME_UNIT_WATCH				"unitWatch"
+
+	#define MACRO_VARNAME_UNIT_PRIMARYWEAPON			"unitPrimaryWeapon"
+	#define MACRO_VARNAME_UNIT_HANDGUNWEAPON			"unitHandgunWeapon"
+	#define MACRO_VARNAME_UNIT_SECONDARYWEAPON			"unitSecondaryWeapon"
 
 	#define MACRO_VARNAME_UNIT_UNIFORM				"unitUniform"
 	#define MACRO_VARNAME_UNIT_VEST					"unitVest"
@@ -320,6 +351,8 @@
 	#define MACRO_VARNAME_UI_MAG					"ctrlMagazine"
 	#define MACRO_VARNAME_UI_MAGALT					"ctrlMagazineAlt"
 	#define MACRO_VARNAME_UI_DISPLAYNAME				"ctrlDisplayName"
+
+
 
 
 

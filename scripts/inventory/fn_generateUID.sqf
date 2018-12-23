@@ -32,6 +32,6 @@ if (_increment1 >= 16777215) then {	     // 2^24 - 1
 missionNamespace setVariable ["cre8ive_generateUID_incr1", _increment1, false];
 
 // Put the UID together
-private _UID = _prefix + "." + str _increment1 + "." + str _increment2;
+private _UID = _prefix + "." + str _increment2 + "." + str _increment1;
 
 _UID;

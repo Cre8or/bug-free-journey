@@ -36,10 +36,12 @@ switch (_event) do {
 	#include "events\ui_dragging_init.sqf"
 	#include "events\ui_dragging_start.sqf"
 	#include "events\ui_dragging.sqf"
-	#include "events\ui_dragging_stop.sqf"
 	#include "events\ui_dragging_abort.sqf"
+	#include "events\ui_dragging_stop.sqf"
+	#include "events\ui_dragging_complete.sqf"
 	#include "events\ui_mouse_moving.sqf"
 	#include "events\ui_mouse_exit.sqf"
+	#include "events\ui_item_move.sqf"
 };
 
 
@@ -51,6 +53,7 @@ private _filteredEvents = [
 	"ui_focus_reset",
 	"ui_mouse_exit",
 	"ui_mouse_moving",
+	"ui_dragging_init",
 	"ui_dragging"
 ];
 if !(_event in _filteredEvents) then {

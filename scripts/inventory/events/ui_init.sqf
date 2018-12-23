@@ -56,7 +56,7 @@ case "ui_init": {
 
 				// If the player doesn't have any data yet, generate it
 				// ---- DEBUG: Remove "true"! v --------------------------------------------------------------------------------
-				if (true or isNull (player getVariable [MACRO_VARNAME_DATA, locationNull])) then {
+				if (false or isNull (player getVariable [MACRO_VARNAME_DATA, locationNull])) then {
 					private _containerData = [player, false] call cre_fnc_generateContainerData;
 					player setVariable [MACRO_VARNAME_DATA, _containerData];
 				};

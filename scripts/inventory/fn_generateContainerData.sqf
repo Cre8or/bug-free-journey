@@ -64,10 +64,10 @@ if (_container isKindOf "Man") then {
 	} forEach assignedItems _container;
 
 	// Handle the unit's weapons
-	private _varNames = [
-		MACRO_VARNAME_UNIT_PRIMARYWEAPON,
-		MACRO_VARNAME_UNIT_HANDGUNWEAPON,
-		MACRO_VARNAME_UNIT_SECONDARYWEAPON
+	private _slotPosEnums = [
+		MACRO_ENUM_SLOTPOS_PRIMARYWEAPON,
+		MACRO_ENUM_SLOTPOS_HANDGUNWEAPON,
+		MACRO_ENUM_SLOTPOS_SECONDARYWEAPON
 	];
 	private _weaponDataArray = [];
 	{
@@ -83,12 +83,10 @@ if (_container isKindOf "Man") then {
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
 			_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
 
-			// Save the variable name as the slot position
-			private _varName = _varNames select _forEachIndex;
-			_itemData setVariable [MACRO_VARNAME_SLOTPOS, _varName];
-
-			// Save the item onto the unit's container data
-			_containerData setVariable [_varName, _itemData];
+			// Save the slot position
+			private _slotPosEnum = _slotPosEnums select _forEachIndex;
+			_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _itemData];
 		};
 	} forEach [
 		primaryWeapon _container,
@@ -97,16 +95,16 @@ if (_container isKindOf "Man") then {
 	];
 
 	// Handle the unit's assigned items
-	_varNames = [
-		MACRO_VARNAME_UNIT_NVGS,
-		MACRO_VARNAME_UNIT_HEADGEAR,
-		MACRO_VARNAME_UNIT_BINOCULARS,
-		MACRO_VARNAME_UNIT_GOGGLES,
-		MACRO_VARNAME_UNIT_MAP,
-		MACRO_VARNAME_UNIT_GPS,
-		MACRO_VARNAME_UNIT_RADIO,
-		MACRO_VARNAME_UNIT_COMPASS,
-		MACRO_VARNAME_UNIT_WATCH
+	_slotPosEnums = [
+		MACRO_ENUM_SLOTPOS_NVGS,
+		MACRO_ENUM_SLOTPOS_HEADGEAR,
+		MACRO_ENUM_SLOTPOS_BINOCULARS,
+		MACRO_ENUM_SLOTPOS_GOGGLES,
+		MACRO_ENUM_SLOTPOS_MAP,
+		MACRO_ENUM_SLOTPOS_GPS,
+		MACRO_ENUM_SLOTPOS_RADIO,
+		MACRO_ENUM_SLOTPOS_COMPASS,
+		MACRO_ENUM_SLOTPOS_WATCH
 	];
 	{
 		// Only continue if we have an item
@@ -119,12 +117,10 @@ if (_container isKindOf "Man") then {
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
 			_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
 
-			// Save the variable name as the slot position
-			private _varName = _varNames select _forEachIndex;
-			_itemData setVariable [MACRO_VARNAME_SLOTPOS, _varName];
-
-			// Save the item onto the unit's container data
-			_containerData setVariable [_varName, _itemData];
+			// Save the slot position
+			private _slotPosEnum = _slotPosEnums select _forEachIndex;
+			_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _itemData];
 		};
 	} forEach [
 		hmd _container,
@@ -140,16 +136,22 @@ if (_container isKindOf "Man") then {
 
 	// If required, recursively run this function on the unit's uniform, vest and backpack containers
 	if (_recursiveOnUnits) then {
-		_varNames = [
-			MACRO_VARNAME_UNIT_UNIFORM,
-			MACRO_VARNAME_UNIT_VEST,
-			MACRO_VARNAME_UNIT_BACKPACK
+		_slotPosEnums = [
+			MACRO_ENUM_SLOTPOS_UNIFORM,
+			MACRO_ENUM_SLOTPOS_VEST,
+			MACRO_ENUM_SLOTPOS_BACKPACK
 		];
 		{
 			private _subContainerData = [_x] call cre_fnc_generateContainerData;
 
+			// Save some basic info onto the sub-container data
+			_subContainerData setVariable [MACRO_VARNAME_CLASS, _x];
 			_subContainerData setVariable [MACRO_VARNAME_PARENT, _containerData];
-			_containerData setVariable [_varNames select _forEachIndex, _subContainerData];
+
+			// Save the sub-container's position
+			private _slotPosEnum = _slotPosEnums select _forEachIndex;
+			_subContainerData setVariable [MACRO_VARNAME_SLOTPOS, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _subContainerData];
 		} forEach [
 			uniformContainer _container,
 			vestContainer _container,
@@ -395,7 +397,7 @@ if (_container isKindOf "Man") then {
 	} forEach _itemsSorted;
 
 	// Save the list of items for quick access
-	_containerData setVariable ["items", _containerItems];
+	_containerData setVariable [MACRO_VARNAME_ITEMS, _containerItems];
 };
 
 

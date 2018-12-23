@@ -6,6 +6,11 @@
 		on consumables, etc.).
 	Arguments:
 		0:      <CONTROL>	Control that needs its child controls generated
+		1:	<STRING>	Class of the item
+		2:	<NUMBER>	Category of the item
+		3:	<STRING>	Default icon path for this control (fallback for empty slots)
+		4:	<ARRAY>		Custom slot size - only used if non-empty!
+					NOTE: Leave eempty to fill out the control fully (default behaviour)
 	Returns:
 		0:	<ARRAY>		List of generated child controls
 -------------------------------------------------------------------------------------------------------------------- */
@@ -16,9 +21,8 @@ params [
 	["_ctrl", controlNull, [controlNull]],
 	["_class", "", [""]],
 	["_category", MACRO_ENUM_CATEGORY_INVALID, [MACRO_ENUM_CATEGORY_INVALID]],
-	["_slotSize", [1,1], [[1,1]]],
 	["_defaultIconPath", "", [""]],
-	["_useFrameSize", false, [false]]
+	["_customSlotSize", [], [[]]]
 ];
 
 // If no control was provided, exit
@@ -42,14 +46,20 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) then {
 	if (_category != MACRO_ENUM_CATEGORY_EMPTY) then {
 		_class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
 		_category = [_class] call cre_fnc_getClassCategory;
-		_slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
-		_defaultIconPath = _ctrl getVariable ["defaultIconPath", ""];
+		_defaultIconPath = _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
+
+		if (count _customSlotSize > 0) then {
+			if ((_customSlotSize param [0, 0]) < 0) then {
+				_customSlotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+			};
+		};
 	};
 };
 
 // Decide which child controls are needed based on the category
 private _requiredControls = [];
 switch (_category) do {
+	case MACRO_ENUM_CATEGORY_INVALID;
 	case MACRO_ENUM_CATEGORY_EMPTY: {
 		_requiredControls = [
 			MACRO_ENUM_CTRL_PICTURE_ICON
@@ -101,10 +111,10 @@ private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
 private _posIconAR = [];
 
-// If we're supposed to use the control's dimensions, recalculate the sizes
-if (_useFrameSize) then {
-	_sizeW = (_slotSize select 0) * MACRO_SCALE_SLOT_SIZE_W * _safeZoneW;
-	_sizeH = (_slotSize select 1) * MACRO_SCALE_SLOT_SIZE_H * _safeZoneH;
+// If we're supposed to use custom dimensions, recalculate the sizes
+if (count _customSlotSize > 0) then {
+	_sizeW = (_customSlotSize select 0) * MACRO_SCALE_SLOT_SIZE_W * _safeZoneW;
+	_sizeH = (_customSlotSize select 1) * MACRO_SCALE_SLOT_SIZE_H * _safeZoneH;
 	_posCtrl set [2, _sizeW];
 	_posCtrl set [3, _sizeH];
 };
@@ -116,44 +126,51 @@ private _childControls = [];
 
 		// Class icon
 		case MACRO_ENUM_CTRL_PICTURE_ICON: {
-			private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
 
-			// Determine the scale of the icon, with regard to the fixed aspect ratio
-			switch (_category) do {
+			// Fetch the icon path
+			private _iconPath = [_class, _category, _defaultIconPath] call cre_fnc_getClassIcon;
 
-				// Weapon icons are 2x1
-				case MACRO_ENUM_CATEGORY_WEAPON: {
-					_posCtrl params ["_posX", "_posY", "_widthOld", "_heightOld"];
-					private _widthNew = _widthOld;
-					private _heightNew = _widthOld * 2 / 3;
+			// Only continue if a valid icon path was provided
+			if (_iconPath != _defaultIconPath or {_defaultIconPath != ""}) then {
+				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
 
-					if (_heightOld > _heightNew) then {
-						_posY = _posY + (_heightOld - _heightNew) / 2;
-					} else {
-						_widthNew = _heightOld * 3 / 2;
-						_heightNew = _heightOld;
-						_posX = _posX + (_widthOld - _widthNew) / 2;
+				// Determine the scale of the icon, with regard to the fixed aspect ratio
+				switch (_category) do {
+
+					// Weapon icons are 2x1
+					case MACRO_ENUM_CATEGORY_WEAPON: {
+						_posCtrl params ["_posX", "_posY", "_widthOld", "_heightOld"];
+						private _widthNew = _widthOld;
+						private _heightNew = _widthOld * 2 / 3;
+
+						if (_heightOld > _heightNew) then {
+							_posY = _posY + (_heightOld - _heightNew) / 2;
+						} else {
+							_widthNew = _heightOld * 3 / 2;
+							_heightNew = _heightOld;
+							_posX = _posX + (_widthOld - _widthNew) / 2;
+						};
+
+						_posIconAR = [_posX, _posY, _widthNew, _heightNew];
+						_ctrlNew ctrlSetPosition _posIconAR;
+						_ctrlNew ctrlCommit 0;
 					};
 
-					_posIconAR = [_posX, _posY, _widthNew, _heightNew];
-					_ctrlNew ctrlSetPosition _posIconAR;
-					_ctrlNew ctrlCommit 0;
+					// Everything else should be 1x1
+					default {
+						_posIconAR = +_posCtrl;
+						_ctrlNew ctrlSetPosition _posCtrl;
+						_ctrlNew ctrlCommit 0;
+					};
 				};
 
-				// Everything else should be 1x1
-				default {
-					_posIconAR = +_posCtrl;
-					_ctrlNew ctrlSetPosition _posCtrl;
-					_ctrlNew ctrlCommit 0;
-				};
+				// Set the icon path
+				_ctrlNew ctrlSetText _iconPath;
+
+				// Save the new control onto the parent control
+				_ctrl setVariable [MACRO_VARNAME_UI_CTRLICON, _ctrlNew];
+				_childControls pushBack _ctrlNew;
 			};
-
-			private _iconPath = [_class, _category, _defaultIconPath] call cre_fnc_getClassIcon;
-			_ctrlNew ctrlSetText _iconPath;
-
-			// Save the new control onto the parent control
-			_ctrl setVariable [MACRO_VARNAME_UI_CTRLICON, _ctrlNew];
-			_childControls pushBack _ctrlNew;
 		};
 
 		// Outline
