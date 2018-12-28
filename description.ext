@@ -31,44 +31,52 @@ class CfgFunctions {
 			class handleWarfare {};
 		};
 
+		class UI {
+			file = "scripts\ui";
+			// Abbreviation:	ui
+
+			//class ui_inventory {};
+
+			//class ui_generateChildControls {};
+		};
+
 		class inventory {
 			file = "scripts\inventory";
+			// Abbreviation:	inv
 
-			class addWeaponWithItems {};
-			class generateUID {};
-			class interceptInventory {
+			class inv_addWeaponWithItems {};
+			class inv_generateUID {};
+			class inv_interceptInventory {
 				postInit = 1;
 			};
-			//class inventory {};
-			class inventory_createNamespace {};
+
+			class inv_createNamespace {};
+			class inv_canFitItem {};
+
 /*
-			class inventory_synchroniser {
+			class inv_synchroniser {
 				postInit = 1;
 			};
 */
-			class canFitItem {};
-			class getMass {};
+			//class inv_generateContainerData {};
 
-			//class generateContainerData {};
-			//class generateChildControls {};
-
-			class generateWeaponAccArray {};
-			class generateWeaponAccData {};
+			class inv_generateWeaponAccArray {};
+			class inv_generateWeaponAccData {};
 		};
 
 		class config {
 			file = "scripts\config";
+			// Abbreviation:	cfg
 
-			class getClassCategory {};
-			class getClassSubCategory {};
-			class getClassIcon {};
-			class getClassMass {};
-			class getClassSlotSize {};
+			class cfg_getClassCategory {};
+			class cfg_getClassSubCategory {};
+			class cfg_getClassIcon {};
+			class cfg_getClassMass {};
+			class cfg_getClassSlotSize {};
 
-			class getContainerSize {};
-
-			class getMagazineMaxAmmo {};
-			class getWeaponMagazines {};
+			class cfg_getContainerSize {};
+			class cfg_getMagazineMaxAmmo {};
+			class cfg_getWeaponMagazines {};
 		};
 	};
 };

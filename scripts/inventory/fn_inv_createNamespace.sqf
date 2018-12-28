@@ -19,7 +19,7 @@
 private _data = createLocation ["NameVillage", [0,0,0], 0, 0];
 
 // Create a UID for this namespace
-private _UID = call cre_fnc_generateUID;
+private _UID = call cre_fnc_inv_generateUID;
 
 // Save the UID onto the namespace
 _data setVariable [MACRO_VARNAME_UID, _UID];

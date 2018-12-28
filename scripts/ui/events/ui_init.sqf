@@ -23,13 +23,13 @@ case "ui_init": {
 
 				// Attach an EH to the inventory to detect when it is closed
 				_inventory displayAddEventHandler ["Unload", {
-					["ui_unload"] call cre_fnc_inventory;
+					["ui_unload"] call cre_fnc_ui_inventory;
 				}];
 
 				// Set up the blur post-process effect
 				private _blurFX = missionNamespace getVariable ["Cre8ive_Inventory_BlurFX", 0];
 				if (_blurFX <= 0) then {
-					private _index = 400;
+					private _index = _indexStart;
 					while {
 						_blurFX = ppEffectCreate ["DynamicBlur", _index];
 						_blurFX < 0
@@ -53,19 +53,18 @@ case "ui_init": {
 				// Close the commanding menu if it is open
 				if (commandingMenu != "") then {showCommandingMenu ""};
 
-
 				// If the player doesn't have any data yet, generate it
 				// ---- DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 				if (false or isNull (player getVariable [MACRO_VARNAME_DATA, locationNull])) then {
-					private _containerData = [player, false] call cre_fnc_generateContainerData;
+					private _containerData = [player, false] call cre_fnc_inv_generateContainerData;
 					player setVariable [MACRO_VARNAME_DATA, _containerData];
 				};
 
 				// Load the weapons menu (default)
-				["ui_menu_weapons"] call cre_fnc_inventory;
+				["ui_menu_weapons"] call cre_fnc_ui_inventory;
 
 				// Load the storage menu
-				["ui_update_storage"] call cre_fnc_inventory;
+				["ui_update_storage"] call cre_fnc_ui_inventory;
 
 				// Set the pixel precision mode of all slot frames to "OFF"
 				{
@@ -89,7 +88,7 @@ case "ui_init": {
 				];
 
 				// Reset the focus
-				["ui_focus_reset"] call cre_fnc_inventory;
+				["ui_focus_reset"] call cre_fnc_ui_inventory;
 			};
 		};
 	};

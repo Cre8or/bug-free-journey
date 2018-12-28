@@ -163,13 +163,13 @@ if (_slotStartX < 0) then {
 
 			// Fetch the item's category
 			private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
-			private _category = [_class] call cre_fnc_getClassCategory;
+			private _category = [_class] call cre_fnc_cfg_getClassCategory;
 
 			// If the item is of the right category...
 			if (_category == _slotCategory) then {
 
 				// Fetch the item's subcategory, if it has one
-				private _subCategory = [_class, _category] call cre_fnc_getClassSubCategory;
+				private _subCategory = [_class, _category] call cre_fnc_cfg_getClassSubCategory;
 
 				// If the item is also of the right subcategory, accept it
 				if (_subCategory == _slotSubCategory) then {

@@ -44,7 +44,7 @@ deleteLocation _containerData;
 if (_container isKindOf "Man") then {
 
 	// Create a new namespace for the container
-	_containerData = (call cre_fnc_inventory_createNamespace) select 0;
+	_containerData = (call cre_fnc_inv_createNamespace) select 0;
 
 	// Determine the unit's assigned items
 	private _map = "";
@@ -75,9 +75,9 @@ if (_container isKindOf "Man") then {
 		if (_x != "") then {
 
 			// Generate the accessories data for the weapon
-			(call cre_fnc_inventory_createNamespace) params ["_itemData"];
-			private _weaponAccArray = [_container, _forEachIndex] call cre_fnc_generateWeaponAccArray;
-			[_itemData, _weaponAccArray] call cre_fnc_generateWeaponAccData;
+			(call cre_fnc_inv_createNamespace) params ["_itemData"];
+			private _weaponAccArray = [_container, _forEachIndex] call cre_fnc_inv_generateWeaponAccArray;
+			[_itemData, _weaponAccArray] call cre_fnc_inv_generateWeaponAccData;
 
 			// Save some basic info onto the item data
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
@@ -111,7 +111,7 @@ if (_container isKindOf "Man") then {
 		if (_x != "") then {
 
 			// Generate the data for the item
-			(call cre_fnc_inventory_createNamespace) params ["_itemData"];
+			(call cre_fnc_inv_createNamespace) params ["_itemData"];
 
 			// Save some basic info onto the item data
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
@@ -142,7 +142,7 @@ if (_container isKindOf "Man") then {
 			MACRO_ENUM_SLOTPOS_BACKPACK
 		];
 		{
-			private _subContainerData = [_x] call cre_fnc_generateContainerData;
+			private _subContainerData = [_x] call cre_fnc_inv_generateContainerData;
 
 			// Save some basic info onto the sub-container data
 			_subContainerData setVariable [MACRO_VARNAME_CLASS, _x];
@@ -188,7 +188,7 @@ if (_container isKindOf "Man") then {
 			};
 
 			// Fetch the item category
-			private _category = [_class] call cre_fnc_getClassCategory;
+			private _category = [_class] call cre_fnc_cfg_getClassCategory;
 
 			// If the item originates from itemCargo...
 			private _skip = false;
@@ -202,12 +202,12 @@ if (_container isKindOf "Man") then {
 
 			// If the item is valid, we handle it
 			if (!_skip) then {
-				private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+				private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 				private _slotArea = (_slotSize select 0) * (_slotSize select 1);
 				private _slotAreaStr = format ["%1.0", _slotArea];
 
 				// Generate a UID for the item
-				private _UID = call cre_fnc_generateUID;
+				private _UID = call cre_fnc_inv_generateUID;
 
 				// Get the list of indexes for this specific slot area, and add the current one to it
 				private _indexes = _slotAreaNamespace getVariable [_slotAreaStr, []];
@@ -270,10 +270,10 @@ if (_container isKindOf "Man") then {
 	deleteLocation _slotAreaNamespace;
 
 	// Create a new namespace for the container
-	_containerData = (call cre_fnc_inventory_createNamespace) select 0;
+	_containerData = (call cre_fnc_inv_createNamespace) select 0;
 
 	// Iterate through the sorted list of items and fit them into the container
-	([typeOf _container] call cre_fnc_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
+	([typeOf _container] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
 	private _containerItems = [];
 	_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _containerSize];
 	_containerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _containerSlotsOnLastY];
@@ -290,11 +290,11 @@ if (_container isKindOf "Man") then {
 
 		// Fetch some information from the item
 		private _class = _args select 0;
-		private _category = [_class] call cre_fnc_getClassCategory;
-		private _itemSize = [_class, _category] call cre_fnc_getClassSlotSize;
+		private _category = [_class] call cre_fnc_cfg_getClassCategory;
+		private _itemSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 		// Generate a namespace for this item and save the item class onto it
-		(call cre_fnc_inventory_createNamespace) params ["_itemData"];
+		(call cre_fnc_inv_createNamespace) params ["_itemData"];
 		_itemData setVariable [MACRO_VARNAME_CLASS, _class];
 
 		// Iterate through the container to see where we can fit the item
@@ -349,7 +349,7 @@ if (_container isKindOf "Man") then {
 							// magazinesAmmoCargo
 							case 0: {
 								private _ammo = _args select 1;
-								private _maxAmmo = [_class] call cre_fnc_getMagazineMaxAmmo;
+								private _maxAmmo = [_class] call cre_fnc_cfg_getMagazineMaxAmmo;
 
 								_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _ammo];
 								_itemData setVariable [MACRO_VARNAME_MAG_MAXAMMO, _maxAmmo];
@@ -357,7 +357,7 @@ if (_container isKindOf "Man") then {
 
 							// weaponsItemsCargo
 							case 1: {
-								[_itemData, _args] call cre_fnc_generateWeaponAccData;
+								[_itemData, _args] call cre_fnc_inv_generateWeaponAccData;
 							};
 
 							// itemCargo
@@ -370,7 +370,7 @@ if (_container isKindOf "Man") then {
 								private _containerX = _args select 1;
 
 								// Recursively generate the container data for all nested containers
-								[_containerX] call cre_fnc_generateContainerData;
+								[_containerX] call cre_fnc_inv_generateContainerData;
 							};
 						};
 

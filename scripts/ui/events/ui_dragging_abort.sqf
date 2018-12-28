@@ -9,12 +9,12 @@ case "ui_dragging_abort": {
 	if (!isNull _ctrl) then {
 
 		// Reset the focus
-		["ui_focus_reset", [_ctrl]] call cre_fnc_inventory;
+		["ui_focus_reset", [_ctrl]] call cre_fnc_ui_inventory;
 
 		// Fetch the control's item class and its associated size
 		private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
-		private _category = [_class] call cre_fnc_getClassCategory;
-		private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+		private _category = [_class] call cre_fnc_cfg_getClassCategory;
+		private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 		// Mark the control as no longer being dragged
 		_ctrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false];

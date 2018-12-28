@@ -1,4 +1,4 @@
-// Move an item from one slot to another (only visually! Item/container data does NOT change here!)
+// Dragging completed successfully (button released)
 case "ui_dragging_complete": {
 	_eventExists = true;
 

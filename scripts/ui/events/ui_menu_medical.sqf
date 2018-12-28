@@ -12,8 +12,8 @@ case "ui_menu_medical": {
 	//_inventory setVariable ["isMedicalMenuOpen", true];
 
 	// Reset the focus
-	["ui_focus_reset"] call cre_fnc_inventory;
+	["ui_focus_reset"] call cre_fnc_ui_inventory;
 
 	// Update the menu
-	["ui_update_medical"] call cre_fnc_inventory;
+	["ui_update_medical"] call cre_fnc_ui_inventory;
 };

@@ -4,7 +4,7 @@
 		Returns the icon of a specific class.
 	Arguments:
 		0:      <STRING>	Classname of the item to check
-		1:      <NUMBER>	Category of the class (see fn_getClassCategory)
+		1:      <NUMBER>	Category of the class (see fn_cfg_getClassCategory)
 		2:      <STRING>	Default icon to be used if nothing was found
 	Returns:
 		0:      <STRING>	Icon path of the class
@@ -62,7 +62,7 @@ if (_iconPath == " ") then {
 			_iconPath = [configfile >> "CfgGlasses" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
 		};
 		default {
-			private _str = format ["ERROR [cre_fnc_getClassIcon]: No rule for category '%1' (%2)!", _category, _class];
+			private _str = format ["ERROR [cre_fnc_cfg_getClassIcon]: No rule for category '%1' (%2)!", _category, _class];
 			systemChat _str;
 			hint _str;
 		};
@@ -74,7 +74,7 @@ if (_iconPath == " ") then {
 			_iconPath = _defaultIconPath;
 		} else {
 			_iconPath = " ";
-			private _str = format ["ERROR [cre_fnc_getClassIcon]: Could not find icon for '%1', and no default path was provided!", _class];
+			private _str = format ["ERROR [cre_fnc_cfg_getClassIcon]: Could not find icon for '%1', and no default path was provided!", _class];
 			systemChat _str;
 			hint _str;
 		};

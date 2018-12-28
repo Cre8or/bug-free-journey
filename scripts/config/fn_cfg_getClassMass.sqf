@@ -4,7 +4,7 @@
 		Returns the mass of a certain class.
 	Arguments:
 		0:      <STRING>	Classname of the item to check
-		1:      <NUMBER>	Category of the class (see fn_getClassCategory)
+		1:      <NUMBER>	Category of the class (see fn_cfg_getClassCategory)
 	Returns:
 		0:      <NUMBER>	Mass of the class
 -------------------------------------------------------------------------------------------------------------------- */
@@ -66,7 +66,7 @@ if (_mass == -1) then {
 			_configPathAlt = configFile >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
 		};
 		default {
-			private _str = format ["ERROR [cre_fnc_getClassMass]: No rule for category '%1' (%2)!", _category, _class];
+			private _str = format ["ERROR [cre_fnc_cfg_getClassMass]: No rule for category '%1' (%2)!", _category, _class];
 			systemChat _str;
 			hint _str;
 		};

@@ -7,7 +7,7 @@
 	Arguments:
 		0:      <STRING>	Classname the of item to check
 	Returns:
-		0:      <NUMBER>	Category of the class (see above)
+		0:      <NUMBER>	Subcategory of the class (see above)
 -------------------------------------------------------------------------------------------------------------------- */
 
 #include "..\..\res\config\dialogs\macros.hpp"
@@ -100,7 +100,7 @@ if (_subCategory == MACRO_ENUM_SUBCATEGORY_INVALID) then {
 		case MACRO_ENUM_CATEGORY_MAGAZINE: {};
 
 		default {
-			private _str = format ["ERROR [cre_fnc_getClassSubCategory]: No rule for category '%1' (%2)!", _category, _class];
+			private _str = format ["ERROR [cre_fnc_cfg_getClassSubCategory]: No rule for category '%1' (%2)!", _category, _class];
 			systemChat _str;
 			hint _str;
 		};

@@ -18,7 +18,7 @@ case "ui_dragging_start": {
 		if (!isNull _ctrl) then {
 
 			// Reset the focus
-			["ui_focus_reset", [_ctrl]] call cre_fnc_inventory;
+			["ui_focus_reset", [_ctrl]] call cre_fnc_ui_inventory;
 
 			// Only continue if the control isn't already being dragged
 			if !(_ctrl getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
@@ -28,9 +28,9 @@ case "ui_dragging_start": {
 
 				// Fetch the control's item class and its associated size
 				private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
-				private _category = [_class] call cre_fnc_getClassCategory;
-				private _subCategory = [_class, _category] call cre_fnc_getClassSubCategory;
-				private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+				private _category = [_class] call cre_fnc_cfg_getClassCategory;
+				private _subCategory = [_class, _category] call cre_fnc_cfg_getClassSubCategory;
+				private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 				_slotSize params ["_slotWidth", "_slotHeight"];
 				private _defaultIconPath = _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
 				private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
@@ -73,7 +73,7 @@ case "ui_dragging_start": {
 				_ctrlFrameTemp setVariable [MACRO_VARNAME_DATA, _data];
 
 				// Generate additional temporary child controls
-				private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_generateChildControls;
+				private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 
 				// Determine the offset of the child controls in relation to the temporary frame
 				{
@@ -235,22 +235,22 @@ case "ui_dragging_start": {
 					getMousePosition params ["_posX", "_posY"];
 
 					// Call the inventory function to handle dragging
-					["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
+					["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_ui_inventory;
 				}];
 
 				// Move the temporary controls in place initially
 				getMousePosition params ["_posX", "_posY"];
-				["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_inventory;
+				["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_ui_inventory;
 
-				["ui_mouse_moving", [_ctrl]] call cre_fnc_inventory;
+				["ui_mouse_moving", [_ctrl]] call cre_fnc_ui_inventory;
 
 				// Add an event handler to the inventory to detect mouse presses
 				private _EH = _inventory displayAddEventHandler ["MouseButtonDown", {
 					_this params ["", "_button"];
 
 					switch (_button) do {
-						case 0: {["ui_dragging_stop"] call cre_fnc_inventory};
-						case 1: {["ui_dragging_abort"] call cre_fnc_inventory};
+						case 0: {["ui_dragging_stop"] call cre_fnc_ui_inventory};
+						case 1: {["ui_dragging_abort"] call cre_fnc_ui_inventory};
 					};
 				}];
 				_inventory setVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN, _EH];

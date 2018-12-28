@@ -45,12 +45,12 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) then {
 	// Otherwise, fetch the required information from the class
 	if (_category != MACRO_ENUM_CATEGORY_EMPTY) then {
 		_class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
-		_category = [_class] call cre_fnc_getClassCategory;
+		_category = [_class] call cre_fnc_cfg_getClassCategory;
 		_defaultIconPath = _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
 
 		if (count _customSlotSize > 0) then {
 			if ((_customSlotSize param [0, 0]) < 0) then {
-				_customSlotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+				_customSlotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 			};
 		};
 	};
@@ -128,7 +128,7 @@ private _childControls = [];
 		case MACRO_ENUM_CTRL_PICTURE_ICON: {
 
 			// Fetch the icon path
-			private _iconPath = [_class, _category, _defaultIconPath] call cre_fnc_getClassIcon;
+			private _iconPath = [_class, _category, _defaultIconPath] call cre_fnc_cfg_getClassIcon;
 
 			// Only continue if a valid icon path was provided
 			if (_iconPath != _defaultIconPath or {_defaultIconPath != ""}) then {

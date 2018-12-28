@@ -20,8 +20,8 @@ case "ui_update_weapons": {
 		// Only continue if we have this item
 		if (!isNull _itemData) then {
 			_class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
-			_category = [_class] call cre_fnc_getClassCategory;
-			_slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+			_category = [_class] call cre_fnc_cfg_getClassCategory;
+			_slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 			// Change the frame's colour
 			_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
@@ -34,12 +34,12 @@ case "ui_update_weapons": {
 		};
 
 		// Generate the child controls
-		[_ctrlFrame, _class, _category, _defaultIconPath] call cre_fnc_generateChildControls;
+		[_ctrlFrame, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 
 		// Add some event handlers for mouse entering/exiting the controls, and moving across it
-		_ctrlFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
-		_ctrlFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_inventory}];
-		_ctrlFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_inventory}];
+		_ctrlFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
+		_ctrlFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
+		_ctrlFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];
 
 		// Save the slot's default icon path and slot position
 		_ctrlFrame setVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, _defaultIconPath];

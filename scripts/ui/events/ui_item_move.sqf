@@ -14,8 +14,8 @@ case "ui_item_move": {
 
 		// Fetch the control's item class and its associated size
 		private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
-		private _category = [_class] call cre_fnc_getClassCategory;
-		private _slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+		private _category = [_class] call cre_fnc_cfg_getClassCategory;
+		private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 		// Remove the event handlers
 		private _EH = _inventory getVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN, -1];
@@ -125,11 +125,11 @@ case "ui_item_move": {
 		} forEach (_targetCtrl getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
 		// Create new child controls on the target control
-		[_targetCtrl, _class, _category, _targetCtrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""]] call cre_fnc_generateChildControls;
+		[_targetCtrl, _class, _category, _targetCtrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""]] call cre_fnc_ui_generateChildControls;
 
 		// Create new child controls on the original control (empty slot), provided it is not the same as the target slot
 		if (_ctrl != _targetCtrl) then {
-			[_ctrl] call cre_fnc_generateChildControls;
+			[_ctrl] call cre_fnc_ui_generateChildControls;
 		};
 
 		// Paint the controls

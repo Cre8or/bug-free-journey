@@ -42,7 +42,8 @@ if (_res isEqualTo []) then {
 	if (_maxLoad < 0) then {
 
 		// If the scripting command failed, we need to manually fetch the load from the config
-		private _category = [_class] call cre_fnc_getClassCategory;
+		private _category = [_class] call cre_fnc_cfg_getClassCategory;
+
 		switch (_category) do {
 			case MACRO_ENUM_CATEGORY_WEAPON: {
 				private _containerClass = [configfile >> "CfgWeapons" >> _class >> "ItemInfo", "containerClass", ""] call BIS_fnc_returnConfigEntry;

@@ -12,8 +12,8 @@ case "ui_menu_weapons": {
 	//_inventory setVariable ["isMedicalMenuOpen", false];
 
 	// Reset the focus
-	["ui_focus_reset"] call cre_fnc_inventory;
+	["ui_focus_reset"] call cre_fnc_ui_inventory;
 
 	// Update the menu
-	["ui_update_weapons"] call cre_fnc_inventory;
+	["ui_update_weapons"] call cre_fnc_ui_inventory;
 };

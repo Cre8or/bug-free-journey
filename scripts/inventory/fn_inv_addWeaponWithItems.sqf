@@ -1,6 +1,6 @@
 /*
 	Name:
-	cre_fnc_addWeaponWithItems
+	cre_fnc_inv_addWeaponWithItems
 
 	Arguments:
 	0: _container [OBJECT]:	 Loot container to add weapon to	 REQUIRED!

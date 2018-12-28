@@ -1,5 +1,5 @@
 TODO:
-
+- Look for an alternative to isNil {} in ui_init, as it may  permanently freeze the game when encountering a script error
 - Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
 - Fully implement dragging functionality so it actually works (actually moving things around in inventories)
 	* Modify the player/object's container data
@@ -14,7 +14,11 @@ TODO:
 
 
 DONE:	(top: most recent)
-- Fix child controls not getting deleted when dragging a reserved slot item onto its own slot
+- Reorganise function locations (and names) with prefixes to avoid overlap and to improve clarity
+	* Functions should go in specific folders, such as "UI", "AI" and "inventory"
+	* Find an abbreviation for each of these folders and use it in the name of the function
+	  (e.g. "inventory" becomes "inv" --> cre_fnc_inv_createNamespace)
+	  - Fix child controls not getting deleted when dragging a reserved slot item onto its own slot
 - Fix incorrect slot colouring when calling ui_dragging_start after the mouse has moved outside of the dragged control
 - Figure out why dragging items into their exact original slot causes them to become undraggable
 - Improve the debug hint to make the data more readable

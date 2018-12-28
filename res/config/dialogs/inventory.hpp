@@ -126,7 +126,7 @@ class MACRO_GUI_NAME {
 				colorBackgroundActive[] = CURLY(MACRO_COLOUR_INVISIBLE);
 				colorShadow[] = CURLY(MACRO_COLOUR_INVISIBLE);
 				colorText[] = {1,1,1,1};
-				action = "['ui_menu_weapons'] call cre_fnc_inventory";
+				action = "['ui_menu_weapons'] call cre_fnc_ui_inventory";
 			};
 
 			// Medical
@@ -140,7 +140,7 @@ class MACRO_GUI_NAME {
 				idc = MACRO_IDC_MEDICAL_BUTTON;
 				text = "MEDICAL";
 				x = _safeZoneX + _safeZoneW * (MACRO_POS_SEPARATOR_GROUND + 0.002 * 4 + 0.143);
-				action = "['ui_menu_medical'] call cre_fnc_inventory";
+				action = "['ui_menu_medical'] call cre_fnc_ui_inventory";
 			};
 
 		// ------------------------------------------------------------------------------------------------------------------------------------------------

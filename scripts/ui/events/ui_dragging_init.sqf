@@ -12,7 +12,7 @@ case "ui_dragging_init": {
 	if (_button == 0) then {
 
 		// Reset the focus
-		["ui_focus_reset", [_ctrl]] call cre_fnc_inventory;
+		["ui_focus_reset", [_ctrl]] call cre_fnc_ui_inventory;
 
 		// If we're not dragging anything yet, set everything up (phase 1)
 		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {isNull (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull])} and {ctrlShown _ctrl}) then {
@@ -27,7 +27,7 @@ case "ui_dragging_init": {
 
 				// Add an event handler to the inventory to detect the mouse release
 				private _EH = _inventory displayAddEventHandler ["MouseButtonUp", {
-					["ui_dragging_start", _this] call cre_fnc_inventory;
+					["ui_dragging_start", _this] call cre_fnc_ui_inventory;
 				}];
 				_inventory setVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONUP, _EH];
 

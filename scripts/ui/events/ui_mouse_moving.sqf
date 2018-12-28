@@ -46,7 +46,7 @@ case "ui_mouse_moving": {
 			if (_ctrl in _allowedCtrls) then {
 
 				// Check if the item fits
-				([_itemData, _containerData, _targetSlotPos, [], false] call cre_fnc_canFitItem) params ["_canFit"];
+				([_itemData, _containerData, _targetSlotPos, [], false] call cre_fnc_inv_canFitItem) params ["_canFit"];
 				//systemChat format ["(%1) - item: %2 - container: %3 - pos: %4 - size: %5 - canFit: %6", time, _itemData getVariable [MACRO_VARNAME_UID, "n/a"], _containerData getVariable [MACRO_VARNAME_UID, "n/a"], _targetSlotPos, [], _canFit];
 
 				if (_canFit) then {
@@ -86,7 +86,7 @@ case "ui_mouse_moving": {
 			_inventory setVariable [MACRO_VARNAME_UI_CURSORPOSNEW, [_targetSlotPosX, _targetSlotPosY]];
 
 			// Test if the dragged item can fit
-			([_itemData, _containerData, [_targetSlotPosX, _targetSlotPosY], [_slotSizeW, _slotSizeH], false] call cre_fnc_canFitItem) params ["_canFit", "_slots"];
+			([_itemData, _containerData, [_targetSlotPosX, _targetSlotPosY], [_slotSizeW, _slotSizeH], false] call cre_fnc_inv_canFitItem) params ["_canFit", "_slots"];
 			//systemChat format ["(%1) - item: %2 - container: %3 - pos: %4 - size: %5 - canFit: %6 - slots: %7", time, _itemData getVariable [MACRO_VARNAME_UID, "n/a"], _containerData getVariable [MACRO_VARNAME_UID, "n/a"], [_targetSlotPosX, _targetSlotPosY], [_slotSizeW, _slotSizeH], _canFit, _slots];
 
 			// Fetch the controls

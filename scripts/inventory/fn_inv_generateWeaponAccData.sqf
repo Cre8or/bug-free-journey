@@ -46,19 +46,19 @@ private _maxAmmoAlt = 0;
 
 
 // If the magazine fits the weapon, it's a primary magazine
-private _validMagazines = [_class] call cre_fnc_getWeaponMagazines;
+private _validMagazines = [_class] call cre_fnc_cfg_getWeaponMagazines;
 if (_magClass != "") then {
 
 	// If the magazine is is a primary magazine, or if there is also an alternate magazine...
 	private _hasAltMagazine = _magazineAlt isEqualType [];
 	if (_hasAltMagazine or {toLower _magClass in _validMagazines}) then {
-		_maxAmmo = [_magClass] call cre_fnc_getMagazineMaxAmmo;
+		_maxAmmo = [_magClass] call cre_fnc_cfg_getMagazineMaxAmmo;
 
 		// Next, look at the alternate magazine
 		if (_hasAltMagazine) then {
 			_magClassAlt = _magazineAlt param [0, ""];
 			_ammoAlt = _magazineAlt param [1, 0];
-			_maxAmmoAlt = [_magClassAlt] call cre_fnc_getMagazineMaxAmmo;
+			_maxAmmoAlt = [_magClassAlt] call cre_fnc_cfg_getMagazineMaxAmmo;
 		} else {
 			// Due to the command not adding empty arrays, we have to reassign the variables
 			_accBipod = _magazineAlt;
@@ -66,7 +66,7 @@ if (_magClass != "") then {
 
 	// Otherwise, it's an alternate magazine
 	} else {
-		_maxAmmoAlt = [_magClass] call cre_fnc_getMagazineMaxAmmo;
+		_maxAmmoAlt = [_magClass] call cre_fnc_cfg_getMagazineMaxAmmo;
 		_accBipod = _magazineAlt;
 		_magClassAlt = _magClass;
 		_magClass = "";
@@ -75,7 +75,7 @@ if (_magClass != "") then {
 	if (_magazineAlt isEqualType []) then {
 		_magClassAlt = _magazineAlt param [0, ""];
 		_ammoAlt = _magazineAlt param [1, 0];
-		_maxAmmoAlt = [_magClassAlt] call cre_fnc_getMagazineMaxAmmo;
+		_maxAmmoAlt = [_magClassAlt] call cre_fnc_cfg_getMagazineMaxAmmo;
 	} else {
 		_accBipod = _magazineAlt;
 		_magClassAlt = "";
@@ -89,7 +89,7 @@ if (_magClass != "") then {
 	if (_accItemClass != "") then {
 
 		// Create a new namespace for the item
-		(call cre_fnc_inventory_createNamespace) params ["_accItemData"];
+		(call cre_fnc_inv_createNamespace) params ["_accItemData"];
 
 		// Fill the attachment's item data
 		_accItemData setVariable [MACRO_VARNAME_CLASS, _accItemClass];
@@ -112,7 +112,7 @@ if (_magClass != "") then {
 	if (_magItemClass != "") then {
 
 		// Create a new namespace for the item
-		(call cre_fnc_inventory_createNamespace) params ["_magItemData"];
+		(call cre_fnc_inv_createNamespace) params ["_magItemData"];
 
 		// Fill the magazines's item data
 		_magItemData setVariable [MACRO_VARNAME_CLASS, _magItemClass];

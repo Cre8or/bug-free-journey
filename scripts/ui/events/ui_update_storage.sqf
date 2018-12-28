@@ -50,8 +50,8 @@ case "ui_update_storage": {
 
 		// If the slot has something in it, fetch its data
 		if (_class != "") then {
-			_category = [_class] call cre_fnc_getClassCategory;
-			_slotSize = [_class, _category] call cre_fnc_getClassSlotSize;
+			_category = [_class] call cre_fnc_cfg_getClassCategory;
+			_slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 			// Change the frame's colour
 			_containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
@@ -72,7 +72,7 @@ case "ui_update_storage": {
 	// ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 			if (false or isNull _containerData) then {
 				systemChat format ["Building container data for: %1", _class];
-				_containerData = [_container] call cre_fnc_generateContainerData;
+				_containerData = [_container] call cre_fnc_inv_generateContainerData;
 
 				// Fill the container data with some info
 				_containerData setVariable [MACRO_VARNAME_CLASS, _class];
@@ -86,7 +86,7 @@ case "ui_update_storage": {
 			_containerFrame setVariable [MACRO_VARNAME_DATA, _containerData];
 
 			// Generate the child controls
-			[_containerFrame, _class, _category, _defaultIconPath] call cre_fnc_generateChildControls;
+			[_containerFrame, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 
 			// Fetch the container's dimensions
 			private _containerSize = _containerData getVariable [MACRO_VARNAME_CONTAINERSIZE, [1,1]];
@@ -137,9 +137,9 @@ case "ui_update_storage": {
 						} forEach [_slotFrame, _slotIcon];
 
 						// Add some event handlers to the slot controls
-						_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
-						_slotFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_inventory}];
-						_slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_inventory}];
+						_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
+						_slotFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
+						_slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];
 
 						// Save some data onto the slot
 						_slotFrame setVariable [MACRO_VARNAME_PARENT, _containerData];
@@ -164,8 +164,8 @@ case "ui_update_storage": {
 				if (!isNull _x) then {
 					private _itemClass = _x getVariable [MACRO_VARNAME_CLASS, ""];
 					private _itemSlot = _x getVariable [MACRO_VARNAME_SLOTPOS, []];
-					private _itemCategory = [_itemClass] call cre_fnc_getClassCategory;
-					private _itemSize = [_itemClass, _itemCategory] call cre_fnc_getClassSlotSize;
+					private _itemCategory = [_itemClass] call cre_fnc_cfg_getClassCategory;
+					private _itemSize = [_itemClass, _itemCategory] call cre_fnc_cfg_getClassSlotSize;
 					_itemSlot params ["_posX", "_posY"];
 					_itemSize params ["_sizeW", "_sizeH"];
 
@@ -191,14 +191,13 @@ case "ui_update_storage": {
 					_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _itemSize];
 
 					// Generate the child controls for this slot
-					[_slotFrame, _itemClass, _itemCategory, MACRO_PICTURE_SLOT_BACKGROUND] call cre_fnc_generateChildControls;
+					[_slotFrame, _itemClass, _itemCategory, MACRO_PICTURE_SLOT_BACKGROUND] call cre_fnc_ui_generateChildControls;
 
 					// Change the colour of the frame
 					_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 					// Save some more info onto the slot control
 					_slotFrame setVariable ["active", true];
-					_slotFrame setVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, _slotIconPath];
 					_slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
 				};
 			} forEach _items;
@@ -209,9 +208,9 @@ case "ui_update_storage": {
 		};
 
 		// Add some event handlers to the container controls
-		_containerFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_inventory}];
-		_containerFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_inventory}];
-		_containerFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_inventory}];
+		_containerFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
+		_containerFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
+		_containerFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];
 
 		// Save the container slot's slot position
 		_containerFrame setVariable [MACRO_VARNAME_SLOTPOS, [_containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];

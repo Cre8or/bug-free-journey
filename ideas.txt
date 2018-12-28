@@ -64,7 +64,7 @@ to unlucky placement of items)? Delete it from the actual inventory?
 CRAYON CANDLES
 -----------------------------------------------------------------------------------------------------------------------
 
-Crayons are made of wax. Stuck in the dark? Pop a crayon and you can see for about half an hour!
+Apparently, crayons are made of wax. Stuck in the dark? Pop a crayon and you can see for a couple minutes!
 
 
 
@@ -76,3 +76,14 @@ RENAMING ITEMS
 
 Using a sharpie or a thick marker of some kind, it's possible to rename any item (except for the marker itself).
 Maybe implement a size limit, and/or scale the durability consumption to the slot size of the item?
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+FIREPLACES INSIDE HOUSES
+-----------------------------------------------------------------------------------------------------------------------
+
+Crafted fireplaces should require stones, and/or generate smoke which can suffocate players inside buildings.
+Some houses may have existing fireplaces, which use a chimney (so no suffocation risk) and are already built.

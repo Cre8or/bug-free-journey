@@ -4,7 +4,7 @@
 		Returns the slot size of a certain class in the form [x,y].
 	Arguments:
 		0:      <STRING>	Classname of the item to check
-		1:      <NUMBER>	Category of the class (see fn_getClassCategory)
+		1:      <NUMBER>	Category of the class (see fn_cfg_getClassCategory)
 	Returns:
 		0:      <ARRAY>	 	Slot size of the class in format [<NUMBER> x, <NUMBER> y]
 -------------------------------------------------------------------------------------------------------------------- */
@@ -59,7 +59,7 @@ if (_slotSize isEqualTo []) then {
 			_configPath = "CfgGlasses"
 		};
 		default {
-			private _str = format ["ERROR [cre_fnc_getClassSlotSize]: No rule for category '%1' (%2)!", _category, _class];
+			private _str = format ["ERROR [cre_fnc_cfg_getClassSlotSize]: No rule for category '%1' (%2)!", _category, _class];
 			systemChat _str;
 			hint _str;
 		};
@@ -72,7 +72,7 @@ if (_slotSize isEqualTo []) then {
 	if (_slotSize isEqualTo []) then {
 
 		// To do so, we use the mass of the item
-		private _mass = [_class, _category] call cre_fnc_getClassMass;
+		private _mass = [_class, _category] call cre_fnc_cfg_getClassMass;
 
 		switch (_category) do {
 			case MACRO_ENUM_CATEGORY_WEAPON: {
@@ -98,7 +98,7 @@ if (_slotSize isEqualTo []) then {
 			};
 			default {
 				_slotSize = [1,1];
-				private _str = format ["ERROR [cre_fnc_getClassSlotSize]: Could not determine slot size for '%1'!", _class];
+				private _str = format ["ERROR [cre_fnc_cfg_getClassSlotSize]: Could not determine slot size for '%1'!", _class];
 				systemChat _str;
 				hint _str;
 			};
