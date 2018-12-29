@@ -13,6 +13,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_class", "", [""]],
 	["_category", MACRO_ENUM_CATEGORY_INVALID, [MACRO_ENUM_CATEGORY_INVALID]],
@@ -46,9 +47,11 @@ if (_iconPath == " ") then {
 	switch (_category) do {
 		case MACRO_ENUM_CATEGORY_ITEM;
 		case MACRO_ENUM_CATEGORY_WEAPON;
+		case MACRO_ENUM_CATEGORY_NVGS;
+		case MACRO_ENUM_CATEGORY_HEADGEAR;
+		case MACRO_ENUM_CATEGORY_BINOCULARS;
 		case MACRO_ENUM_CATEGORY_UNIFORM;
-		case MACRO_ENUM_CATEGORY_VEST;
-		case MACRO_ENUM_CATEGORY_HEADGEAR: {
+		case MACRO_ENUM_CATEGORY_VEST: {
 			_iconPath = [configfile >> "CfgWeapons" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
 		};
 		case MACRO_ENUM_CATEGORY_MAGAZINE: {

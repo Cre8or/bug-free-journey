@@ -1,8 +1,22 @@
+/* --------------------------------------------------------------------------------------------------------------------
+	Author:		Cre8or
+	Description:
+		Handles the custom inventory UI. Accepts an event name (e.g. "ui_init") and an optional array with
+		additional parameters that might be required for the specified event.
+	Arguments:
+		0:      <STRING>	Name of the event
+		1:	<ARRAY>		Array of additional parameters for the specified event
+
+	Returns:
+		(nothing)
+-------------------------------------------------------------------------------------------------------------------- */
+
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_event", "", [""]],
-	"_args"
+	["_args", []]
 ];
 
 // Change the case to avoid mistakes

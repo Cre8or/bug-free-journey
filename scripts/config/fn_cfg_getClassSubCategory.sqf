@@ -12,6 +12,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_class", "", [""]],
 	["_category", MACRO_ENUM_CATEGORY_INVALID, [MACRO_ENUM_CATEGORY_INVALID]]
@@ -63,14 +64,6 @@ if (_subCategory == MACRO_ENUM_SUBCATEGORY_INVALID) then {
 				case "itemwatch": {
 					_subCategory = MACRO_ENUM_SUBCATEGORY_WATCH;
 				};
-				case "nvgoggles": {
-					_subCategory = MACRO_ENUM_SUBCATEGORY_NVGS;
-				};
-				case "weapon": {
-					if (([configFile >> "CfgWeapons" >> _class, "type", 0] call BIS_fnc_returnConfigEntry) == 4096) then {
-						_subCategory = MACRO_ENUM_SUBCATEGORY_BINOCULARS;
-					};
-				};
 			};
 		};
 
@@ -93,7 +86,9 @@ if (_subCategory == MACRO_ENUM_SUBCATEGORY_INVALID) then {
 
 		case MACRO_ENUM_CATEGORY_UNIFORM;
 		case MACRO_ENUM_CATEGORY_VEST;
+		case MACRO_ENUM_CATEGORY_NVGS;
 		case MACRO_ENUM_CATEGORY_HEADGEAR;
+		case MACRO_ENUM_CATEGORY_BINOCULARS;
 		case MACRO_ENUM_CATEGORY_GOGGLES;
 		case MACRO_ENUM_CATEGORY_BACKPACK;
 		case MACRO_ENUM_CATEGORY_VEHICLE;

@@ -21,6 +21,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_itemData", locationNull, [locationNull]],
 	["_containerData", locationNull, [locationNull]],
@@ -50,7 +51,7 @@ _slotSize params [
 ];
 _slotPos params [
 	["_slotStartX", MACRO_ENUM_SLOTPOS_INVALID],
-	"_slotStartY"
+	["_slotStartY", MACRO_ENUM_SLOTPOS_INVALID]
 ];
 
 // Fetch the size of the container
@@ -65,116 +66,94 @@ scopeName "main";
 
 
 
-// If the slot position is a reserved slot (negative X values), check the allowed slots
+// If the slot position is a reserved slot (negative X values), check the reserved slots
 if (_slotStartX < 0) then {
 
 	// Determine the expected slot data based on the slot position enumeration
-	private _slotVarName = "";
 	private _slotCategory = MACRO_ENUM_CATEGORY_INVALID;
 	private _slotSubCategory = MACRO_ENUM_SUBCATEGORY_INVALID;
 	switch (_slotStartX) do {
 		// Weapon slots
 		case MACRO_ENUM_SLOTPOS_PRIMARYWEAPON: {
-			_slotVarName =		MACRO_VARNAME_UNIT_PRIMARYWEAPON;
 			_slotCategory =		MACRO_ENUM_CATEGORY_WEAPON;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_PRIMARYWEAPON;
 		};
 		case MACRO_ENUM_SLOTPOS_HANDGUNWEAPON: {
-			_slotVarName =		MACRO_VARNAME_UNIT_HANDGUNWEAPON;
 			_slotCategory =		MACRO_ENUM_CATEGORY_WEAPON;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_HANDGUNWEAPON;
 		};
 		case MACRO_ENUM_SLOTPOS_HANDGUNWEAPON: {
-			_slotVarName =		MACRO_VARNAME_UNIT_HANDGUNWEAPON;
 			_slotCategory =		MACRO_ENUM_CATEGORY_WEAPON;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_HANDGUNWEAPON;
 		};
 
 		// Item slots (top)
 		case MACRO_ENUM_SLOTPOS_NVGS: {
-			_slotVarName =		MACRO_VARNAME_UNIT_NVGS;
-			_slotCategory =		MACRO_ENUM_CATEGORY_ITEM;
-			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_NVGS;
+			_slotCategory =		MACRO_ENUM_CATEGORY_NVGS;
 		};
 		case MACRO_ENUM_SLOTPOS_HEADGEAR: {
-			_slotVarName =		MACRO_VARNAME_UNIT_HEADGEAR;
 			_slotCategory =		MACRO_ENUM_CATEGORY_HEADGEAR;
 		};
 		case MACRO_ENUM_SLOTPOS_BINOCULARS: {
-			_slotVarName =		MACRO_VARNAME_UNIT_BINOCULARS;
-			_slotCategory =		MACRO_ENUM_CATEGORY_ITEM;
-			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_BINOCULARS;
+			_slotCategory =		MACRO_ENUM_CATEGORY_BINOCULARS;
 		};
 		case MACRO_ENUM_SLOTPOS_GOGGLES: {
-			_slotVarName =		MACRO_VARNAME_UNIT_GOGGLES;
 			_slotCategory =		MACRO_ENUM_CATEGORY_GOGGLES;
 		};
 
 		// Item slots (bottom)
 		case MACRO_ENUM_SLOTPOS_MAP: {
-			_slotVarName =		MACRO_VARNAME_UNIT_MAP;
 			_slotCategory =		MACRO_ENUM_CATEGORY_ITEM;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_MAP;
 		};
 		case MACRO_ENUM_SLOTPOS_GPS: {
-			_slotVarName =		MACRO_VARNAME_UNIT_GPS;
 			_slotCategory =		MACRO_ENUM_CATEGORY_ITEM;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_GPS;
 		};
 		case MACRO_ENUM_SLOTPOS_RADIO: {
-			_slotVarName =		MACRO_VARNAME_UNIT_RADIO;
 			_slotCategory =		MACRO_ENUM_CATEGORY_ITEM;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_RADIO;
 		};
 		case MACRO_ENUM_SLOTPOS_COMPASS: {
-			_slotVarName =		MACRO_VARNAME_UNIT_COMPASS;
 			_slotCategory =		MACRO_ENUM_CATEGORY_ITEM;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_COMPASS;
 		};
 		case MACRO_ENUM_SLOTPOS_WATCH: {
-			_slotVarName =		MACRO_VARNAME_UNIT_WATCH;
 			_slotCategory =		MACRO_ENUM_CATEGORY_ITEM;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_WATCH;
 		};
 
 		// Uniform, vest and backpack slots
 		case MACRO_ENUM_SLOTPOS_UNIFORM: {
-			_slotVarName =		MACRO_VARNAME_UNIT_UNIFORM;
 			_slotCategory =		MACRO_ENUM_CATEGORY_UNIFORM;
 		};
 		case MACRO_ENUM_SLOTPOS_VEST: {
-			_slotVarName =		MACRO_VARNAME_UNIT_VEST;
 			_slotCategory =		MACRO_ENUM_CATEGORY_VEST;
 		};
 		case MACRO_ENUM_SLOTPOS_BACKPACK: {
-			_slotVarName =		MACRO_VARNAME_UNIT_BACKPACK;
 			_slotCategory =		MACRO_ENUM_CATEGORY_BACKPACK;
 		};
 	};
 
-	// If we found a valid varname...
-	if (_slotVarName != "") then {
+	// Fetch the item data from the reserved slot
+	private _slotData = _containerData getVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotStartX, _slotStartY], locationNull];
 
-		// Fetch the item data from the reserved slot
-		private _slotData = _containerData getVariable [_slotVarName, locationNull];
+	// If the slot is empty...
+	if (isNull _slotData or {_slotData == _itemData}) then {
 
-		// If the slot is empty...
-		if (isNull _slotData or {_slotData == _itemData}) then {
+		// Fetch the item's category
+		private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
+		private _category = [_class] call cre_fnc_cfg_getClassCategory;
 
-			// Fetch the item's category
-			private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
-			private _category = [_class] call cre_fnc_cfg_getClassCategory;
+		// If the item is of the right category...
+		if (_category == _slotCategory) then {
 
-			// If the item is of the right category...
-			if (_category == _slotCategory) then {
+			// Fetch the item's subcategory, if it has one
+			private _subCategory = [_class, _category] call cre_fnc_cfg_getClassSubCategory;
 
-				// Fetch the item's subcategory, if it has one
-				private _subCategory = [_class, _category] call cre_fnc_cfg_getClassSubCategory;
-
-				// If the item is also of the right subcategory, accept it
-				if (_subCategory == _slotSubCategory) then {
-					_res = [true, []];
-				};
+			// If the item is also of the right subcategory, accept it
+			if (_subCategory == _slotSubCategory) then {
+				_res = [true, []];
 			};
 		};
 	};

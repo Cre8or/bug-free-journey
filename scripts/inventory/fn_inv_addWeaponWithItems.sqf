@@ -12,6 +12,7 @@
 	[cursorTarget, "arifle_MX_F", ["30Rnd_65x39_caseless_mag_Tracer", 19], ["muzzle_snds_H","optic_DMS","bipod_01_F_blk"]] spawn cre_fnc_addWeaponWithItems
 */
 
+// Fetch our params
 params [
 	["_container", objNull, [objNull]],
 	["_weapon", "", [""]],

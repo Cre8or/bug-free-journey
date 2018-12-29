@@ -11,6 +11,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_class", "", [""]]
 ];
@@ -58,9 +59,9 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 							_category = MACRO_ENUM_CATEGORY_HEADGEAR;
 							breakTo "loop";
 						};
-						case 616: {	// NVGs
-							// It's an item
-							_category = MACRO_ENUM_CATEGORY_ITEM;
+						case 616: {
+							// It's an NVG
+							_category = MACRO_ENUM_CATEGORY_NVGS;
 							breakTo "loop";
 						};
 						case 701: {
@@ -78,11 +79,15 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 					// If the class has a WeaponSlotsInfo subclass, it might be a weapon
 					if (isClass (configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo")) then {
 
-						// If the class is not of type 4096 (binoculars), it's definitely a weapon
-						if (getNumber (configFile >> "CfgWeapons" >> _class >> "type") != 4096) then {
-							_category = MACRO_ENUM_CATEGORY_WEAPON;
+						// If the class is of type 4096, it's a binocular
+						if (getNumber (configFile >> "CfgWeapons" >> _class >> "type") == 4096) then {
+							_category = MACRO_ENUM_CATEGORY_BINOCULARS;
 							breakTo "loop";
 						};
+
+						// Otherwise, it's a weapon
+						_category = MACRO_ENUM_CATEGORY_WEAPON;
+						breakTo "loop";
 					};
 
 					// Otherwise, it's an item

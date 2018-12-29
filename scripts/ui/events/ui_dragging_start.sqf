@@ -113,20 +113,20 @@ case "ui_dragging_start": {
 
 				// Drop the frame of the slot that matches the item type
 				switch (_category) do {
+					case MACRO_ENUM_CATEGORY_NVGS: {
+						_allowedCtrlsIDCs pushBack MACRO_IDC_NVGS_FRAME;
+					};
 					case MACRO_ENUM_CATEGORY_HEADGEAR: {
 						_allowedCtrlsIDCs pushBack MACRO_IDC_HEADGEAR_FRAME;
+					};
+					case MACRO_ENUM_CATEGORY_BINOCULARS: {
+						_allowedCtrlsIDCs pushBack MACRO_IDC_BINOCULARS_FRAME;
 					};
 					case MACRO_ENUM_CATEGORY_GOGGLES: {
 						_allowedCtrlsIDCs pushBack MACRO_IDC_GOGGLES_FRAME;
 					};
 					case MACRO_ENUM_CATEGORY_ITEM: {
 						switch (_subCategory) do {
-							case MACRO_ENUM_SUBCATEGORY_NVGS: {
-								_allowedCtrlsIDCs pushBack MACRO_IDC_NVGS_FRAME;
-							};
-							case MACRO_ENUM_SUBCATEGORY_BINOCULARS: {
-								_allowedCtrlsIDCs pushBack MACRO_IDC_BINOCULARS_FRAME;
-							};
 							case MACRO_ENUM_SUBCATEGORY_MAP: {
 								_allowedCtrlsIDCs pushBack MACRO_IDC_MAP_FRAME;
 							};

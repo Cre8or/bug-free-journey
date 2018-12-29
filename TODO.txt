@@ -1,4 +1,7 @@
 TODO:
+- Write a script that monitors the total mass of magazines inside a container and replaces them with dummy weights
+	* Required to prevent magazines from getting auto-reloaded when adding weapons to a unit, and when manually reloading
+	* Needs custom items with preset mass to be defined via config ( --> needs a mod)
 - Look for an alternative to isNil {} in ui_init, as it may  permanently freeze the game when encountering a script error
 - Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
 - Fully implement dragging functionality so it actually works (actually moving things around in inventories)
@@ -14,6 +17,14 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Rewrite the storage update event to detect when container are added/removed/changed, and to handle slot creation/deletion automatically
+- Remove unused unit varname macros (NVGs, radio, weapons, uniform, vest, etc.)
+- Update canFitItem function to no longer use plain-text varnames (for the player data), but rather slot position enums
+- Write a function to move items between actual inventories
+- Re-add custom categories for binoculars and NVGs (for compatibility with inventory related scripting commands)
+- Rename the PARENT macro to PARENTDATA (because it doesn't link to the object, but the data)
+- Reassign the PARENT macro to point towards the container
+- Make a CONTAINER macro that is used on *actual* containers ONLY, that returns the associated container object
 - Reorganise function locations (and names) with prefixes to avoid overlap and to improve clarity
 	* Functions should go in specific folders, such as "UI", "AI" and "inventory"
 	* Find an abbreviation for each of these folders and use it in the name of the function

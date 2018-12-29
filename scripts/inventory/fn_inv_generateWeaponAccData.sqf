@@ -13,6 +13,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_weaponData", locationNull, [locationNull]],
 	["_args", [], [[]]]
@@ -93,7 +94,7 @@ if (_magClass != "") then {
 
 		// Fill the attachment's item data
 		_accItemData setVariable [MACRO_VARNAME_CLASS, _accItemClass];
-		_accItemData setVariable [MACRO_VARNAME_PARENT, _weaponData];
+		_accItemData setVariable [MACRO_VARNAME_PARENTDATA, _weaponData];
 
 		// Update the weapon's item data to know about the attachment
 		_weaponData setVariable [_accVarName, _accItemData];
@@ -116,7 +117,7 @@ if (_magClass != "") then {
 
 		// Fill the magazines's item data
 		_magItemData setVariable [MACRO_VARNAME_CLASS, _magItemClass];
-		_magItemData setVariable [MACRO_VARNAME_PARENT, _weaponData];
+		_magItemData setVariable [MACRO_VARNAME_PARENTDATA, _weaponData];
 
 		switch (_forEachIndex) do {
 			case 0: {

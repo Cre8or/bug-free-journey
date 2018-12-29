@@ -17,6 +17,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_ctrl", controlNull, [controlNull]],
 	["_class", "", [""]],

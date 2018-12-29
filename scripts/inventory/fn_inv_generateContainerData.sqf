@@ -17,6 +17,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_container", objNull, [objNull]],
 	["_recursiveOnUnits", true, [true]]
@@ -81,7 +82,8 @@ if (_container isKindOf "Man") then {
 
 			// Save some basic info onto the item data
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
-			_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
+			_itemData setVariable [MACRO_VARNAME_PARENT, _container];
+			_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 
 			// Save the slot position
 			private _slotPosEnum = _slotPosEnums select _forEachIndex;
@@ -115,7 +117,8 @@ if (_container isKindOf "Man") then {
 
 			// Save some basic info onto the item data
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
-			_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
+			_itemData setVariable [MACRO_VARNAME_PARENT, _container];
+			_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 
 			// Save the slot position
 			private _slotPosEnum = _slotPosEnums select _forEachIndex;
@@ -141,12 +144,18 @@ if (_container isKindOf "Man") then {
 			MACRO_ENUM_SLOTPOS_VEST,
 			MACRO_ENUM_SLOTPOS_BACKPACK
 		];
+		private _containerTypes = [
+			uniform _container,
+			vest _container,
+			backpack _container
+		];
 		{
 			private _subContainerData = [_x] call cre_fnc_inv_generateContainerData;
 
 			// Save some basic info onto the sub-container data
-			_subContainerData setVariable [MACRO_VARNAME_CLASS, _x];
-			_subContainerData setVariable [MACRO_VARNAME_PARENT, _containerData];
+			_subContainerData setVariable [MACRO_VARNAME_CLASS, _containerTypes select _forEachIndex];
+			_subContainerData setVariable [MACRO_VARNAME_PARENT, _container];
+			_subContainerData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 
 			// Save the sub-container's position
 			private _slotPosEnum = _slotPosEnums select _forEachIndex;
@@ -375,7 +384,8 @@ if (_container isKindOf "Man") then {
 						};
 
 						// Save some more info onto the item data
-						_itemData setVariable [MACRO_VARNAME_PARENT, _containerData];
+						_itemData setVariable [MACRO_VARNAME_PARENT, _container];
+						_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 						_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
 						_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
 
@@ -398,6 +408,9 @@ if (_container isKindOf "Man") then {
 
 	// Save the list of items for quick access
 	_containerData setVariable [MACRO_VARNAME_ITEMS, _containerItems];
+
+	// Save the container onto the container data
+	_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 };
 
 

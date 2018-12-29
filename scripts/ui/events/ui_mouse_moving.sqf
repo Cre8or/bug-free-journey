@@ -14,9 +14,6 @@ case "ui_mouse_moving": {
 	_posRelX = (_posRelX - _posCtrlX) / _widthCtrl;
 	_posRelY = (_posRelY - _posCtrlY) / _heightCtrl;
 
-	// Save the mouse position relative to the control onto the inventory
-	//_inventory setVariable [MACRO_VARNAME_UI_CURSORPOSREL, [_posRelX, _posRelY]];
-
 	// Update the cursor control on the inventory
 	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, _ctrl];
 
@@ -28,7 +25,7 @@ case "ui_mouse_moving": {
 		private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
 
 		// Fetch the item and container data
-		private _containerData = _ctrl getVariable [MACRO_VARNAME_PARENT, locationNull];
+		private _containerData = _ctrl getVariable [MACRO_VARNAME_PARENTDATA, locationNull];
 		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
 
 		// Fetch the target control's slot position

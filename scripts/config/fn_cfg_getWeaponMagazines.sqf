@@ -8,6 +8,7 @@
 		0:      <ARRAY>		Array containing the classnames of all magazines that can be used
 -------------------------------------------------------------------------------------------------------------------- */
 
+// Fetch our params
 params [
 	["_class", "", [""]]
 ];

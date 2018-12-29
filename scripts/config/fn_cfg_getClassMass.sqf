@@ -11,6 +11,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_class", "", [""]],
 	["_category", MACRO_ENUM_CATEGORY_INVALID, [MACRO_ENUM_CATEGORY_INVALID]]
@@ -46,9 +47,11 @@ if (_mass == -1) then {
 	switch (_category) do {
 		case MACRO_ENUM_CATEGORY_ITEM;
 		case MACRO_ENUM_CATEGORY_WEAPON;
+		case MACRO_ENUM_CATEGORY_NVGS;
+		case MACRO_ENUM_CATEGORY_HEADGEAR;
+		case MACRO_ENUM_CATEGORY_BINOCULARS;
 		case MACRO_ENUM_CATEGORY_UNIFORM;
-		case MACRO_ENUM_CATEGORY_VEST;
-		case MACRO_ENUM_CATEGORY_HEADGEAR: {
+		case MACRO_ENUM_CATEGORY_VEST: {
 			_configPath = configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "mass";
 			_configPathAlt = configFile >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
 		};

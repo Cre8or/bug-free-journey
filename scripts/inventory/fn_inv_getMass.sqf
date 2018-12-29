@@ -8,6 +8,7 @@
 		0:      <NUMBER>	Mass of all objects inside the container object
 -------------------------------------------------------------------------------------------------------------------- */
 
+// Fetch our params
 params [
 	["_obj", objNull, [objNull]]
 ];

@@ -8,6 +8,7 @@
 		0:      <NUMBER>	Amount of bullets that fit into the magazine
 -------------------------------------------------------------------------------------------------------------------- */
 
+// Fetch our params
 params [
 	["_class", "", [""]]
 ];

@@ -11,6 +11,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_class", "", [""]]
 ];

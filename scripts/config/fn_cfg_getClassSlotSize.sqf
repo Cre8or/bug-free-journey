@@ -11,6 +11,7 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
+// Fetch our params
 params [
 	["_class", "", [""]],
 	["_category", MACRO_ENUM_CATEGORY_INVALID, [MACRO_ENUM_CATEGORY_INVALID]]
@@ -43,9 +44,11 @@ if (_slotSize isEqualTo []) then {
 	switch (_category) do {
 		case MACRO_ENUM_CATEGORY_ITEM;
 		case MACRO_ENUM_CATEGORY_WEAPON;
+		case MACRO_ENUM_CATEGORY_NVGS;
+		case MACRO_ENUM_CATEGORY_HEADGEAR;
+		case MACRO_ENUM_CATEGORY_BINOCULARS;
 		case MACRO_ENUM_CATEGORY_UNIFORM;
-		case MACRO_ENUM_CATEGORY_VEST;
-		case MACRO_ENUM_CATEGORY_HEADGEAR: {
+		case MACRO_ENUM_CATEGORY_VEST: {
 			_configPath = "CfgWeapons"
 		};
 		case MACRO_ENUM_CATEGORY_BACKPACK;
@@ -86,6 +89,8 @@ if (_slotSize isEqualTo []) then {
 				_slotSize = [_x, _y];
 			};
 			case MACRO_ENUM_CATEGORY_ITEM;
+			case MACRO_ENUM_CATEGORY_NVGS;
+			case MACRO_ENUM_CATEGORY_BINOCULARS;
 			case MACRO_ENUM_CATEGORY_UNIFORM;
 			case MACRO_ENUM_CATEGORY_VEST;
 			case MACRO_ENUM_CATEGORY_BACKPACK;

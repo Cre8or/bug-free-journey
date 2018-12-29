@@ -33,7 +33,7 @@ case "ui_dragging_init": {
 
 				// DEBUG
 				private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
-				private _namespaceToDebug = _data;
+				private _namespaceToDebug = _data; //player getVariable [MACRO_VARNAME_DATA, locationNull];
 				private _maxDepth = 5;
 				private _str = format ["<t color='#00aaff'>VARIABLES</t> (%1)<br /><br />", count allVariables _namespaceToDebug];
 				{
@@ -42,6 +42,7 @@ case "ui_dragging_init": {
 					if (_val isEqualType locationNull) then {
 						private _colourVal = "fffffff";
 						switch (typeName (_val getVariable [MACRO_VARNAME_UID, ""])) do {
+							case typeName objNull;
 							case typeName locationNull;
 							case typeName 0: {_colourVal = "eda765"};
 							case typeName "": {_colourVal = "a3d87d"};
@@ -65,6 +66,7 @@ case "ui_dragging_init": {
 					} else {
 						private _colourVal = "fffffff";
 						switch (typeName _val) do {
+							case typeName objNull;
 							case typeName locationNull;
 							case typeName 0: {_colourVal = "eda765"};
 							case typeName "": {_colourVal = "a3d87d"};

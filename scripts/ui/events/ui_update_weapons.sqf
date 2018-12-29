@@ -44,7 +44,7 @@ case "ui_update_weapons": {
 		// Save the slot's default icon path and slot position
 		_ctrlFrame setVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, _defaultIconPath];
 		_ctrlFrame setVariable [MACRO_VARNAME_SLOTPOS, _slotPos];
-		_ctrlFrame setVariable [MACRO_VARNAME_PARENT, _containerData];
+		_ctrlFrame setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 
 	} forEach [
 		[MACRO_ENUM_SLOTPOS_NVGS,		_inventory displayCtrl MACRO_IDC_NVGS_FRAME,			MACRO_PICTURE_NVGS],

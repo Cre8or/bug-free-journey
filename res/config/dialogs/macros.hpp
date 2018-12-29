@@ -214,10 +214,12 @@
 	#define MACRO_ENUM_CATEGORY_VEST				4
 	#define MACRO_ENUM_CATEGORY_BACKPACK				5
 
-	#define MACRO_ENUM_CATEGORY_HEADGEAR				6
-	#define MACRO_ENUM_CATEGORY_GOGGLES				7
+	#define MACRO_ENUM_CATEGORY_NVGS				6
+	#define MACRO_ENUM_CATEGORY_HEADGEAR				7
+	#define MACRO_ENUM_CATEGORY_BINOCULARS				8
+	#define MACRO_ENUM_CATEGORY_GOGGLES				9
 
-	#define MACRO_ENUM_CATEGORY_VEHICLE				8
+	#define MACRO_ENUM_CATEGORY_VEHICLE				10
 
 
 
@@ -235,13 +237,11 @@
 	#define MACRO_ENUM_SUBCATEGORY_SECONDARYWEAPON			2
 
 	// Item sub-categories
-	#define MACRO_ENUM_SUBCATEGORY_NVGS				10
-	#define MACRO_ENUM_SUBCATEGORY_BINOCULARS			11
-	#define MACRO_ENUM_SUBCATEGORY_MAP				12
-	#define MACRO_ENUM_SUBCATEGORY_GPS				13
-	#define MACRO_ENUM_SUBCATEGORY_RADIO				14
-	#define MACRO_ENUM_SUBCATEGORY_COMPASS				15
-	#define MACRO_ENUM_SUBCATEGORY_WATCH				16
+	#define MACRO_ENUM_SUBCATEGORY_MAP				10
+	#define MACRO_ENUM_SUBCATEGORY_GPS				11
+	#define MACRO_ENUM_SUBCATEGORY_RADIO				12
+	#define MACRO_ENUM_SUBCATEGORY_COMPASS				13
+	#define MACRO_ENUM_SUBCATEGORY_WATCH				14
 
 
 
@@ -288,11 +288,13 @@
 	#define MACRO_VARNAME_UI_ICONTEMP				"ctrlIconTemp"
 	#define MACRO_VARNAME_UI_CHILDCONTROLS				"childControls"
 	#define MACRO_VARNAME_UI_CTRLICON				"ctrlIcon"
+	#define MACRO_VARNAME_UI_CTRLSLOTICON				"ctrlSlotIcon"
 	#define MACRO_VARNAME_UI_CTRLOUTLINE				"ctrlOutline"
 	#define MACRO_VARNAME_UI_CTRLPARENT				"ctrlParent"
 
+	#define MACRO_VARNAME_UI_STORAGE_CONTAINERS			"storageContainers"
+
 	#define MACRO_VARNAME_UI_CURSORCTRL				"cursorCtrl"
-	//#define MACRO_VARNAME_UI_CURSORPOSREL				"cursorPosRel"
 	#define MACRO_VARNAME_UI_CURSORPOSNEW				"cursorPosNew"
 	#define MACRO_VARNAME_UI_HIGHLITCONTROLS			"dragging_highlitControls"
 	#define MACRO_VARNAME_UI_ALLOWEDCONTROLS			"dragging_allowedControls"
@@ -301,6 +303,7 @@
 
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONUP			"EH_mouseButtonUp"
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			"EH_mouseButtonDown"
+	#define MACRO_VARNAME_UI_CTRL_HAS_EHS				"ctrlHasEHs"
 
 	// Items and containers
 	#define MACRO_VARNAME_UID					"UID"
@@ -310,29 +313,13 @@
 	#define MACRO_VARNAME_SLOTPOS					"slotPos"
 	#define MACRO_VARNAME_SLOT_X_Y					"slot_%1_%2"
 	#define MACRO_VARNAME_OCCUPIEDSLOTS				"occupiedSlots"
-	#define MACRO_VARNAME_PARENT					"parent"
 	#define MACRO_VARNAME_ITEMS					"items"
+	#define MACRO_VARNAME_CONTAINER					"container"
+	#define MACRO_VARNAME_PARENT					"parent"
+	#define MACRO_VARNAME_PARENTDATA				"parentData"
 
 	#define MACRO_VARNAME_CONTAINERSIZE				"containerSize"
 	#define MACRO_VARNAME_CONTAINERSLOTSONLASTY			"containerSlotsOnLastY"
-
-	#define MACRO_VARNAME_UNIT_NVGS					"unitNVGs"
-	#define MACRO_VARNAME_UNIT_HEADGEAR				"unitHeadgear"
-	#define MACRO_VARNAME_UNIT_BINOCULARS				"unitBinoculars"
-	#define MACRO_VARNAME_UNIT_GOGGLES				"unitGoggles"
-	#define MACRO_VARNAME_UNIT_MAP					"unitMap"
-	#define MACRO_VARNAME_UNIT_GPS					"unitGPS"
-	#define MACRO_VARNAME_UNIT_RADIO				"unitRadio"
-	#define MACRO_VARNAME_UNIT_COMPASS				"unitCompass"
-	#define MACRO_VARNAME_UNIT_WATCH				"unitWatch"
-
-	#define MACRO_VARNAME_UNIT_PRIMARYWEAPON			"unitPrimaryWeapon"
-	#define MACRO_VARNAME_UNIT_HANDGUNWEAPON			"unitHandgunWeapon"
-	#define MACRO_VARNAME_UNIT_SECONDARYWEAPON			"unitSecondaryWeapon"
-
-	#define MACRO_VARNAME_UNIT_UNIFORM				"unitUniform"
-	#define MACRO_VARNAME_UNIT_VEST					"unitVest"
-	#define MACRO_VARNAME_UNIT_BACKPACK				"unitBackpack"
 
 	#define MACRO_VARNAME_MAG_AMMO					"ammo"
 	#define MACRO_VARNAME_MAG_MAXAMMO				"maxAmmo"
@@ -363,6 +350,18 @@
 	#define CURLY(DATA)						{##DATA##}
 	#define SQUARE(DATA)						[##DATA##]
 	#define STR(DATA)						#DATA
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//	INVENTORY UI EVENT MODES
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+	// Modes for ui_storage_update
+	#define MACRO_VARNAME_UI_UPDATE_STORAGE_CONTAINERS		0
+	#define MACRO_VARNAME_UI_UPDATE_STORAGE_CONTENTS		1
 
 
 

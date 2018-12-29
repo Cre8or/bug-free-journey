@@ -14,6 +14,7 @@
 		0:	<ARRAY>		The weapon's accessories array.
 -------------------------------------------------------------------------------------------------------------------- */
 
+// Fetch our params
 params [
 	["_unit", objNull, [objNull]],
 	["_weaponType", 0, [0]]

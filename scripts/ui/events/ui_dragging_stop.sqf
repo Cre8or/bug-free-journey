@@ -14,12 +14,12 @@ case "ui_dragging_stop": {
 		private _slotPos = _inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []];
 		private _slotSize = _draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
 		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
-		private _originContainerData = _itemData getVariable [MACRO_VARNAME_PARENT, controlNull];
+		private _originContainer = _itemData getVariable [MACRO_VARNAME_PARENT, objNull];
+		private _originContainerData = _itemData getVariable [MACRO_VARNAME_PARENTDATA, locationNull];
 
 		private _cursorCtrl = _inventory getVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
-		private _targetContainerData = _cursorCtrl getVariable [MACRO_VARNAME_PARENT, locationNull];
+		private _targetContainerData = _cursorCtrl getVariable [MACRO_VARNAME_PARENTDATA, locationNull];
 		private _targetContainerCtrl = _cursorCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, _cursorCtrl];	// Fallback for reserved slots that don't have a container control
-
 		// Try to fit the item on the slot
 		([_itemData, _targetContainerData, _slotPos, _slotSize] call cre_fnc_inv_canFitItem) params ["_canFit"];
 		//systemChat format ["(%1) - origin: %2 - target: %3 - pos: %4 - size: %5 - canFit: %6", time, ctrlIDC (_draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull]), ctrlIDC _targetContainerCtrl, _slotPos, _slotSize, _canFit];
@@ -67,10 +67,14 @@ case "ui_dragging_stop": {
 				};
 			};
 
+			// Fetch the target container
+			private _targetContainer = _targetContainerData getVariable [MACRO_VARNAME_CONTAINER, objNull];
+
 			// Now, we update the item's new occupied slots, position and parent
 			_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _occupiedSlots];
 			_itemData setVariable [MACRO_VARNAME_SLOTPOS, _slotPos];
-			_itemData setVariable [MACRO_VARNAME_PARENT, _targetContainerData];
+			_itemData setVariable [MACRO_VARNAME_PARENT, _targetContainer];
+			_itemData setVariable [MACRO_VARNAME_PARENTDATA, _targetContainerData];
 
 			// Also update the items lists
 			private _itemsOrigin = _originContainerData getVariable [MACRO_VARNAME_ITEMS, []];
@@ -82,8 +86,14 @@ case "ui_dragging_stop": {
 			// Tell the control that it is no longer being dragged
 			_draggedCtrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false];
 
+			// Move the item across the inventories
+			[_itemData, _originContainer, _targetContainer] call cre_fnc_inv_moveItem;
+
 			// Update the inventory UI to reflect the changes
 			["ui_item_move", [_draggedCtrl, _slotPos, _targetContainerCtrl]] call cre_fnc_ui_inventory;
+
+			// Update the storage screen, in case we moved a container (uniform, vest, backpack)
+			["ui_update_storage"] call cre_fnc_ui_inventory;
 
 			// Finally, complete the dragging process once the button is released
 			private _EH = _inventory displayAddEventHandler ["MouseButtonUp", {
