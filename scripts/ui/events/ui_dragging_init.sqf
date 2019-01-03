@@ -40,29 +40,27 @@ case "ui_dragging_init": {
 					private _val = _namespaceToDebug getVariable [_x, ""];
 
 					if (_val isEqualType locationNull) then {
-						private _colourVal = "fffffff";
-						switch (typeName (_val getVariable [MACRO_VARNAME_UID, ""])) do {
-							case typeName objNull;
-							case typeName locationNull;
-							case typeName 0: {_colourVal = "eda765"};
-							case typeName "": {_colourVal = "a3d87d"};
-						};
-						_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%3'>%4</t><br />    [</t>", _forEachIndex + 1, _x, _colourVal, _val getVariable [MACRO_VARNAME_UID, ""]];
-						{
-							if (_forEachIndex + 1 <= _maxDepth) then {
-								_str = _str + format ["<t align='left'><t color='#44dddd'>%1</t>", _x];
-								if (_forEachIndex + 1 == _maxDepth) then {
-									if (count allVariables _val > _maxDepth) then {
-										_str = _str + format [", ... <t color='#888888'>(%1 more)</t>", (count allVariables _val) - _maxDepth];
-									};
-								} else {
-									if (_forEachIndex + 1 < count allVariables _val) then {
-										_str = _str + ",   ";
+						private _countVars = count allVariables _val;
+						if (_countVars > 0) then {
+							_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%a3d87d'>%3</t><br />    [</t>", _forEachIndex + 1, _x, _val getVariable [MACRO_VARNAME_UID, ""]];
+							{
+								if (_forEachIndex + 1 <= _maxDepth) then {
+									_str = _str + format ["<t align='left'><t color='#44dddd'>%1</t>", _x];
+									if (_forEachIndex + 1 == _maxDepth) then {
+										if (_countVars > _maxDepth) then {
+											_str = _str + format [", ... <t color='#888888'>(%1 more)</t>", _countVars - _maxDepth];
+										};
+									} else {
+										if (_forEachIndex + 1 < _countVars) then {
+											_str = _str + ",   ";
+										};
 									};
 								};
-							};
-						} forEach allVariables _val;
-						_str = _str + "]</t><br />";
+							} forEach allVariables _val;
+							_str = _str + "]<br />";
+						} else {
+							_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2</t></t><br />", _forEachIndex + 1, _x];
+						};
 					} else {
 						private _colourVal = "fffffff";
 						switch (typeName _val) do {

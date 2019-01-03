@@ -2,6 +2,8 @@
 case "ui_update_storage": {
 	_eventExists = true;
 
+	systemChat " ";
+
 	// Grab some of our inventory controls
 	private _storageCtrlGrp = _inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP;
 	private _ctrlUniformFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_UNIFORM_FRAME;
@@ -57,7 +59,7 @@ case "ui_update_storage": {
 		// If the container doesn't have any data yet, generate it
 // ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 		if (false or isNull _containerData and {!isNull _container}) then {
-			systemChat format ["Building container data for: %1", _class];
+			//systemChat format ["Building container data for: %1", _class];
 			_containerData = [_container] call cre_fnc_inv_generateContainerData;
 
 			// Fill the container data with some info
@@ -220,8 +222,6 @@ case "ui_update_storage": {
 		} else {
 
 			if (_shouldMoveCtrls) then {
-				systemChat format ["Needs its controls moved: %1", _class];
-
 				// Reposition the container frame's child controls
 				private _containerFrameCtrls = (_containerFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_containerFrame getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]];
 				{

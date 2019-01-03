@@ -17,6 +17,8 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Prevent moving uniforms, vests and backpacks into containers if they're not empty
+- Fix generateContainerData not setting the container variable on sub-containers (e.g. nested backpacks)
 - Rewrite the storage update event to detect when container are added/removed/changed, and to handle slot creation/deletion automatically
 - Remove unused unit varname macros (NVGs, radio, weapons, uniform, vest, etc.)
 - Update canFitItem function to no longer use plain-text varnames (for the player data), but rather slot position enums

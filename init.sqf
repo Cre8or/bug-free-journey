@@ -20,7 +20,14 @@ cre_fnc_inv_generateContainerData = compile preprocessFileLineNumbers "scripts\i
 cre_fnc_inv_canFitItem = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_canFitItem.sqf";
 cre_fnc_inv_moveItem = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_moveItem.sqf";
 
+cre_fnc_inv_getEveryContainer = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_getEveryContainer.sqf";
+
 cre_inv_synchroniser = [] spawn compile preprocessFileLineNumbers "scripts\inventory\fn_inv_synchroniser.sqf";
 
 // Bonus stuff
 cre_warfare = [] spawn compile preprocessFileLineNumbers "scripts\AI\fn_handleWarfare.sqf";
+
+
+
+// Test script
+player addAction ["<t color='#00DD00'>test.sqf</t>", {if (isNil "cre_handle") then {cre_handle = scriptNull}; terminate cre_handle; cre_handle = [] spawn compile preprocessFileLineNumbers "debug\test.sqf"}, nil, 10, false, false];

@@ -87,3 +87,23 @@ FIREPLACES INSIDE HOUSES
 
 Crafted fireplaces should require stones, and/or generate smoke which can suffocate players inside buildings.
 Some houses may have existing fireplaces, which use a chimney (so no suffocation risk) and are already built.
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+CARRY ITEMS IN HANDS
+-----------------------------------------------------------------------------------------------------------------------
+
+A special inventory slot that can be used to carry heavy objects in one's hands.
+
+Using a combination of looping gestures (tip: two identical anims, but different config entries, to swap back and forth
+between the two, creating a loop) and movement control scripts (detect stance changes, e.g. prevent going prone), it
+should be possible to move objects around that don't fit into the inventory.
+
+Depending on the item's mass, and technical limitations, maybe play a one-handed or two-handed gesture when carrying.
+
+Also, consider carried objects in the dummy weights calculations, to affect stamina. Alternatively, set stamina to 0
+repeatedly while carrying (to prevent sprinting), and tag specific items as "heavy" or "cumbersome" to also prevent
+running/jogging (force walking). 

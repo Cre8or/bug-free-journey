@@ -284,6 +284,7 @@ if (_container isKindOf "Man") then {
 	// Iterate through the sorted list of items and fit them into the container
 	([typeOf _container] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
 	private _containerItems = [];
+	_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 	_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _containerSize];
 	_containerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _containerSlotsOnLastY];
 
@@ -301,10 +302,6 @@ if (_container isKindOf "Man") then {
 		private _class = _args select 0;
 		private _category = [_class] call cre_fnc_cfg_getClassCategory;
 		private _itemSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
-
-		// Generate a namespace for this item and save the item class onto it
-		(call cre_fnc_inv_createNamespace) params ["_itemData"];
-		_itemData setVariable [MACRO_VARNAME_CLASS, _class];
 
 		// Iterate through the container to see where we can fit the item
 		for "_posY" from _lastFreeY to _sizeH do {
@@ -346,7 +343,23 @@ if (_container isKindOf "Man") then {
 							};
 						};
 
-						// If we didn't exit the loop yet, then the slots are free
+						// If we didn't exit yet, that means the item can fit!
+						// Now we generate a namespace for this item and save the item class onto it
+						// However, if the item is a container, we don't need to generate the item data manually,
+						// instead we recursively generate the container data on it and fetch the result
+						private _itemData = locationNull;
+						if (_formatType == 3) then {
+							private _containerX = _args select 1;
+							_itemData = [_containerX] call cre_fnc_inv_generateContainerData;
+							bag = _containerX;
+						} else {
+							_itemData = (call cre_fnc_inv_createNamespace) select 0;
+						};
+
+						// Save the item class onto the item data
+						_itemData setVariable [MACRO_VARNAME_CLASS, _class];
+
+						// Link the slots to the item
 						{
 							_containerData setVariable [_x, _itemData];
 						} forEach _requiredSlotsStrArray;
@@ -373,14 +386,6 @@ if (_container isKindOf "Man") then {
 							case 2: {
 
 							};
-
-							// everyContainer
-							case 3: {
-								private _containerX = _args select 1;
-
-								// Recursively generate the container data for all nested containers
-								[_containerX] call cre_fnc_inv_generateContainerData;
-							};
 						};
 
 						// Save some more info onto the item data
@@ -390,7 +395,6 @@ if (_container isKindOf "Man") then {
 						_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
 
 						_containerItems pushBack _itemData,
-						//systemChat format ["Added %1 at pos: %2", _class, [_posX, _posY]];
 
 						// Move on to the next item
 						breakTo "loopItems";
@@ -408,9 +412,6 @@ if (_container isKindOf "Man") then {
 
 	// Save the list of items for quick access
 	_containerData setVariable [MACRO_VARNAME_ITEMS, _containerItems];
-
-	// Save the container onto the container data
-	_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 };
 
 

@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={27159.068,23.994791,24100.93};
-		dir[]={-0.48715022,-0.4350391,0.75725043};
-		up[]={-0.23537023,0.90041107,0.36587125};
-		aside[]={0.84100556,-6.7753717e-008,0.5410313};
+		pos[]={27148.084,15.742994,24116.393};
+		dir[]={-0.77778977,-0.37175259,0.50680363};
+		up[]={-0.31146941,0.92833072,0.2029518};
+		aside[]={0.5459289,-6.9616362e-008,0.83783615};
 	};
 };
 binarizationWanted=0;
@@ -373,7 +373,7 @@ class Mission
 								isBackpack=0;
 								class MagazineCargo
 								{
-									items=6;
+									items=5;
 									class Item0
 									{
 										name="16Rnd_9x21_Mag";
@@ -402,12 +402,6 @@ class Mission
 									{
 										name="HandGrenade";
 										count=2;
-										ammoLeft=1;
-									};
-									class Item5
-									{
-										name="1Rnd_HE_Grenade_shell";
-										count=1;
 										ammoLeft=1;
 									};
 								};

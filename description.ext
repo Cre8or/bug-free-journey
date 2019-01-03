@@ -64,6 +64,13 @@ class CfgFunctions {
 			class inv_generateWeaponAccData {};
 		};
 
+		class inventory_commands {
+			file = "scripts\inventory\commands";
+			// Abbreviation:	inv
+
+			//class inv_getEveryContainer {};
+		};
+
 		class config {
 			file = "scripts\config";
 			// Abbreviation:	cfg

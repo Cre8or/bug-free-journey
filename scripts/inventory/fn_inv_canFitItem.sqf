@@ -174,6 +174,7 @@ if (_slotStartX < 0) then {
 			or {_slotEndX > _containerW}
 			or {_slotEndY > _containerH}
 			or {_itemData == _containerData}
+			or {!((_itemData getVariable [MACRO_VARNAME_ITEMS, []]) isEqualTo [])}
 		) then {
 			//systemChat "(canFitItem) FAIL: Item does not fit in the container!";
 			breakTo "main"
@@ -217,6 +218,7 @@ if (_slotStartX < 0) then {
 			or {_slotEndX > _containerW}
 			or {_slotEndY > _containerH}
 			or {_itemData == _containerData}
+			or {!((_itemData getVariable [MACRO_VARNAME_ITEMS, []]) isEqualTo [])}
 		) then {
 			_canFit = false;
 		};
