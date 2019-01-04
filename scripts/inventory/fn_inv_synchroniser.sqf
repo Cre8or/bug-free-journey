@@ -2,8 +2,8 @@
 	Author:		Cre8or
 	Description:
 		Scheduled script that synchronises the player's actual inventory with the custom inventory data.
-		When a mismatch is found, this function will attempt to update the custom data to match the actual
-		inventory. However, if this is not possible, the actual inventory will be modified instead.
+		When a mismatch is found, this function will modify the actual inventory to match the custom
+		inventory, by means of adding or removing items.
 	Arguments:
 		(none)
 	Returns:

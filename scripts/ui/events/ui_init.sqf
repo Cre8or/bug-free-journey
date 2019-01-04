@@ -57,7 +57,7 @@ case "ui_init": {
 				// ---- DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 				// TODO: Move this into mission init (or similar) so that this data is available even if the inventory hasn't been opened yet!
 				if (false or isNull (player getVariable [MACRO_VARNAME_DATA, locationNull])) then {
-					private _containerData = [player, false] call cre_fnc_inv_generateContainerData;
+					private _containerData = [player, "", false] call cre_fnc_inv_generateContainerData;
 					_containerData setVariable [MACRO_VARNAME_CONTAINER, player];
 					player setVariable [MACRO_VARNAME_DATA, _containerData];
 				};

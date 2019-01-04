@@ -50,13 +50,13 @@ if (_mass == -1) then {
 		case MACRO_ENUM_CATEGORY_NVGS;
 		case MACRO_ENUM_CATEGORY_HEADGEAR;
 		case MACRO_ENUM_CATEGORY_BINOCULARS;
+		case MACRO_ENUM_CATEGORY_CONTAINER;
 		case MACRO_ENUM_CATEGORY_UNIFORM;
 		case MACRO_ENUM_CATEGORY_VEST: {
 			_configPath = configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "mass";
 			_configPathAlt = configFile >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
 		};
-		case MACRO_ENUM_CATEGORY_BACKPACK;
-		case MACRO_ENUM_CATEGORY_VEHICLE: {
+		case MACRO_ENUM_CATEGORY_BACKPACK: {
 			_configPath = configFile >> "CfgVehicles" >> _class >> "mass";
 			_configPathAlt = _configPath;
 		};

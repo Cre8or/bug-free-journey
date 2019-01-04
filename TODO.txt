@@ -1,15 +1,13 @@
 TODO:
-- Write a script that monitors the total mass of magazines inside a container and replaces them with dummy weights
-	* Required to prevent magazines from getting auto-reloaded when adding weapons to a unit, and when manually reloading
-	* Needs custom items with preset mass to be defined via config ( --> needs a mod)
-- Look for an alternative to isNil {} in ui_init, as it may  permanently freeze the game when encountering a script error
-- Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
-- Fully implement dragging functionality so it actually works (actually moving things around in inventories)
-	* Modify the player/object's container data
-	* Modify the player/object's inventory
-	* Detect discrepancies and synchronise the actual inventory with the UI?
-- Add a global scale multiplier (macro) for slot pictures?
+- Make the handleFakeMass function consider container items' items (as they're not technically objects, so no cargo)
 - Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
+	* --> inventory synchroniser!
+- Look for an alternative to isNil {} in ui_init, as it may  permanently freeze the game when encountering a script error
+- Add the ability to interact with the world
+ 	* Detect ground holders and inventories in a certain radius around the player
+	* Update the list (and alongside it, the UI) of nearby inventories when moving
+- Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
+- Add a global scale multiplier (macro) for slot pictures?
 - Search for "TODO" and "DEBUG" comments and address them
 
 
@@ -17,6 +15,17 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Add support for container items (ammo boxes, first aid pouches, etc, cases, etc.)
+	* For Arma 3 to consider these items as containers, they need to BE a container (e.g. vest) --> inheritance
+	* On-ground model can be different from the on-player model (to avoid errors, and maybe detect cheaters)
+- Fully implement dragging functionality so it actually works (actually moving things around in inventories)
+	* Modify the player/object's container data
+	* Modify the player/object's inventory
+	* Detect discrepancies and synchronise the actual inventory with the UI?
+- Make generateContainerData filter out the fake weight magazines
+- Write a script that monitors the total mass of magazines inside a container and replaces them with dummy weights
+	* Required to prevent magazines from getting auto-reloaded when adding weapons to a unit, and when manually reloading
+	* Needs custom items with preset mass to be defined via config ( --> needs a mod)
 - Prevent moving uniforms, vests and backpacks into containers if they're not empty
 - Fix generateContainerData not setting the container variable on sub-containers (e.g. nested backpacks)
 - Rewrite the storage update event to detect when container are added/removed/changed, and to handle slot creation/deletion automatically

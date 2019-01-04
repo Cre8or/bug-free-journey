@@ -2,8 +2,6 @@
 case "ui_update_storage": {
 	_eventExists = true;
 
-	systemChat " ";
-
 	// Grab some of our inventory controls
 	private _storageCtrlGrp = _inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP;
 	private _ctrlUniformFrame = _storageCtrlGrp controlsGroupCtrl MACRO_IDC_UNIFORM_FRAME;
@@ -60,7 +58,7 @@ case "ui_update_storage": {
 // ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 		if (false or isNull _containerData and {!isNull _container}) then {
 			//systemChat format ["Building container data for: %1", _class];
-			_containerData = [_container] call cre_fnc_inv_generateContainerData;
+			_containerData = [_container, _class] call cre_fnc_inv_generateContainerData;
 
 			// Fill the container data with some info
 			_containerData setVariable [MACRO_VARNAME_CLASS, _class];
@@ -125,7 +123,9 @@ case "ui_update_storage": {
 				_containerFrame setVariable [MACRO_VARNAME_DATA, _containerData];
 
 				// Fetch the container's slots count on the last line
-				private _containerSlotsOnLastY = _containerData getVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, [1,1]];
+				private _containerSlotsOnLastY = _containerData getVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _sizeW];
+				if (_containerSlotsOnLastY == 0) then {_containerSlotsOnLastY = _sizeW};
+
 				_containerSize params ["_sizeW", "_sizeH"];
 
 				// Create the new slots

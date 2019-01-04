@@ -5,6 +5,7 @@
 		Essentially the equivalent of 'everyContainer', but with item data instead of objects.
 	Arguments:
 		0:	<LOCATION>	Item data of the container to be inspected
+		1:	<ARRAY>		Array of allowed categories (items that don't match are ignored)
 	Returns:
 		0:	<ARRAY>		Array of item datas (<LOCATION>) of every sub-container that was found
 -------------------------------------------------------------------------------------------------------------------- */

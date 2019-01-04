@@ -50,6 +50,7 @@ if (_iconPath == " ") then {
 		case MACRO_ENUM_CATEGORY_NVGS;
 		case MACRO_ENUM_CATEGORY_HEADGEAR;
 		case MACRO_ENUM_CATEGORY_BINOCULARS;
+		case MACRO_ENUM_CATEGORY_CONTAINER;
 		case MACRO_ENUM_CATEGORY_UNIFORM;
 		case MACRO_ENUM_CATEGORY_VEST: {
 			_iconPath = [configfile >> "CfgWeapons" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
@@ -57,8 +58,7 @@ if (_iconPath == " ") then {
 		case MACRO_ENUM_CATEGORY_MAGAZINE: {
 			_iconPath = [configfile >> "CfgMagazines" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
 		};
-		case MACRO_ENUM_CATEGORY_BACKPACK;
-		case MACRO_ENUM_CATEGORY_VEHICLE: {
+		case MACRO_ENUM_CATEGORY_BACKPACK: {
 			_iconPath = [configfile >> "CfgVehicles" >> _class, "picture", ""] call BIS_fnc_returnConfigEntry;
 		};
 		case MACRO_ENUM_CATEGORY_GOGGLES: {

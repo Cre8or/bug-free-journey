@@ -20,6 +20,7 @@
 // Fetch our params
 params [
 	["_container", objNull, [objNull]],
+	["_containerClass", "", [""]],
 	["_recursiveOnUnits", true, [true]]
 ];
 
@@ -178,6 +179,45 @@ if (_container isKindOf "Man") then {
 	// Define some variables
 	private _index = 0;
 	private _items = [];
+	private _filteredClasses = [	// This is only faster than looking up a class if there are less than ~70-80 entries
+		"Cre8ive_DummyWeight_1",
+		"Cre8ive_DummyWeight_2",
+		"Cre8ive_DummyWeight_3",
+		"Cre8ive_DummyWeight_4",
+		"Cre8ive_DummyWeight_5",
+		"Cre8ive_DummyWeight_6",
+		"Cre8ive_DummyWeight_7",
+		"Cre8ive_DummyWeight_8",
+		"Cre8ive_DummyWeight_9",
+		"Cre8ive_DummyWeight_10",
+		"Cre8ive_DummyWeight_20",
+		"Cre8ive_DummyWeight_30",
+		"Cre8ive_DummyWeight_40",
+		"Cre8ive_DummyWeight_50",
+		"Cre8ive_DummyWeight_60",
+		"Cre8ive_DummyWeight_70",
+		"Cre8ive_DummyWeight_80",
+		"Cre8ive_DummyWeight_90",
+		"Cre8ive_DummyWeight_100",
+		"Cre8ive_DummyWeight_200",
+		"Cre8ive_DummyWeight_300",
+		"Cre8ive_DummyWeight_400",
+		"Cre8ive_DummyWeight_500",
+		"Cre8ive_DummyWeight_600",
+		"Cre8ive_DummyWeight_700",
+		"Cre8ive_DummyWeight_800",
+		"Cre8ive_DummyWeight_900",
+		"Cre8ive_DummyWeight_1000",
+		"Cre8ive_DummyWeight_2000",
+		"Cre8ive_DummyWeight_3000",
+		"Cre8ive_DummyWeight_4000",
+		"Cre8ive_DummyWeight_5000",
+		"Cre8ive_DummyWeight_6000",
+		"Cre8ive_DummyWeight_7000",
+		"Cre8ive_DummyWeight_8000",
+		"Cre8ive_DummyWeight_9000",
+		"Cre8ive_DummyWeight_10000"
+	];
 
 	// Create some temporary namespaces
 	private _slotAreaNamespace = createLocation ["NameVillage", [0,0,0], 0, 0];
@@ -189,6 +229,7 @@ if (_container isKindOf "Man") then {
 
 		// Iterate through the sub-arrays
 		{
+			// Fetch the class
 			private _class = _x;
 			if (_x isEqualType []) then {
 				_class = _x select 0;
@@ -204,9 +245,14 @@ if (_container isKindOf "Man") then {
 			if (_formatType == 2) then {
 
 				// ...but it's actually a vest or a uniform, we skip it
-				if (_category == MACRO_ENUM_CATEGORY_UNIFORM or {_category == MACRO_ENUM_CATEGORY_VEST}) then {
+				if (_category in [MACRO_ENUM_CATEGORY_UNIFORM, MACRO_ENUM_CATEGORY_VEST, MACRO_ENUM_CATEGORY_CONTAINER]) then {
 					_skip = true;
 				};
+			};
+
+			// If the class is blacklisted, skip it
+			if (_class in _filteredClasses) then {
+				_skip = true;
 			};
 
 			// If the item is valid, we handle it
@@ -281,8 +327,13 @@ if (_container isKindOf "Man") then {
 	// Create a new namespace for the container
 	_containerData = (call cre_fnc_inv_createNamespace) select 0;
 
+	// If no container class was provided, fetch it from the object (not reliable on uniforms/vests!)
+	if (_containerClass == "") then {
+		_containerClass = typeOf _container;
+	};
+
 	// Iterate through the sorted list of items and fit them into the container
-	([typeOf _container] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
+	([_containerClass] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
 	private _containerItems = [];
 	_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 	_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _containerSize];
@@ -350,7 +401,7 @@ if (_container isKindOf "Man") then {
 						private _itemData = locationNull;
 						if (_formatType == 3) then {
 							private _containerX = _args select 1;
-							_itemData = [_containerX] call cre_fnc_inv_generateContainerData;
+							_itemData = [_containerX, _class] call cre_fnc_inv_generateContainerData;
 							bag = _containerX;
 						} else {
 							_itemData = (call cre_fnc_inv_createNamespace) select 0;

@@ -65,8 +65,13 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 							breakTo "loop";
 						};
 						case 701: {
-							// It's a vest
-							_category = MACRO_ENUM_CATEGORY_VEST;
+							if (getNumber (configFile >> "CfgWeapons" >> _class >> "cre8ive_isContainer") > 0) then {
+								// It's a container
+								_category = MACRO_ENUM_CATEGORY_CONTAINER;
+							} else {
+								// It's a vest
+								_category = MACRO_ENUM_CATEGORY_VEST;
+							};
 							breakTo "loop";
 						};
 						case 801: {
@@ -96,17 +101,8 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 
 				// CfgVehicles
 				case 1: {
-
-					// If the class inherits from "Bag_Base", it's a backpack
-					if (_class isKindOf "Bag_Base") then {
-						_category = MACRO_ENUM_CATEGORY_BACKPACK;
-						breakTo "loop";
-					};
-
-					// Otherwise, it's a vehicle
-					_category = MACRO_ENUM_CATEGORY_VEHICLE;
+					_category = MACRO_ENUM_CATEGORY_BACKPACK;
 				};
-
 
 				// CfgMagazines
 				case 2: {

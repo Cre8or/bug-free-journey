@@ -90,6 +90,15 @@ switch (_category) do {
 		];
 	};
 
+	case MACRO_ENUM_CATEGORY_CONTAINER: {
+		_requiredControls = [
+			MACRO_ENUM_CTRL_PICTURE_ICON,
+			MACRO_ENUM_CTRL_OUTLINE,
+			MACRO_ENUM_CTRL_TEXT_DISPLAYNAME
+		];
+	};
+
+
 	default {
 		_requiredControls = [
 			MACRO_ENUM_CTRL_PICTURE_ICON,
@@ -233,6 +242,7 @@ private _childControls = [];
 				case MACRO_ENUM_CATEGORY_ITEM;
 				case MACRO_ENUM_CATEGORY_WEAPON;
 				case MACRO_ENUM_CATEGORY_UNIFORM;
+				case MACRO_ENUM_CATEGORY_CONTAINER;
 				case MACRO_ENUM_CATEGORY_VEST;
 				case MACRO_ENUM_CATEGORY_HEADGEAR: {
 					_displayName = [configfile >> "CfgWeapons" >> _class, "displayName", ""] call BIS_fnc_returnConfigEntry;
@@ -240,8 +250,7 @@ private _childControls = [];
 				case MACRO_ENUM_CATEGORY_MAGAZINE: {
 					_displayName = [configfile >> "CfgMagazines" >> _class, "displayName", ""] call BIS_fnc_returnConfigEntry;
 				};
-				case MACRO_ENUM_CATEGORY_BACKPACK;
-				case MACRO_ENUM_CATEGORY_VEHICLE: {
+				case MACRO_ENUM_CATEGORY_BACKPACK: {
 					_displayName = [configfile >> "CfgVehicles" >> _class, "displayName", ""] call BIS_fnc_returnConfigEntry;
 				};
 				case MACRO_ENUM_CATEGORY_GOGGLES: {

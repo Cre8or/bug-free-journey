@@ -47,12 +47,12 @@ if (_slotSize isEqualTo []) then {
 		case MACRO_ENUM_CATEGORY_NVGS;
 		case MACRO_ENUM_CATEGORY_HEADGEAR;
 		case MACRO_ENUM_CATEGORY_BINOCULARS;
+		case MACRO_ENUM_CATEGORY_CONTAINER;
 		case MACRO_ENUM_CATEGORY_UNIFORM;
 		case MACRO_ENUM_CATEGORY_VEST: {
 			_configPath = "CfgWeapons"
 		};
-		case MACRO_ENUM_CATEGORY_BACKPACK;
-		case MACRO_ENUM_CATEGORY_VEHICLE: {
+		case MACRO_ENUM_CATEGORY_BACKPACK: {
 			_configPath = "CfgVehicles"
 		};
 		case MACRO_ENUM_CATEGORY_MAGAZINE: {
@@ -69,7 +69,7 @@ if (_slotSize isEqualTo []) then {
 	};
 
 	// Look up the slot size in the config (in case it's specifically defined for this class)
-	_slotSize = [configfile >> _configPath >> _class, "slotSize", []] call BIS_fnc_returnConfigEntry;
+	_slotSize = [configfile >> _configPath >> _class, "cre8ive_slotSize", []] call BIS_fnc_returnConfigEntry;
 
 	// If we didn't find a specific slot size, we have to determine it
 	if (_slotSize isEqualTo []) then {
@@ -90,13 +90,13 @@ if (_slotSize isEqualTo []) then {
 			};
 			case MACRO_ENUM_CATEGORY_ITEM;
 			case MACRO_ENUM_CATEGORY_NVGS;
+			case MACRO_ENUM_CATEGORY_HEADGEAR;
 			case MACRO_ENUM_CATEGORY_BINOCULARS;
+			case MACRO_ENUM_CATEGORY_GOGGLES;
+			case MACRO_ENUM_CATEGORY_CONTAINER;
 			case MACRO_ENUM_CATEGORY_UNIFORM;
 			case MACRO_ENUM_CATEGORY_VEST;
-			case MACRO_ENUM_CATEGORY_BACKPACK;
-			case MACRO_ENUM_CATEGORY_GOGGLES;
-			case MACRO_ENUM_CATEGORY_HEADGEAR;
-			case MACRO_ENUM_CATEGORY_VEHICLE: {
+			case MACRO_ENUM_CATEGORY_BACKPACK: {
 				private _x = round (1.0 * _mass ^ (1/3));     // Cubic root
 				private _y = floor (1.0 * _mass ^ (1/3));
 				_slotSize = [_x, _y];

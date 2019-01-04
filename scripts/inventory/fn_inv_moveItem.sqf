@@ -70,7 +70,7 @@ if (!isNull _originContainer) then {
 			};
 		};
 
-	// Otherwise, use the regular (more complex) way
+	// Otherwise, it's a container, so we use the regular (more complex) way
 	} else {
 
 		// If the two containers are the same, do nothing
@@ -117,50 +117,23 @@ if (!isNull _originContainer) then {
 					} forEach (_weapons select 0);;
 				};
 
-
 				case MACRO_ENUM_CATEGORY_MAGAZINE: {
-
-					// Figure out how many magazines of this type are inside the container
-					private _index = 0;
-					private _count = 0;
-					private _classLower = toLower _class;
-					private _magazines = getMagazineCargo _originContainer;
-					private _allCounts = _magazines select 1;
-					scopeName "switch";
-					{
-						if (toLower _x == _classLower) then {
-							_count = _allCounts select _forEachIndex;
-							_index = _forEachIndex;
-							breakTo "switch";
-						};
-					} forEach (_magazines select 0);
-
-					// Remove all magazines from the cargo (if only there was a better command...)
-					clearMagazineCargoGlobal _originContainer;
-
-					// Re-add the magazines
-					{
-						if (_forEachIndex != _index) then {
-							_originContainer addMagazineCargoGlobal [_x, _allCounts select _forEachIndex];
-						} else {
-							if (_count > 1) then {
-								_originContainer addMagazineCargoGlobal [_x, _count - 1];
-							};
-						};
-					} forEach (_magazines select 0);
+					[_originContainer] call cre_fnc_inv_handleFakeMass;
 				};
 
 				case MACRO_ENUM_CATEGORY_ITEM;
 				case MACRO_ENUM_CATEGORY_NVGS;
 				case MACRO_ENUM_CATEGORY_GOGGLES;
 				case MACRO_ENUM_CATEGORY_UNIFORM;
+				case MACRO_ENUM_CATEGORY_CONTAINER;
 				case MACRO_ENUM_CATEGORY_VEST: {
 
 					private _items = [];
 					private _itemCargo = getItemCargo _originContainer;
 					private _forbiddenCategories = [
 						MACRO_ENUM_CATEGORY_UNIFORM,
-						MACRO_ENUM_CATEGORY_VEST
+						MACRO_ENUM_CATEGORY_VEST,
+						MACRO_ENUM_CATEGORY_CONTAINER
 					];
 
 					// Fetch the items that are not containers
@@ -186,7 +159,7 @@ if (!isNull _originContainer) then {
 
 					// Re-add the item containers
 					private _originContainerData = _originContainer getVariable [MACRO_VARNAME_DATA, locationNull];
-					private _containers = [_originContainerData, [MACRO_ENUM_CATEGORY_UNIFORM, MACRO_ENUM_CATEGORY_VEST]] call cre_fnc_inv_getEveryContainer;
+					private _containers = [_originContainerData, _forbiddenCategories] call cre_fnc_inv_getEveryContainer;
 					{
 						private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
 						_originContainer addItemCargoGlobal [_class, 1];
@@ -338,7 +311,7 @@ if (!_doNothing) then {
 			};
 
 			case MACRO_ENUM_CATEGORY_MAGAZINE: {
-				_targetContainer addMagazineCargoGlobal [_class, 1];
+				[_targetContainer] call cre_fnc_inv_handleFakeMass;
 			};
 
 			case MACRO_ENUM_CATEGORY_ITEM;
@@ -347,6 +320,7 @@ if (!_doNothing) then {
 				_targetContainer addItemCargoGlobal [_class, 1];
 			};
 
+			case MACRO_ENUM_CATEGORY_CONTAINER;
 			case MACRO_ENUM_CATEGORY_UNIFORM;
 			case MACRO_ENUM_CATEGORY_VEST: {
 
