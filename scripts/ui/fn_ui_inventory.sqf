@@ -50,6 +50,7 @@ switch (_event) do {
 	#include "events\ui_dragging_init.sqf"
 	#include "events\ui_dragging_start.sqf"
 	#include "events\ui_dragging.sqf"
+	#include "events\ui_dragging_rotate.sqf"
 	#include "events\ui_dragging_abort.sqf"
 	#include "events\ui_dragging_stop.sqf"
 	#include "events\ui_dragging_complete.sqf"

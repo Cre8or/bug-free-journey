@@ -6,7 +6,8 @@ case "ui_item_move": {
 	_args params [
 		["_ctrl", controlNull, [controlNull]],
 		["_slotPos", [MACRO_ENUM_SLOTPOS_INVALID, MACRO_ENUM_SLOTPOS_INVALID], [[]]],
-		["_targetContainerCtrl", controlNull, [controlNull]]
+		["_targetContainerCtrl", controlNull, [controlNull]],
+		["_isRotated", false, [false]]
 	];
 
 	// Check if the control exists
@@ -17,13 +18,12 @@ case "ui_item_move": {
 		private _category = [_class] call cre_fnc_cfg_getClassCategory;
 		private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
-		// Remove the event handlers
-		private _EH = _inventory getVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN, -1];
-		_inventory displayRemoveEventHandler ["MouseButtonDown", _EH];
-		_inventory displayRemoveAllEventHandlers "MouseMoving";
+		// If the control is rotated, flip the width and height
+		private _slotSizeRot = +_slotSize;
+		if (_isRotated) then {reverse _slotSizeRot};
 
 		// Reset the colour of the original slot frame
-		_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+		//_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 		// Delete the temporary slot picture
 		ctrlDelete (_ctrl getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
@@ -70,7 +70,7 @@ case "ui_item_move": {
 		// If the target slot is a container slot, handle the required slots and the scaling
 		if (_slotPosX > 0) then {
 
-			_slotSize params ["_itemW", "_itemH"];
+			_slotSizeRot params ["_itemW", "_itemH"];
 			private _slotEndX = _slotPosX + _itemW - 1;
 			private _slotEndY = _slotPosY + _itemH - 1;
 
@@ -115,6 +115,7 @@ case "ui_item_move": {
 		_targetCtrl setVariable [MACRO_VARNAME_CLASS, _class];
 		_targetCtrl setVariable [MACRO_VARNAME_DATA, _itemData];
 		_targetCtrl setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
+		_targetCtrl setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
 		// Set the allowed controls list to only contain the target slot control
 		//_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, [_targetCtrl]];

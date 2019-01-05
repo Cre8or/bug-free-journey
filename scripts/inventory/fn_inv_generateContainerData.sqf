@@ -353,102 +353,115 @@ if (_container isKindOf "Man") then {
 		private _class = _args select 0;
 		private _category = [_class] call cre_fnc_cfg_getClassCategory;
 		private _itemSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
+		_itemSize params ["_itemWidth", "_itemHeight"];
 
-		// Iterate through the container to see where we can fit the item
-		for "_posY" from _lastFreeY to _sizeH do {
-			private _yHasFreeSlot = false;
+		// Iterate twice (once normally, and once with the item rotated)
+		for "_rotateMode" from 0 to 1 do {
 
-			_newW = [_sizeW, _containerSlotsOnLastY] select (_posY == _sizeH);
-			for "_posX" from 1 to _newW do {
-				scopeName "loopSlots";
+			private _isRotated = (_rotateMode > 0);
+			if (_isRotated) then {
+				private _widthTemp = _itemWidth;
+				_itemWidth = _itemHeight;
+				_itemHeight = _widthTemp;
+			};
 
-				private _slotStr = format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY];
-				private _slotData = _containerData getVariable [_slotStr, locationNull];
+			// Iterate through the container to see where we can fit the item
+			for "_posY" from _lastFreeY to _sizeH do {
+				private _yHasFreeSlot = false;
 
-				// If this slot is empty, check if the item can fit in it
-				if (isNull _slotData) then {
-					_yhasFreeSlot = true;
+				_newW = [_sizeW, _containerSlotsOnLastY] select (_posY == _sizeH);
+				for "_posX" from 1 to _newW do {
+					scopeName "loopSlots";
 
-					// First of all, test if the item even fits in this position
-					private _posEndX = _posX + (_itemSize select 0) - 1;
-					private _posEndY = _posY + (_itemSize select 1) - 1;
-					if (_posEndX <= _newW and {_posEndY <= _sizeH}) then {
+					private _slotStr = format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY];
+					private _slotData = _containerData getVariable [_slotStr, locationNull];
 
-						// The dimensions fit, now we check if the required slots are all free
-						private _requiredSlots = [];
-						private _requiredSlotsStrArray = [];
-						for "_posItemY" from _posY to _posEndY do {
-							for "_posItemX" from _posX to _posEndX do {
-								private _requiredSlotStr = format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
-								private _requiredSlot = _containerData getVariable [_requiredSlotStr, locationNull];
+					// If this slot is empty, check if the item can fit in it
+					if (isNull _slotData) then {
+						_yhasFreeSlot = true;
 
-								// If the slot is empty, add it to the list
-								if (isNull _requiredSlot) then {
-									_requiredSlotsStrArray pushBack _requiredSlotStr;
-									_requiredSlots pushBack [_posItemX, _posItemY];
+						// First of all, test if the item even fits in this position
+						private _posEndX = _posX + _itemWidth - 1;
+						private _posEndY = _posY + _itemHeight - 1;
+						if (_posEndX <= _newW and {_posEndY <= _sizeH}) then {
 
-								// Otherwise, abort and look for a new slot
-								} else {
-									breakTo "loopSlots";
+							// The dimensions fit, now we check if the required slots are all free
+							private _requiredSlots = [];
+							private _requiredSlotsStrArray = [];
+							for "_posItemY" from _posY to _posEndY do {
+								for "_posItemX" from _posX to _posEndX do {
+									private _requiredSlotStr = format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
+									private _requiredSlot = _containerData getVariable [_requiredSlotStr, locationNull];
+
+									// If the slot is empty, add it to the list
+									if (isNull _requiredSlot) then {
+										_requiredSlotsStrArray pushBack _requiredSlotStr;
+										_requiredSlots pushBack [_posItemX, _posItemY];
+
+									// Otherwise, abort and look for a new slot
+									} else {
+										breakTo "loopSlots";
+									};
 								};
 							};
-						};
 
-						// If we didn't exit yet, that means the item can fit!
-						// Now we generate a namespace for this item and save the item class onto it
-						// However, if the item is a container, we don't need to generate the item data manually,
-						// instead we recursively generate the container data on it and fetch the result
-						private _itemData = locationNull;
-						if (_formatType == 3) then {
-							private _containerX = _args select 1;
-							_itemData = [_containerX, _class] call cre_fnc_inv_generateContainerData;
-							bag = _containerX;
-						} else {
-							_itemData = (call cre_fnc_inv_createNamespace) select 0;
-						};
-
-						// Save the item class onto the item data
-						_itemData setVariable [MACRO_VARNAME_CLASS, _class];
-
-						// Link the slots to the item
-						{
-							_containerData setVariable [_x, _itemData];
-						} forEach _requiredSlotsStrArray;
-
-						// Now we may fill in the item data
-						// The provided scripting commands return results in a different format, so we have to choose accordingly
-						switch (_formatType) do {
-
-							// magazinesAmmoCargo
-							case 0: {
-								private _ammo = _args select 1;
-								private _maxAmmo = [_class] call cre_fnc_cfg_getMagazineMaxAmmo;
-
-								_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _ammo];
-								_itemData setVariable [MACRO_VARNAME_MAG_MAXAMMO, _maxAmmo];
+							// If we didn't exit yet, that means the item can fit!
+							// Now we generate a namespace for this item and save the item class onto it
+							// However, if the item is a container, we don't need to generate the item data manually,
+							// instead we recursively generate the container data on it and fetch the result
+							private _itemData = locationNull;
+							if (_formatType == 3) then {
+								private _containerX = _args select 1;
+								_itemData = [_containerX, _class] call cre_fnc_inv_generateContainerData;
+								bag = _containerX;
+							} else {
+								_itemData = (call cre_fnc_inv_createNamespace) select 0;
 							};
 
-							// weaponsItemsCargo
-							case 1: {
-								[_itemData, _args] call cre_fnc_inv_generateWeaponAccData;
+							// Save the item class onto the item data
+							_itemData setVariable [MACRO_VARNAME_CLASS, _class];
+
+							// Link the slots to the item
+							{
+								_containerData setVariable [_x, _itemData];
+							} forEach _requiredSlotsStrArray;
+
+							// Now we may fill in the item data
+							// The provided scripting commands return results in a different format, so we have to choose accordingly
+							switch (_formatType) do {
+
+								// magazinesAmmoCargo
+								case 0: {
+									private _ammo = _args select 1;
+									private _maxAmmo = [_class] call cre_fnc_cfg_getMagazineMaxAmmo;
+
+									_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _ammo];
+									_itemData setVariable [MACRO_VARNAME_MAG_MAXAMMO, _maxAmmo];
+								};
+
+								// weaponsItemsCargo
+								case 1: {
+									[_itemData, _args] call cre_fnc_inv_generateWeaponAccData;
+								};
+
+								// itemCargo
+								case 2: {
+
+								};
 							};
 
-							// itemCargo
-							case 2: {
+							// Save some more info onto the item data
+							_itemData setVariable [MACRO_VARNAME_PARENT, _container];
+							_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
+							_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
+							_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
+							_itemData setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
-							};
+							_containerItems pushBack _itemData,
+
+							// Move on to the next item
+							breakTo "loopItems";
 						};
-
-						// Save some more info onto the item data
-						_itemData setVariable [MACRO_VARNAME_PARENT, _container];
-						_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
-						_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
-						_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
-
-						_containerItems pushBack _itemData,
-
-						// Move on to the next item
-						breakTo "loopItems";
 					};
 				};
 			};

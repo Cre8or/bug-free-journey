@@ -63,10 +63,14 @@
 	#define MACRO_PICTURE_WEAPON_MAGAZINE				"a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_magazine_gs.paa"
 
 	// Weapon accessories
-	#define MACRO_PICTURE_WEAPON_ACC_MUZZLE				"a3\weapons_f\Data\UI\attachment_muzzle.paa"
-	#define MACRO_PICTURE_WEAPON_ACC_BIPOD				"a3\weapons_f_mark\Data\UI\attachment_under.paa"
-	#define MACRO_PICTURE_WEAPON_ACC_SIDE				"a3\weapons_f\Data\UI\attachment_side.paa"
-	#define MACRO_PICTURE_WEAPON_ACC_OPTIC				"a3\weapons_f\Data\UI\attachment_top.paa"
+	#define MACRO_PICTURE_WEAPON_ACC_MUZZLE				"res\ui\inventory\attachments\acc_muzzle.paa"
+	#define MACRO_PICTURE_WEAPON_ACC_BIPOD				"res\ui\inventory\attachments\acc_bipod.paa"
+	#define MACRO_PICTURE_WEAPON_ACC_SIDE				"res\ui\inventory\attachments\acc_side.paa"
+	#define MACRO_PICTURE_WEAPON_ACC_OPTIC				"res\ui\inventory\attachments\acc_optic.paa"
+	//#define MACRO_PICTURE_WEAPON_ACC_MUZZLE				"a3\weapons_f\Data\UI\attachment_muzzle.paa"
+	//#define MACRO_PICTURE_WEAPON_ACC_BIPOD				"a3\weapons_f_mark\Data\UI\attachment_under.paa"
+	//#define MACRO_PICTURE_WEAPON_ACC_SIDE				"a3\weapons_f\Data\UI\attachment_side.paa"
+	//#define MACRO_PICTURE_WEAPON_ACC_OPTIC				"a3\weapons_f\Data\UI\attachment_top.paa"
 
 	// Assigned slots
 	#define MACRO_PICTURE_MAP					"a3\ui_f\data\GUI\Rsc\RscDisplayGear\ui_gear_map_gs.paa"
@@ -295,6 +299,7 @@
 	#define MACRO_VARNAME_UI_STORAGE_CONTAINERS			"storageContainers"
 
 	#define MACRO_VARNAME_UI_CURSORCTRL				"cursorCtrl"
+	#define MACRO_VARNAME_UI_CURSORPOSREL				"cursorPosRel"
 	#define MACRO_VARNAME_UI_CURSORPOSNEW				"cursorPosNew"
 	#define MACRO_VARNAME_UI_HIGHLITCONTROLS			"dragging_highlitControls"
 	#define MACRO_VARNAME_UI_ALLOWEDCONTROLS			"dragging_allowedControls"
@@ -303,6 +308,7 @@
 
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONUP			"EH_mouseButtonUp"
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			"EH_mouseButtonDown"
+	#define MACRO_VARNAME_UI_EH_KEYDOWN				"EH_keyDown"
 	#define MACRO_VARNAME_UI_CTRL_HAS_EHS				"ctrlHasEHs"
 
 	// Items and containers
@@ -317,6 +323,7 @@
 	#define MACRO_VARNAME_CONTAINER					"container"
 	#define MACRO_VARNAME_PARENT					"parent"
 	#define MACRO_VARNAME_PARENTDATA				"parentData"
+	#define MACRO_VARNAME_ISROTATED					"isRotated"
 
 	#define MACRO_VARNAME_CONTAINERSIZE				"containerSize"
 	#define MACRO_VARNAME_CONTAINERSLOTSONLASTY			"containerSlotsOnLastY"

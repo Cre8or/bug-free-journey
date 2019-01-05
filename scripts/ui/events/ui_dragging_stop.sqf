@@ -12,7 +12,7 @@ case "ui_dragging_stop": {
 		["ui_focus_reset", [_draggedCtrl]] spawn cre_fnc_ui_inventory;
 
 		private _slotPos = _inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []];
-		private _slotSize = _draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
+		private _slotSize = +(_draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]]);
 		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
 		private _originContainer = _itemData getVariable [MACRO_VARNAME_PARENT, objNull];
 		private _originContainerData = _itemData getVariable [MACRO_VARNAME_PARENTDATA, locationNull];
@@ -20,6 +20,16 @@ case "ui_dragging_stop": {
 		private _cursorCtrl = _inventory getVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
 		private _targetContainerData = _cursorCtrl getVariable [MACRO_VARNAME_PARENTDATA, locationNull];
 		private _targetContainerCtrl = _cursorCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, _cursorCtrl];	// Fallback for reserved slots that don't have a container control
+
+		// If the control is rotated, flip the width and height
+		private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
+		private _isRotated = _ctrlFrameTemp getVariable [MACRO_VARNAME_ISROTATED, false];
+		if (_isRotated) then {
+			private _widthTemp = _slotSize select 0;
+			_slotSize set [0, _slotSize select 1];
+			_slotSize set [1, _widthTemp];
+		};
+
 		// Try to fit the item on the slot
 		([_itemData, _targetContainerData, _slotPos, _slotSize] call cre_fnc_inv_canFitItem) params ["_canFit"];
 		//systemChat format ["(%1) - origin: %2 - target: %3 - pos: %4 - size: %5 - canFit: %6", time, ctrlIDC (_draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull]), ctrlIDC _targetContainerCtrl, _slotPos, _slotSize, _canFit];
@@ -49,10 +59,13 @@ case "ui_dragging_stop": {
 			_slotPos params ["_slotPosX", "_slotPosY"];
 			if (_slotPosX < 0) then {
 
+				// Reset the rotation
+				_isRotated = false;
+
 				// Link the container's reserved slot position towards the item
 				_targetContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosX, _slotPosY], _itemData];
 
-			// Otherwise, it's going into a regular contianer
+			// Otherwise, it's going into a regular container
 			} else {
 
 				// Iterate through the new occupied slots and add them to the list
@@ -75,6 +88,7 @@ case "ui_dragging_stop": {
 			_itemData setVariable [MACRO_VARNAME_SLOTPOS, _slotPos];
 			_itemData setVariable [MACRO_VARNAME_PARENT, _targetContainer];
 			_itemData setVariable [MACRO_VARNAME_PARENTDATA, _targetContainerData];
+			_itemData setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
 			// Also update the items lists
 			private _itemsOrigin = _originContainerData getVariable [MACRO_VARNAME_ITEMS, []];
@@ -90,10 +104,15 @@ case "ui_dragging_stop": {
 			[_itemData, _originContainer, _targetContainer] call cre_fnc_inv_moveItem;
 
 			// Update the inventory UI to reflect the changes
-			["ui_item_move", [_draggedCtrl, _slotPos, _targetContainerCtrl]] call cre_fnc_ui_inventory;
+			["ui_item_move", [_draggedCtrl, _slotPos, _targetContainerCtrl, _isRotated]] call cre_fnc_ui_inventory;
 
 			// Update the storage screen, in case we moved a container (uniform, vest, backpack)
 			["ui_update_storage"] call cre_fnc_ui_inventory;
+
+			// Remove the event handlers
+			_inventory displayRemoveEventHandler ["KeyDown", _inventory getVariable [MACRO_VARNAME_UI_EH_KEYDOWN, -1]];
+			_inventory displayRemoveEventHandler ["MouseButtonDown", _inventory getVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN, -1]];
+			_inventory displayRemoveAllEventHandlers "MouseMoving";
 
 			// Finally, complete the dragging process once the button is released
 			private _EH = _inventory displayAddEventHandler ["MouseButtonUp", {

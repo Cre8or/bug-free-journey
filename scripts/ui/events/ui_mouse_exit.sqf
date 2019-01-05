@@ -49,4 +49,7 @@ case "ui_mouse_exit": {
 			};
 		};
 	};
+
+	// Reset the cursor control on the inventory
+	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
 };

@@ -12,45 +12,54 @@ case "ui_dragging_start": {
 	if (_button == 0) then {
 
 		// Fetch the control
-		private _ctrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
+		private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
 
 		// Only continue if the control still exists
-		if (!isNull _ctrl) then {
+		if (!isNull _draggedCtrl) then {
 
 			// Reset the focus
-			["ui_focus_reset", [_ctrl]] call cre_fnc_ui_inventory;
+			["ui_focus_reset", [_draggedCtrl]] call cre_fnc_ui_inventory;
 
 			// Only continue if the control isn't already being dragged
-			if !(_ctrl getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
+			if !(_draggedCtrl getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
 
 				// Change the colour of the slot frame to indicate that it's being dragged
-				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+				_draggedCtrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 
 				// Fetch the control's item class and its associated size
-				private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
+				private _class = _draggedCtrl getVariable [MACRO_VARNAME_CLASS, ""];
 				private _category = [_class] call cre_fnc_cfg_getClassCategory;
 				private _subCategory = [_class, _category] call cre_fnc_cfg_getClassSubCategory;
-				private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
-				_slotSize params ["_slotWidth", "_slotHeight"];
-				private _defaultIconPath = _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
+				([_class, _category] call cre_fnc_cfg_getClassSlotSize) params ["_slotWidth", "_slotHeight"];
+
+				private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
+				private _defaultIconPath = _draggedCtrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
 				private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 				private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
-				private _posCtrl = ctrlPosition _ctrl;
+				private _posCtrl = ctrlPosition _draggedCtrl;
 				_posCtrl params ["_posCtrlX", "_posCtrlY"];
 
 				// Hide the original child controls
-				private _childControls = _ctrl getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []];
+				private _childControls = _draggedCtrl getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []];
 				{
 					_x ctrlShow false;
 				} forEach _childControls;
 
 				// Create a temporary picture that stays on the slot
 				if (_defaultIconPath != "") then {
-					private _ctrlIconTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, ctrlParentControlsGroup _ctrl];
+					private _ctrlIconTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, ctrlParentControlsGroup _draggedCtrl];
 					_ctrlIconTemp ctrlSetText _defaultIconPath;
 					_ctrlIconTemp ctrlSetPosition _posCtrl;
 					_ctrlIconTemp ctrlCommit 0;
-					_ctrl setVariable [MACRO_VARNAME_UI_ICONTEMP, _ctrlIconTemp];
+					_draggedCtrl setVariable [MACRO_VARNAME_UI_ICONTEMP, _ctrlIconTemp];
+				};
+
+				// If the item is rotated, flip the width and height
+				private _isRotated = _itemData getVariable [MACRO_VARNAME_ISROTATED, false];
+				if (_isRotated) then {
+					private _widthTemp = _slotWidth;
+					_slotWidth = _slotHeight;
+					_slotHeight = _widthTemp;
 				};
 
 				// Update the size
@@ -63,14 +72,15 @@ case "ui_dragging_start": {
 				_ctrlFrameTemp ctrlCommit 0;
 				_ctrlFrameTemp ctrlShow true;
 				_ctrlFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-				_ctrl setVariable [MACRO_VARNAME_UI_FRAMETEMP, _ctrlFrameTemp];
+				_draggedCtrl setVariable [MACRO_VARNAME_UI_FRAMETEMP, _ctrlFrameTemp];
 
 				// Set the frame's pixel precision mode to off, disables rounding
 				_ctrlFrameTemp ctrlSetPixelPrecision 2;
 
 				// Copy the original control's item data onto the dummy frame
-				private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
+				private _data = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
 				_ctrlFrameTemp setVariable [MACRO_VARNAME_DATA, _data];
+				_ctrlFrameTemp setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
 				// Generate additional temporary child controls
 				private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
@@ -86,7 +96,7 @@ case "ui_dragging_start": {
 				} forEach _tempChildControls;
 
 				// Mark the control as being dragged
-				_ctrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, true];
+				_draggedCtrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, true];
 
 				// Reset the list of highlit controls
 				_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
@@ -187,14 +197,13 @@ case "ui_dragging_start": {
 				_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, _allowedCtrls];
 
 				// Fetch the parent control
-				private _containerCtrl = _ctrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];
-				if (!isNull _containerCtrl and {_ctrl != _containerCtrl}) then {
+				private _containerCtrl = _draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];
+				if (!isNull _containerCtrl and {_draggedCtrl != _containerCtrl}) then {
 
 					// Fetch the slot position
-					(_ctrl getVariable [MACRO_VARNAME_SLOTPOS, [0,0]]) params ["_posSlotX", "_posSlotY"];
+					(_draggedCtrl getVariable [MACRO_VARNAME_SLOTPOS, [0,0]]) params ["_posSlotX", "_posSlotY"];
 
 					// Fetch the occupied slots
-					private _itemData = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
 					private _occupiedSlots = +(_itemData getVariable [MACRO_VARNAME_OCCUPIEDSLOTS, []]);
 					private _hiddenSlots = [];
 					_occupiedSlots deleteAt 0;
@@ -216,8 +225,8 @@ case "ui_dragging_start": {
 					// Rescale the original slot control
 					_posCtrl set [2, _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
 					_posCtrl set [3, _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
-					_ctrl ctrlSetPosition _posCtrl;
-					_ctrl ctrlCommit 0;
+					_draggedCtrl ctrlSetPosition _posCtrl;
+					_draggedCtrl ctrlCommit 0;
 
 				} else {
 					_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, []];
@@ -230,19 +239,19 @@ case "ui_dragging_start": {
 				// Move the temporary controls if the mouse is moving
 				_inventory displayAddEventHandler ["MouseMoving", {
 					params ["_inventory"];
-					private _ctrl = _inventory getVariable ["draggedControl", controlNull];
+					private _draggedCtrl = _inventory getVariable ["draggedControl", controlNull];
 
 					getMousePosition params ["_posX", "_posY"];
 
 					// Call the inventory function to handle dragging
-					["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_ui_inventory;
+					["ui_dragging", [_draggedCtrl, _posX, _posY]] call cre_fnc_ui_inventory;
 				}];
 
 				// Move the temporary controls in place initially
 				getMousePosition params ["_posX", "_posY"];
-				["ui_dragging", [_ctrl, _posX, _posY]] call cre_fnc_ui_inventory;
+				["ui_dragging", [_draggedCtrl, _posX, _posY]] call cre_fnc_ui_inventory;
 
-				["ui_mouse_moving", [_ctrl]] call cre_fnc_ui_inventory;
+				["ui_mouse_moving", [_draggedCtrl]] call cre_fnc_ui_inventory;
 
 				// Add an event handler to the inventory to detect mouse presses
 				private _EH = _inventory displayAddEventHandler ["MouseButtonDown", {
@@ -254,6 +263,17 @@ case "ui_dragging_start": {
 					};
 				}];
 				_inventory setVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN, _EH];
+
+				// Add an event handler to the inventory to detect key presses
+				_EH = _inventory displayAddEventHandler ["KeyDown", {
+					_this params ["", "_key"];
+
+					// If the player presses the reload key, rotate the dragged item
+					if (_key in actionKeys "ReloadMagazine") then {
+						["ui_dragging_rotate"] call cre_fnc_ui_inventory;
+					};
+				}];
+				_inventory setVariable [MACRO_VARNAME_UI_EH_KEYDOWN, _EH];
 
 			// If something went wrong, reset the dragged control (fallback)
 			} else {

@@ -5,21 +5,38 @@ case "ui_mouse_moving": {
 	// Fetch the parameters
 	_args params [
 		["_ctrl", controlNull, [controlNull]],		// The control that the mouse is currently moving over
-		["_posRelX", 0, [0]],
-		["_posRelY", 0, [0]]
+		["_posRelX", -99999, [-1]],
+		["_posRelY", -99999, [-1]]
 	];
 
-	// Determine the position of the mouse cursor relative to the control
+	// If the control is null, exit
+	if (isNull _ctrl) exitWith {};
+
+	// Fetch the control's dimensions
 	(ctrlPosition _ctrl) params ["_posCtrlX", "_posCtrlY", "_widthCtrl", "_heightCtrl"];
-	_posRelX = (_posRelX - _posCtrlX) / _widthCtrl;
-	_posRelY = (_posRelY - _posCtrlY) / _heightCtrl;
 
-	// Update the cursor control on the inventory
-	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, _ctrl];
+	// Check if an empty control, or an invalid relative position was provided
+	if (_posRelX == -99999 or {_posRelY == -99999}) then {
+		private _cursorPosRel = _inventory getVariable [MACRO_VARNAME_UI_CURSORPOSREL, [0,0]];
+		_posRelX = _cursorPosRel select 0;
+		_posRelY = _cursorPosRel select 1;
 
-	// If the control is not null, and is being dragged...
+	// If not, update the cursor control and the relative position on the inventory
+	} else {
+		_posRelX = _posRelX - _posCtrlX;
+		_posRelY = _posRelY - _posCtrlY;
+
+		_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, _ctrl];
+		_inventory setVariable [MACRO_VARNAME_UI_CURSORPOSREL, [_posRelX, _posRelY]];
+	};
+
+
+	// If the dragged control is not null, and is being dragged...
 	private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
 	if (_draggedCtrl getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
+
+		// Fetch the dragged control's slot size
+		(_draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]]) params ["_slotSizeW", "_slotSizeH"];
 
 		// Fetch the temporary frame, aswell as teh target control's slot po
 		private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
@@ -44,7 +61,6 @@ case "ui_mouse_moving": {
 
 				// Check if the item fits
 				([_itemData, _containerData, _targetSlotPos, [], false] call cre_fnc_inv_canFitItem) params ["_canFit"];
-				//systemChat format ["(%1) - item: %2 - container: %3 - pos: %4 - size: %5 - canFit: %6", time, _itemData getVariable [MACRO_VARNAME_UID, "n/a"], _containerData getVariable [MACRO_VARNAME_UID, "n/a"], _targetSlotPos, [], _canFit];
 
 				if (_canFit) then {
 					_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_DRAGGING_GREEN);
@@ -62,29 +78,58 @@ case "ui_mouse_moving": {
 		// Otherwise, determine whether the item can fit via its size
 		} else {
 
-			// Fetch the dragged control's slot size
-			(_draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]]) params ["_slotSizeW", "_slotSizeH"];
+			// If the item is rotated, flip the slot sizes
+			if (_ctrlFrameTemp getVariable [MACRO_VARNAME_ISROTATED, false]) then {
+				private _slotSizeTemp = _slotSizeW;
+				_slotSizeW = _slotSizeH;
+				_slotSizeH = _slotSizeTemp;
+			};
+
+			// Fetch the target control's slot size
+			(_ctrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]]) params ["_targetSlotSizeW", "_targetSlotSizeH"];
+
+			// If the target control is the same as the dragged control, treat it as an empty slot (of size [1,1])
+			if (_ctrl == _draggedCtrl) then {
+				_targetSlotSizeW = 1;
+				_targetSlotSizeH = 1;
+			} else {
+				// If the target control is rotated, invert the width/height
+				if (_ctrl getVariable [MACRO_VARNAME_ISROTATED, false]) then {
+					private _widthTemp = _targetSlotSizeW;
+					_targetSlotSizeW = _targetSlotSizeH;
+					_targetSlotSizeH = _widthTemp;
+				};
+			};
+
+			// Factor the relative cursor position in (noticeable on large items)
+			private _oneSlotSizeW = _widthCtrl / _targetSlotSizeW;
+			private _oneSlotSizeH = _heightCtrl / _targetSlotSizeH;
+			_targetSlotPosX = _targetSlotPosX + (0 max floor ((_posRelX  / _oneSlotSizeW) - 0.5));
+			_targetSlotPosY = _targetSlotPosY + (0 max floor ((_posRelY  / _oneSlotSizeH) - 0.5));
 
 			// Offset the slot by 50% of the size of the control, so it's centered
 			_targetSlotPosX = _targetSlotPosX - ceil (_slotSizeW / 2) + 1;
 			_targetSlotPosY = _targetSlotPosY - ceil (_slotSizeH / 2) + 1;
 
 			// If the width is even, and the mouse is in the left 50% of the control, pick the next slot to the left
-			if (_slotSizeW % 2 == 0 and {_posRelX < 0.5}) then {
+			if (_slotSizeW % 2 == 0 and {_posRelX < _oneSlotSizeW * 0.5}) then {
 				_targetSlotPosX = _targetSlotPosX - 1;
 			};
 
 			// Same thing on the Y axis
-			if (_slotSizeH % 2 == 0 and {_posRelY < 0.5}) then {
+			if (_slotSizeH % 2 == 0 and {_posRelY < _oneSlotSizeH * 0.5}) then {
 				_targetSlotPosY = _targetSlotPosY - 1;
 			};
+
+			// Clamp the slot position (stop it from going negative)
+			_targetSlotPosX = _targetSlotPosX max 0;
+			_targetSlotPosY = _targetSlotPosY max 0;
 
 			// Save the new slot position onto the inventory
 			_inventory setVariable [MACRO_VARNAME_UI_CURSORPOSNEW, [_targetSlotPosX, _targetSlotPosY]];
 
 			// Test if the dragged item can fit
 			([_itemData, _containerData, [_targetSlotPosX, _targetSlotPosY], [_slotSizeW, _slotSizeH], false] call cre_fnc_inv_canFitItem) params ["_canFit", "_slots"];
-			//systemChat format ["(%1) - item: %2 - container: %3 - pos: %4 - size: %5 - canFit: %6 - slots: %7", time, _itemData getVariable [MACRO_VARNAME_UID, "n/a"], _containerData getVariable [MACRO_VARNAME_UID, "n/a"], [_targetSlotPosX, _targetSlotPosY], [_slotSizeW, _slotSizeH], _canFit, _slots];
 
 			// Fetch the controls
 			private _containerCtrl = _ctrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];

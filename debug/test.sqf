@@ -13,6 +13,6 @@ if (!alive _targetContainer) exitWith {};
 //clearBackpackCargoGlobal _targetContainer;
 //clearItemCargoGlobal _targetContainer;
 
-//_targetContainer addBackpackCargoGlobal ["Cre8ive_Container_AmmoBox", 1];
 _targetContainer addItemCargoGlobal ["Cre8ive_Container_AmmoBox", 1];
-//_targetContainer addWeaponCargoGlobal ["Cre8ive_Container_AmmoBox", 1];
+_targetContainer addItemCargoGlobal ["Cre8ive_Container_FirstAidKit", 1];
+_targetContainer addItemCargoGlobal ["Cre8ive_Container_Drysack", 1];

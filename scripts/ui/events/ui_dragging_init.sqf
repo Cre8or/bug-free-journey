@@ -66,6 +66,7 @@ case "ui_dragging_init": {
 						switch (typeName _val) do {
 							case typeName objNull;
 							case typeName locationNull;
+							case typeName true;
 							case typeName 0: {_colourVal = "eda765"};
 							case typeName "": {_colourVal = "a3d87d"};
 						};

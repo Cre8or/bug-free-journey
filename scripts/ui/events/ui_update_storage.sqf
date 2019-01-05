@@ -184,6 +184,14 @@ case "ui_update_storage": {
 						_itemSlot params ["_posX", "_posY"];
 						_itemSize params ["_sizeW", "_sizeH"];
 
+						// If the control is rotated, flip the width and height
+						private _isRotated = _x getVariable [MACRO_VARNAME_ISROTATED, false];
+						if (_isRotated) then {
+							private _widthTemp = _sizeW;
+							_sizeW = _sizeH;
+							_sizeH = _widthTemp;
+						};
+
 						// Hide the occupied slots
 						private _occupiedSlots = +(_x getVariable [MACRO_VARNAME_OCCUPIEDSLOTS, []]);
 						_occupiedSlots deleteAt 0;
@@ -204,6 +212,7 @@ case "ui_update_storage": {
 						// Save the item data onto the control
 						_slotFrame setVariable [MACRO_VARNAME_DATA, _x];
 						_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _itemSize];
+						_slotFrame setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
 						// Generate the child controls for this slot
 						[_slotFrame, _itemClass, _itemCategory, MACRO_PICTURE_SLOT_BACKGROUND] call cre_fnc_ui_generateChildControls;

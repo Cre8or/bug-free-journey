@@ -115,6 +115,7 @@ switch (_category) do {
 private _ctrlParent = ctrlParentControlsGroup _ctrl;
 private _posCtrl = ctrlPosition _ctrl;
 private _data = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
+private _isRotated = _ctrl getVariable [MACRO_VARNAME_ISROTATED, false];
 
 _posCtrl params ["", "", "_sizeW", "_sizeH"];
 private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
@@ -123,11 +124,28 @@ private _posIconAR = [];
 
 // If we're supposed to use custom dimensions, recalculate the sizes
 if (count _customSlotSize > 0) then {
-	_sizeW = (_customSlotSize select 0) * MACRO_SCALE_SLOT_SIZE_W * _safeZoneW;
-	_sizeH = (_customSlotSize select 1) * MACRO_SCALE_SLOT_SIZE_H * _safeZoneH;
+	// If the control is rotated, flip the width and height
+	_customSlotSize params ["_slotWidth", "_slotHeight"];
+	if (_isRotated) then {
+		private _widthTemp = _slotWidth;
+		_slotWidth = _slotHeight;
+		_slotHeight = _widthTemp;
+	};
+
+	_sizeW = _slotWidth * MACRO_SCALE_SLOT_SIZE_W * _safeZoneW;
+	_sizeH = _slotHeight * MACRO_SCALE_SLOT_SIZE_H * _safeZoneH;
 	_posCtrl set [2, _sizeW];
 	_posCtrl set [3, _sizeH];
+
+// Otherwise, if the control is rotated, flip the width and height
+} else {
+	if (_isRotated) then {
+		private _widthTemp = _slotWidth;
+		_slotWidth = _slotHeight;
+		_slotHeight = _widthTemp;
+	};
 };
+
 
 // Iterate through the list of required controls and create them
 private _childControls = [];
@@ -142,25 +160,39 @@ private _childControls = [];
 
 			// Only continue if a valid icon path was provided
 			if (_iconPath != _defaultIconPath or {_defaultIconPath != ""}) then {
-				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
+				private _ctrlNew = controlNull;
 
 				// Determine the scale of the icon, with regard to the fixed aspect ratio
 				switch (_category) do {
 
 					// Weapon icons are 2x1
 					case MACRO_ENUM_CATEGORY_WEAPON: {
+						// Create a picture control without the "keep aspect ratio" property (because weapons are 2:1)
+						_ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPictureNoAR", -1, _ctrlParent];
 						_posCtrl params ["_posX", "_posY", "_widthOld", "_heightOld"];
+
+						// Safezone aspect ratio: 4:3
+						// meaning a rectangle of width 1 and height 1 is (in reality) 4 units wide and 3 units high
+						// We want weapon icons to be displayed in true 2:1 ratio (to avoid stretching/incorrect scaling)
+						// To do this, we set the height to the width * 2 / 3, resulting in the 2:1 ratio
+						// If the item is rotated, we need to achieve a 1:2 ratio, so we set the height to the width * 8 / 3
 						private _widthNew = _widthOld;
 						private _heightNew = _widthOld * 2 / 3;
-
-						if (_heightOld > _heightNew) then {
-							_posY = _posY + (_heightOld - _heightNew) / 2;
-						} else {
-							_widthNew = _heightOld * 3 / 2;
-							_heightNew = _heightOld;
-							_posX = _posX + (_widthOld - _widthNew) / 2;
+						if (_isRotated) then {
+							 _heightNew = _widthOld * 8 / 3;
+							 _ctrlNew ctrlSetAngle [90, 0.5, 0.5];	// Rotate the control
 						};
 
+						// We only modified the height, so now we check whether it increased or decreased
+						// If the height has increased (typically from rotations, but not necessarily), we need to scale the control down (and reposition it)
+						if (_heightNew > _heightOld) then {
+							_widthNew = _widthNew * (_heightOld / _heightNew);
+							_posX = _posX + (_widthOld - _widthNew) / 2;
+							_heightNew = _heightOld;
+						// Otherwise, if the height has decreased (or hasn't changed), we just need to reposition the control
+						} else {
+							_posY = _posY + (_heightOld - _heightNew) / 2;
+						};
 						_posIconAR = [_posX, _posY, _widthNew, _heightNew];
 						_ctrlNew ctrlSetPosition _posIconAR;
 						_ctrlNew ctrlCommit 0;
@@ -168,9 +200,15 @@ private _childControls = [];
 
 					// Everything else should be 1x1
 					default {
+						_ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
 						_posIconAR = +_posCtrl;
 						_ctrlNew ctrlSetPosition _posCtrl;
 						_ctrlNew ctrlCommit 0;
+
+						// If the control is rotated, rotate the icon
+						if (_isRotated) then {
+							_ctrlNew ctrlSetAngle [90, 0.5, 0.5];
+						};
 					};
 				};
 
@@ -219,7 +257,6 @@ private _childControls = [];
 			// Save the new control onto the parent control
 			_childControls pushBack _ctrlNew;
 			_ctrl setVariable [MACRO_VARNAME_UI_CTRLOUTLINE, _ctrlNew];
-
 		};
 
 		// Display name
@@ -321,21 +358,34 @@ private _childControls = [];
 			// Only continue if the weapon has this attachment
 			if (!isNull (_data getVariable [MACRO_VARNAME_ACC_MUZZLE, locationNull])) then {
 				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
-				private _accSizeMul = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "MuzzleSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry;
+				private _accSizeMul = 2 * ([configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "MuzzleSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry);
 				private _pos = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "MuzzleSlot", "iconPosition", [0, 0]] call BIS_fnc_returnConfigEntry;
-
 				_pos params ["_posX", "_posY"];
 				_posIconAR params ["_posIconX", "_posIconY", "_widthIcon", "_heightIcon"];
 
 				private _width = _accSizeMul * _widthIcon;
 				private _height = _accSizeMul * _heightIcon;
 
-				_pos = [
-					_posIconX + _posX * _widthIcon - _width / 2,
-					_posIconY + _posY * _heightIcon - _height / 2,
-					_width,
-					_height
-				];
+				// If the item is rotated, rotate the control and invert the width/height
+				if (_isRotated) then {
+					_pos = [
+						_posIconX + (1 - _posY) * _widthIcon - _width * 0.5,
+						_posIconY + _posX * _heightIcon - _height * 0.5,
+						_width,
+						_height
+					];
+					_ctrlNew ctrlSetAngle [90, 0.5, 0.5];
+
+				// Otherwise, position the control normally
+				} else {
+					_pos = [
+						_posIconX + _posX * _widthIcon - _width * 0.5,
+						_posIconY + _posY * _heightIcon - _height * 0.5,
+						_width,
+						_height
+					];
+				};
+
 				_ctrlNew ctrlSetPosition _pos;
 				_ctrlNew ctrlCommit 0;
 
@@ -353,21 +403,34 @@ private _childControls = [];
 			// Only continue if the weapon has this attachment
 			if (!isNull (_data getVariable [MACRO_VARNAME_ACC_BIPOD, locationNull])) then {
 				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
-				private _accSizeMul = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "UnderBarrelSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry;
+				private _accSizeMul = 1.5 * ([configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "UnderBarrelSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry);
 				private _pos = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "UnderBarrelSlot", "iconPosition", [0, 0]] call BIS_fnc_returnConfigEntry;
-
 				_pos params ["_posX", "_posY"];
 				_posIconAR params ["_posIconX", "_posIconY", "_widthIcon", "_heightIcon"];
 
 				private _width = _accSizeMul * _widthIcon;
 				private _height = _accSizeMul * _heightIcon;
 
-				_pos = [
-					_posIconX + _posX * _widthIcon - _width / 2,
-					_posIconY + _posY * _heightIcon - _height,	// Apparently BI set the center on the top for this attachment
-					_width,
-					_height
-				];
+				// If the item is rotated, rotate the control and invert the width/height
+				if (_isRotated) then {
+					_pos = [
+						_posIconX + (1 - _posY) * _widthIcon - _width * 0.25,
+						_posIconY + _posX * _heightIcon - _height * 0.5,
+						_width,
+						_height
+					];
+					_ctrlNew ctrlSetAngle [90, 0.5, 0.5];
+
+				// Otherwise, position the control normally
+				} else {
+					_pos = [
+						_posIconX + _posX * _widthIcon - _width * 0.5,
+						_posIconY + _posY * _heightIcon - _height * 0.75,
+						_width,
+						_height
+					];
+				};
+
 				_ctrlNew ctrlSetPosition _pos;
 				_ctrlNew ctrlCommit 0;
 
@@ -387,19 +450,32 @@ private _childControls = [];
 				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
 				private _accSizeMul = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "PointerSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry;
 				private _pos = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "PointerSlot", "iconPosition", [0, 0]] call BIS_fnc_returnConfigEntry;
-
 				_pos params ["_posX", "_posY"];
 				_posIconAR params ["_posIconX", "_posIconY", "_widthIcon", "_heightIcon"];
 
 				private _width = _accSizeMul * _widthIcon;
 				private _height = _accSizeMul * _heightIcon;
 
-				_pos = [
-					_posIconX + _posX * _widthIcon - _width / 2,
-					_posIconY + _posY * _heightIcon - _height / 2,
-					_width,
-					_height
-				];
+				// If the item is rotated, rotate the control and invert the width/height
+				if (_isRotated) then {
+					_pos = [
+						_posIconX + (1 - _posY) * _widthIcon - _width * 0.5,
+						_posIconY + _posX * _heightIcon - _height * 0.5,
+						_width,
+						_height
+					];
+					_ctrlNew ctrlSetAngle [90, 0.5, 0.5];
+
+				// Otherwise, position the control normally
+				} else {
+					_pos = [
+						_posIconX + _posX * _widthIcon - _width * 0.5,
+						_posIconY + _posY * _heightIcon - _height * 0.5,
+						_width,
+						_height
+					];
+				};
+
 				_ctrlNew ctrlSetPosition _pos;
 				_ctrlNew ctrlCommit 0;
 
@@ -418,21 +494,34 @@ private _childControls = [];
 			// Only continue if the weapon has this attachment
 			if (!isNull (_data getVariable [MACRO_VARNAME_ACC_OPTIC, locationNull])) then {
 				private _ctrlNew = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, _ctrlParent];
-				private _accSizeMul = 2 * ([configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "CowsSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry);
+				private _accSizeMul = 4 * ([configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "CowsSlot", "iconScale", 0.2] call BIS_fnc_returnConfigEntry);
 				private _pos = [configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "CowsSlot", "iconPosition", [0, 0]] call BIS_fnc_returnConfigEntry;
-
 				_pos params ["_posX", "_posY"];
 				_posIconAR params ["_posIconX", "_posIconY", "_widthIcon", "_heightIcon"];
 
 				private _width = _accSizeMul * _widthIcon;
 				private _height = _accSizeMul * _heightIcon;
 
-				_pos = [
-					_posIconX + _posX * _widthIcon - _width / 2,
-					_posIconY + _posY * _heightIcon - _height * 3 / 4,
-					_width,
-					_height
-				];
+				// If the item is rotated, rotate the control and invert the width/height
+				if (_isRotated) then {
+					_pos = [
+						_posIconX + (1 - _posY) * _widthIcon - _width * (0.5 - 1 / 8),
+						_posIconY + _posX * _heightIcon - _height * 0.5,
+						_width,
+						_height
+					];
+					_ctrlNew ctrlSetAngle [90, 0.5, 0.5];
+
+				// Otherwise, position the control normally
+				} else {
+					_pos = [
+						_posIconX + _posX * _widthIcon - _width * 0.5,
+						_posIconY + _posY * _heightIcon - _height * (0.5 + 1 / 8),
+						_width,
+						_height
+					];
+				};
+
 				_ctrlNew ctrlSetPosition _pos;
 				_ctrlNew ctrlCommit 0;
 

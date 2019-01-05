@@ -1,5 +1,10 @@
 TODO:
-- Make the handleFakeMass function consider container items' items (as they're not technically objects, so no cargo)
+- Add support for rotating items (by pressing R/space?)
+	* Add a isRotated variable to the item data
+	* Reset isRotated variable when dragging into a reserved slot
+	* Update generateChildControls to take the isRotated variable into account
+	* Call ui_mouse_moving event after rotating so the highlighted slots update
+		+ Requires the inventory to remember the last cursor control (done) AND the last relative pos!
 - Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
 	* --> inventory synchroniser!
 - Look for an alternative to isNil {} in ui_init, as it may  permanently freeze the game when encountering a script error

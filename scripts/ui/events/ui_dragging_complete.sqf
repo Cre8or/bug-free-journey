@@ -17,8 +17,5 @@ case "ui_dragging_complete": {
 		// Remove the MouseButtonUp event handler
 		private _EH = _inventory getVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONUP, -1];
 		_inventory displayRemoveEventHandler ["MouseButtonUp", _EH];
-
-		// Reset the allowed controls list
-		//_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
 	};
 };
