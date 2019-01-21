@@ -43,6 +43,7 @@ case "ui_update_storage": {
 	{
 		_x params ["_containerSlotPosEnum", "_containerFrame", "_defaultIconPath"];
 
+
 		private _class = _classes param [_forEachIndex, ""];
 		private _category = MACRO_ENUM_CATEGORY_EMPTY;
 		private _slotSize = [1,1];
@@ -56,7 +57,7 @@ case "ui_update_storage": {
 
 		// If the container doesn't have any data yet, generate it
 // ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
-		if (false or isNull _containerData and {!isNull _container}) then {
+		if (isNull _containerData and {!isNull _container}) then {
 			//systemChat format ["Building container data for: %1", _class];
 			_containerData = [_container, _class] call cre_fnc_inv_generateContainerData;
 
@@ -70,6 +71,7 @@ case "ui_update_storage": {
 			_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _containerData];
 		};
 
+
 		// Fetch the container's dimensions
 		private _containerSize = _containerData getVariable [MACRO_VARNAME_CONTAINERSIZE, [0,0]];
 
@@ -81,8 +83,13 @@ case "ui_update_storage": {
 		_containerFrame ctrlCommit 0;
 
 		// If the container has changed, or was removed, delete the old controls
-		if (_container != _storageContainer and {!(isNull _container and isNull _storageContainer)}) then {
+		if (_container != _storageContainer) then {
 			_shouldMoveCtrls = true;
+
+			// Link the player container data to this container data
+			_containerData setVariable [MACRO_VARNAME_PARENT, player];
+			_containerData setVariable [MACRO_VARNAME_PARENTDATA, _playerContainerData];
+			_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _containerData];
 
 			// Delete the container frame's child controls
 			{
@@ -225,6 +232,17 @@ case "ui_update_storage": {
 						_slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
 					};
 				} forEach _items;
+
+			// Otherwise, if the container is null...
+			} else {
+
+				// Change the frame's colour
+				if !(_containerFrame in (_inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []])) then {
+					_containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+				};
+
+				_containerFrame setVariable ["active", false];
+				_containerFrame setVariable [MACRO_VARNAME_CLASS, ""];
 			};
 
 		// If the container hasn't changed, check if we need to reposition its controls

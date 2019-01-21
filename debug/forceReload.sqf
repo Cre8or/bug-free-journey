@@ -38,7 +38,7 @@ if (_magType != "") then {
 
 	// Check if the unit has a cargo container
 	private _container = objNull;
-	private _deleteContainer = false;
+	private _shouldRemove = false;
 	{
 		if (!isNull _x) exitWith {_container = _x};
 	} forEach [uniformContainer player, vestContainer player, backpackContainer player];
@@ -47,34 +47,19 @@ if (_magType != "") then {
 	if (isNull _container) then {
 		player addVest "V_Rangemaster_belt";
 		_container = vestContainer player;
-		_deleteContainer = true;
+		_shouldRemove = true;
 	};
 
 	// Force the player to reload
-	_container addMagazineAmmoCargo [_magType, 1, _magCount];
+	_container addMagazineCargo [_magType, 1];
 	reload player;
+	clearMagazineCargo _container;
 
-	// Delete the temporary container after the reload completes
-	if (_deleteContainer) then {
-		player setVariable ["cre_forceReload_magType", _magType, false];
-		player setVariable ["cre_forceReload_tempContainer", _container, false];
+	// Add the correct magazine to the weapon
+	player addWeaponItem [_currentWeapon, [_magType, _magCount, _currentMuzzle]];
 
-		private _reloadEH = player addEventHandler ["Reloaded", {
-			params ["_unit", "", "", ["_newMagazine", [], [[]]], ["_oldMagazine", [], [[]]]];
-
-			private _magType = _unit getVariable ["cre_forceReload_magType", ""];
-			if (_magType == (_newMagazine param [0, ""]) or {_magType == (_oldMagazine param [0, ""])}) then {
-
-				// Check if we're still wearing the temporary vest
-				private _vest = player getVariable ["cre_forceReload_tempContainer", objNull];
-				if (vestContainer _unit == _vest) then {
-					removeVest _unit;
-				};
-
-				private _reloadEH = _unit getVariable ["cre_forceReload_reloadEH", 0];
-				_unit removeEventHandler ["Reloaded", _reloadEH];
-			};
-		}];
-		player setVariable ["cre_forceReload_reloadEH", _reloadEH, false];
+	// Remove the container, if needed
+	if (_shouldRemove) then {
+		removeVest player;
 	};
 };

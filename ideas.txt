@@ -106,4 +106,4 @@ Depending on the item's mass, and technical limitations, maybe play a one-handed
 
 Also, consider carried objects in the dummy weights calculations, to affect stamina. Alternatively, set stamina to 0
 repeatedly while carrying (to prevent sprinting), and tag specific items as "heavy" or "cumbersome" to also prevent
-running/jogging (force walking). 
+running/jogging (force walking).

@@ -10,6 +10,8 @@
 						0:	primary weapon
 						1:	handgun
 						2:	secondary weapon (launcher)
+		2:	<BOOL>		Whether or not the alt magazine sub-array should be included if it's empty
+					(default: false)
 	Returns:
 		0:	<ARRAY>		The weapon's accessories array.
 -------------------------------------------------------------------------------------------------------------------- */
@@ -17,7 +19,8 @@
 // Fetch our params
 params [
 	["_unit", objNull, [objNull]],
-	["_weaponType", 0, [0]]
+	["_weaponType", 0, [0]],
+	["_includeAltMag", false, [false]]
 ];
 
 
@@ -28,7 +31,7 @@ params [
 // Set up some variables
 private _array = [];
 private _getLoadedMagazines = {
-	private _magazines = [[]];
+	private _magazines = [ [[]], [[],[]] ] select _includeAltMag;
 	scopeName "magazines";
 	{
 		scopeName "loop";

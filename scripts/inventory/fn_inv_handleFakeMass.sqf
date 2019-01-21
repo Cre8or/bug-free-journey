@@ -35,33 +35,34 @@ if (isNull _container or {isNull _containerData}) exitWith {
 
 
 
-// Fetch the list of magazines that are supposed to be in this container
-private _listMagazines = [_containerData, [MACRO_ENUM_CATEGORY_MAGAZINE]] call cre_fnc_inv_getItemsByCategory;
-
-// Clear the container's magazines pool
+// Clear the container's magazines and weapons pool
 clearMagazineCargoGlobal _container;
+clearWeaponCargoGlobal _container;
 
-// If there are no magazines, exit here
-if (_listMagazines isEqualTo []) exitWith {};
+// Fetch the list of weapons that are supposed to be in the container
+private _listWeapons = [_containerData, [MACRO_ENUM_CATEGORY_WEAPON], 1] call cre_fnc_inv_getClassCountsByCategory;
 
-
-
-
-
-// Otherwise, calculate the mass of the magazines that are supposed to be in the inventory
-private _totalMass = 0;
+// Re-add the weapons
 {
-	private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-	private _mass = [_class, MACRO_ENUM_CATEGORY_MAGAZINE] call cre_fnc_cfg_getClassMass;
-	_totalMass = _totalMass + _mass;
-} forEach _listMagazines;
+	_container addWeaponCargoGlobal _x;
+} forEach _listWeapons;
+
+// Get the container's total fake mass
+private _totalMass = [_containerData, true, false] call cre_fnc_inv_getInvMass;
+
+// If the fake mass is equal to 0, exit
+if (_totalMass <= 0) exitWith {};
 
 
+
+
+
+// Otherwise, determine the amount and type of dummy weights that are needed
 {
-	// Determine how many magazines of this type we need
+	// Determine how many dummy weights of this type we need
 	private _count = floor (_totalMass / _x);
 
-	// Add the fake magazines
+	// Add the dummy weights
 	if (_count > 0) then {
 		if (_forEachIndex == 0) then {
 			if (_count > 9) then {

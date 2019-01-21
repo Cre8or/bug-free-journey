@@ -296,6 +296,7 @@
 	#define MACRO_VARNAME_UI_CTRLOUTLINE				"ctrlOutline"
 	#define MACRO_VARNAME_UI_CTRLPARENT				"ctrlParent"
 
+	#define MACRO_VARNAME_UI_WEAPONS_ITEMDATAS			"weaponsItemData"
 	#define MACRO_VARNAME_UI_STORAGE_CONTAINERS			"storageContainers"
 
 	#define MACRO_VARNAME_UI_CURSORCTRL				"cursorCtrl"
@@ -329,7 +330,6 @@
 	#define MACRO_VARNAME_CONTAINERSLOTSONLASTY			"containerSlotsOnLastY"
 
 	#define MACRO_VARNAME_MAG_AMMO					"ammo"
-	#define MACRO_VARNAME_MAG_MAXAMMO				"maxAmmo"
 
 	#define MACRO_VARNAME_ACC_MUZZLE				"accMuzzle"
 	#define MACRO_VARNAME_ACC_BIPOD					"accBipod"

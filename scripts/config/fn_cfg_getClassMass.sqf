@@ -40,33 +40,36 @@ if (_mass == -1) then {
 		missionNamespace setVariable ["cre8ive_getClassMass_namespace", _namespace, false];
 	};
 
-	private _configPath = "";
-	private _configPathAlt = "";
+	private _configPath = configFile;
+	private _configPathAlt = _configPath;
 
 	// Determine the config path based on the category
 	switch (_category) do {
 		case MACRO_ENUM_CATEGORY_ITEM;
 		case MACRO_ENUM_CATEGORY_WEAPON;
-		case MACRO_ENUM_CATEGORY_NVGS;
 		case MACRO_ENUM_CATEGORY_HEADGEAR;
 		case MACRO_ENUM_CATEGORY_BINOCULARS;
 		case MACRO_ENUM_CATEGORY_CONTAINER;
 		case MACRO_ENUM_CATEGORY_UNIFORM;
 		case MACRO_ENUM_CATEGORY_VEST: {
-			_configPath = configFile >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "mass";
-			_configPathAlt = configFile >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
+			_configPath = _configPath >> "CfgWeapons" >> _class >> "WeaponSlotsInfo" >> "mass";
+			_configPathAlt = _configPathAlt >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
 		};
 		case MACRO_ENUM_CATEGORY_BACKPACK: {
-			_configPath = configFile >> "CfgVehicles" >> _class >> "mass";
+			_configPath = _configPath >> "CfgVehicles" >> _class >> "mass";
 			_configPathAlt = _configPath;
 		};
 		case MACRO_ENUM_CATEGORY_MAGAZINE: {
-			_configPath = configFile >> "CfgMagazines" >> _class >> "mass";
+			_configPath = _configPath >> "CfgMagazines" >> _class >> "mass";
+			_configPathAlt = _configPath;
+		};
+		case MACRO_ENUM_CATEGORY_NVGS: {
+			_configPath = _configPath >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
 			_configPathAlt = _configPath;
 		};
 		case MACRO_ENUM_CATEGORY_GOGGLES: {
-			_configPath = configFile >> "CfgGlasses" >> _class >> "mass";
-			_configPathAlt = configFile >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
+			_configPath = _configPath >> "CfgGlasses" >> _class >> "mass";
+			_configPathAlt = _configPathAlt >> "CfgWeapons" >> _class >> "ItemInfo" >> "mass";
 		};
 		default {
 			private _str = format ["ERROR [cre_fnc_cfg_getClassMass]: No rule for category '%1' (%2)!", _category, _class];
@@ -76,15 +79,13 @@ if (_mass == -1) then {
 	};
 
 	// Fetch the mass
-	if !(_configPath isEqualType "") then {
-		_mass = getNumber _configPath;
-		if (_mass <= 0) then {
-			_mass = getNumber _configPathAlt;
-		};
+	_mass = getNumber _configPath;
+	if (_mass <= 0) then {
+		_mass = getNumber _configPathAlt;
 	};
 
-	// Save the mass onto the namespace (and set it to 1 if no mass was found)
-	_mass = _mass max 1;
+	// Save the mass onto the namespace (and set it to 0 if no mass was found)
+	_mass = _mass max 0;
 	_namespace setVariable [_class, _mass];
 };
 

@@ -47,9 +47,12 @@ if (!isNull _originContainer) then {
 
 			case MACRO_ENUM_CATEGORY_WEAPON;
 			case MACRO_ENUM_CATEGORY_NVGS;
-			case MACRO_ENUM_CATEGORY_HEADGEAR;
 			case MACRO_ENUM_CATEGORY_BINOCULARS: {
 				_originContainer removeWeapon _class;
+			};
+
+			case MACRO_ENUM_CATEGORY_HEADGEAR: {
+				removeHeadgear _originContainer;
 			};
 
 			case MACRO_ENUM_CATEGORY_GOGGLES: {
@@ -82,9 +85,7 @@ if (!isNull _originContainer) then {
 
 			// Determine what to do based on the class
 			switch (_category) do {
-
-				case MACRO_ENUM_CATEGORY_WEAPON;
-				case MACRO_ENUM_CATEGORY_HEADGEAR;
+;
 				case MACRO_ENUM_CATEGORY_BINOCULARS: {
 
 					// Figure out how many weapons of this type are inside the container
@@ -117,12 +118,14 @@ if (!isNull _originContainer) then {
 					} forEach (_weapons select 0);;
 				};
 
+				case MACRO_ENUM_CATEGORY_WEAPON;
 				case MACRO_ENUM_CATEGORY_MAGAZINE: {
 					[_originContainer] call cre_fnc_inv_handleFakeMass;
 				};
 
 				case MACRO_ENUM_CATEGORY_ITEM;
 				case MACRO_ENUM_CATEGORY_NVGS;
+				case MACRO_ENUM_CATEGORY_HEADGEAR;
 				case MACRO_ENUM_CATEGORY_GOGGLES;
 				case MACRO_ENUM_CATEGORY_UNIFORM;
 				case MACRO_ENUM_CATEGORY_CONTAINER;
@@ -217,6 +220,10 @@ if (!_doNothing) then {
 		// Determine what to do based on the category
 		switch (_category) do {
 
+			case MACRO_ENUM_CATEGORY_HEADGEAR: {
+				_targetContainer addHeadgear _class;
+			};
+
 			case MACRO_ENUM_CATEGORY_GOGGLES: {
 				_targetContainer addGoggles _class;
 			};
@@ -234,14 +241,32 @@ if (!_doNothing) then {
 					MACRO_VARNAME_ACC_MUZZLE,
 					MACRO_VARNAME_ACC_BIPOD,
 					MACRO_VARNAME_ACC_SIDE,
-					MACRO_VARNAME_ACC_OPTIC,
+					MACRO_VARNAME_ACC_OPTIC
+				];
+
+				// Re-add the magazines
+				{
+					private _magX = _itemData getVariable [_x, locationNull];
+					if (!isNull _magX) then {
+
+						// If this is an alternative magazine, fetch the corresponding muzzle
+						private _muzzle = _class;
+						if (_forEachIndex == 1) then {
+							private _muzzles = [_class] call cre_fnc_cfg_getWeaponMuzzles;
+							_muzzle = _muzzles param [1, _class];
+						};
+
+						// Re-add the magazine with the correct ammo count to the appropriate muzzle
+						_targetContainer addWeaponItem [_class, [_magX getVariable [MACRO_VARNAME_CLASS, ""], _magX getVariable [MACRO_VARNAME_MAG_AMMO, 0], _muzzle]];
+					};
+
+				} forEach [
 					MACRO_VARNAME_MAG,
 					MACRO_VARNAME_MAGALT
 				];
 			};
 
 			case MACRO_ENUM_CATEGORY_NVGS;
-			case MACRO_ENUM_CATEGORY_HEADGEAR;
 			case MACRO_ENUM_CATEGORY_BINOCULARS: {
 				_targetContainer addWeaponGlobal _class;
 			};
@@ -304,18 +329,18 @@ if (!_doNothing) then {
 		// Determine what to do based on the category
 		switch (_category) do {
 
-			case MACRO_ENUM_CATEGORY_WEAPON;
-			case MACRO_ENUM_CATEGORY_HEADGEAR;
 			case MACRO_ENUM_CATEGORY_BINOCULARS: {
 				_targetContainer addWeaponCargoGlobal [_class, 1];
 			};
 
+			case MACRO_ENUM_CATEGORY_WEAPON;
 			case MACRO_ENUM_CATEGORY_MAGAZINE: {
 				[_targetContainer] call cre_fnc_inv_handleFakeMass;
 			};
 
 			case MACRO_ENUM_CATEGORY_ITEM;
 			case MACRO_ENUM_CATEGORY_NVGS;
+			case MACRO_ENUM_CATEGORY_HEADGEAR;
 			case MACRO_ENUM_CATEGORY_GOGGLES: {
 				_targetContainer addItemCargoGlobal [_class, 1];
 			};

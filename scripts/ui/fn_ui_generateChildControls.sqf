@@ -27,7 +27,7 @@ params [
 ];
 
 // If no control was provided, exit
-if (isNull _ctrl) exitWith {systemChat "ERROR: No control provided!"};
+if (isNull _ctrl) exitWith {systemChat "(cre_fnc_ui_generateChildControls) ERROR: No control provided!"};
 
 // Fetch the inventory display
 private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
@@ -308,7 +308,7 @@ private _childControls = [];
 		case MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR: {
 
 			// Fetch the item's data
-			private _maxAmmo = _data getVariable [MACRO_VARNAME_MAG_MAXAMMO, 1];
+			private _maxAmmo = [_class] call cre_fnc_cfg_getMagazineMaxAmmo;
 
 			// Only create a fillbar if the magazine has more than one round
 			if (_maxAmmo > 1) then {
