@@ -12,22 +12,16 @@
 
 #include "..\..\res\config\dialogs\macros.hpp"
 
-// Define some constants
-private _sleepTime = 1 / 3;	// in seconds
-
-// Define some variables
-private _containerIndex = -1;
-
 
 
 
 
 // Synchronise the inventories
-while {true} do {
+addMissionEventHandler ["EachFrame", {
+	private _time = time;
 
-	// Escape the scheduled environment
-	isNil {
-
+	// Check if we should synchronise the inventory this frame
+	if (_time > (missionNamespace getVariable ["cre8ive_synchroniser_nextUpdate", 0]) or {missionNamespace getVariable ["cre8ive_synchroniser_forceUpdate", false]}) then {
 		disableSerialization;
 
 		// Fetch the inventory
@@ -229,6 +223,7 @@ while {true} do {
 
 		// Fetch the current container
 		private _container = objNull;
+		private _containerIndex = missionNamespace getVariable ["cre8ive_synchroniser_containerIndex", -1];
 		_containerIndex = (_containerIndex + 1) % 3;
 		switch (_containerIndex) do {
 			case 0: {_container = uniformContainer player};
@@ -360,7 +355,9 @@ while {true} do {
 		if (!isNull _inventory) then {
 			["ui_update_storage"] call cre_fnc_ui_inventory;
 		};
-	};
 
-	sleep _sleepTime;
-};
+		// Update our variables
+		missionNamespace setVariable ["cre8ive_synchroniser_containerIndex", _containerIndex, false];
+		missionNamespace setVariable ["cre8ive_synchroniser_nextUpdate", _time + 0.25, false];
+	};
+}];

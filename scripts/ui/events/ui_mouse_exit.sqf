@@ -27,17 +27,29 @@ case "ui_mouse_exit": {
 			// If the control is not being dragged
 			if (_draggedCtrl getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
 
+				// Fetch the drop control
+				private _ctrlDrop = _inventory displayCtrl MACRO_IDC_GROUND_DROP_FRAME;
+
 				// Restore the original colour on the highlighted controls
 				{
-					if (_x getVariable ["active", false] and {_x != _draggedCtrl}) then {
-						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+					// If the current control is the drop control, make it invisible
+					if (_x == _ctrlDrop) then {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
+
+					// Otherwise, apply the usual behaviour
 					} else {
-						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+						if (_x getVariable ["active", false] and {_x != _draggedCtrl}) then {
+							_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+						} else {
+							_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+						};
 					};
 				} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
 				_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
 
+			// Otherwise, if we're dragging a control...
 			} else {
+
 				{
 					if (_x getVariable ["active", false]) then {
 						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);

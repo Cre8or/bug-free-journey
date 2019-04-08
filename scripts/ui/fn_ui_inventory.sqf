@@ -9,6 +9,9 @@
 
 	Returns:
 		(nothing)
+
+	EXAMPLE:
+		["ui_init"] call cre_fnc_ui_inventory
 -------------------------------------------------------------------------------------------------------------------- */
 
 #include "..\..\res\config\dialogs\macros.hpp"
@@ -42,6 +45,7 @@ switch (_event) do {
 	#include "events\ui_focus_reset.sqf"
 	#include "events\ui_menu_weapons.sqf"
 	#include "events\ui_menu_medical.sqf"
+	#include "events\ui_update_ground.sqf"
 	#include "events\ui_update_weapons.sqf"
 	#include "events\ui_update_medical.sqf"
 	#include "events\ui_update_storage.sqf"

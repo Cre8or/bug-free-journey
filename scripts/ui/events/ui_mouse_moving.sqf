@@ -31,14 +31,17 @@ case "ui_mouse_moving": {
 	};
 
 
-	// If the dragged control is not null, and is being dragged...
+	// Fetch the dragged control and the drop control
+	private _ctrlDrop = _inventory displayCtrl MACRO_IDC_GROUND_DROP_FRAME;
 	private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
+
+	// If the dragged control is not null, and is being dragged...
 	if (_draggedCtrl getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
 
 		// Fetch the dragged control's slot size
 		(_draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]]) params ["_slotSizeW", "_slotSizeH"];
 
-		// Fetch the temporary frame, aswell as teh target control's slot po
+		// Fetch the temporary frame, aswell as the target control's slot position
 		private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
 
 		// Fetch the item and container data
@@ -46,30 +49,47 @@ case "ui_mouse_moving": {
 		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
 
 		// Fetch the target control's slot position
-		private _targetSlotPos = _ctrl getVariable [MACRO_VARNAME_SLOTPOS, [MACRO_ENUM_SLOTPOS_INVALID]];
+		private _targetSlotPos = _ctrl getVariable [MACRO_VARNAME_SLOTPOS, [MACRO_ENUM_SLOTPOS_INVALID, MACRO_ENUM_SLOTPOS_INVALID]];
 		_targetSlotPos params ["_targetSlotPosX", "_targetSlotPosY"];
 
 		// If the control is a reserved slot, do a simple check to see if the item can fit in it
 		if (_targetSlotPosX < 0) then {
 
-			// Fetch the allowed controls and the temporary icon
-			private _allowedCtrls = _inventory getVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
-			private _ctrlIconTemp = _ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull];
+			// If we're hovering over a drop control, highlight it (don't check if the item fits)
+			if (_targetSlotPosX == MACRO_ENUM_SLOTPOS_DROP) then {
+				//private _ctrlIconTemp = _ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull];
+				//_ctrlIconTemp ctrlSetTextColor [0,1,0,1];
+				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);	// MACRO_COLOUR_ELEMENT_DRAGGING_GREEN
 
-			// If the item is allowed to go in the target control, paint it green
-			if (_ctrl in _allowedCtrls) then {
+				// Add the drop frame to the highlit controls array
+				 private _ctrls = _inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
+				 if !(_ctrl in _ctrls) then {
+					 _ctrls pushBack _ctrl;
+				 	_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, _ctrls];
+				};
 
-				// Check if the item fits
-				([_itemData, _containerData, _targetSlotPos, [], false] call cre_fnc_inv_canFitItem) params ["_canFit"];
+			// Otherwise...
+			} else {
 
-				if (_canFit) then {
-					_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_DRAGGING_GREEN);
-					_ctrlIconTemp ctrlSetTextColor [0,1,0,1];
+				// Fetch the allowed controls and the temporary icon
+				private _allowedCtrls = _inventory getVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
+				private _ctrlIconTemp = _ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull];
+
+				// If the item is allowed to go in the target control, paint it green
+				if (_ctrl in _allowedCtrls) then {
+
+					// Check if the item fits
+					([_itemData, _containerData, _targetSlotPos, [], false] call cre_fnc_inv_canFitItem) params ["_canFit"];
+
+					if (_canFit) then {
+						_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_DRAGGING_GREEN);
+						_ctrlIconTemp ctrlSetTextColor [0,1,0,1];
+					} else {
+						_ctrlIconTemp ctrlSetTextColor [1,0,0,1];
+					};
 				} else {
 					_ctrlIconTemp ctrlSetTextColor [1,0,0,1];
 				};
-			} else {
-				_ctrlIconTemp ctrlSetTextColor [1,0,0,1];
 			};
 
 			// Reset the slot position
@@ -181,7 +201,7 @@ case "ui_mouse_moving": {
 	} else {
 
 		// Make sure the control isn't one that's about to be dragged
-		if (!isNull _ctrl and {_ctrl != _draggedCtrl}) then {
+		if (!isNull _ctrl and {_ctrl != _draggedCtrl} and {_ctrl != _ctrlDrop}) then {
 
 			// Paint the old controls in whichever colour they were before
 			private _ctrlsOld = _inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];

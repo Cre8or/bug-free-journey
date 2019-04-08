@@ -27,7 +27,6 @@ if (_containerData isEqualType objNull) then {
 // If the container (or its data) doesn't exist, exit and return an empty array
 if (isNull _container or {isNull _containerData}) exitWith {
 	systemChat format ["ERROR [cre_fnc_inv_handleFakeMass]: Provided container data is empty, or container doesn't exist! (%1 - %2)", _containerData getVariable [MACRO_VARNAME_UID, "n/a"], _containerData getVariable [MACRO_VARNAME_CLASS, "n/a"]];
-	[]
 };
 
 

@@ -7,6 +7,7 @@ case "ui_dragging_stop": {
 
 	// Only continue if the control still exists and isn't already being dragged
 	if (!isNull _draggedCtrl) then {
+		private _canMoveItem = false;
 
 		// Reset the focus (NOTE: scheduled environment, because it needs to execute *after* the MouseDown event
 		["ui_focus_reset", [_draggedCtrl]] spawn cre_fnc_ui_inventory;
@@ -18,6 +19,7 @@ case "ui_dragging_stop": {
 		private _originContainerData = _itemData getVariable [MACRO_VARNAME_PARENTDATA, locationNull];
 
 		private _cursorCtrl = _inventory getVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
+		private _targetContainer = objNull;
 		private _targetContainerData = _cursorCtrl getVariable [MACRO_VARNAME_PARENTDATA, locationNull];
 		private _targetContainerCtrl = _cursorCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, _cursorCtrl];	// Fallback for reserved slots that don't have a container control
 
@@ -30,12 +32,44 @@ case "ui_dragging_stop": {
 			_slotSize set [1, _widthTemp];
 		};
 
-		// Try to fit the item on the slot
-		([_itemData, _targetContainerData, _slotPos, _slotSize] call cre_fnc_inv_canFitItem) params ["_canFit"];
-		//systemChat format ["(%1) - origin: %2 - target: %3 - pos: %4 - size: %5 - canFit: %6", time, ctrlIDC (_draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull]), ctrlIDC _targetContainerCtrl, _slotPos, _slotSize, _canFit];
+		// If the item is going into a drop slot, skip the canFit checks
+		_slotPos params ["_slotPosX", "_slotPosY"];
+		if (_slotPosX == MACRO_ENUM_SLOTPOS_DROP) then {
+			_canMoveItem = true;
 
-		// If the item can fit there, move it
-		if (_canFit) then {
+			// Create the ground weapon holder for the dropped item
+			_targetContainer = "GroundWeaponHolder" createVehicle (getPosATL player);
+			_targetContainer setPosASL getPosASL player;
+			_targetContainer setDir random 360;
+			player reveal _targetContainer;
+
+			// Generate the container data
+			_targetContainerData = [_targetContainer] call cre_fnc_inv_generateContainerData;
+
+			// Set the container's size to that of the item
+			_targetContainerData setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
+
+			// Nullify the target control, as we don't handle drawing ground items here
+			_targetContainerCtrl = controlNull;
+
+		// Otherwise...
+		} else {
+
+			// Try to fit the item on the slot
+			_canFit = ([_itemData, _targetContainerData, _slotPos, _slotSize] call cre_fnc_inv_canFitItem) params ["_canFit"];
+			//systemChat format ["(%1) - origin: %2 - target: %3 - pos: %4 - size: %5 - canFit: %6", time, ctrlIDC (_draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull]), ctrlIDC _targetContainerCtrl, _slotPos, _slotSize, _canFit];
+
+			// If the item can fit there, move it
+			if (_canFit) then {
+				_canMoveItem = true;
+
+				// Fetch the target container
+				_targetContainer = _targetContainerData getVariable [MACRO_VARNAME_CONTAINER, objNull];
+			};
+		};
+
+		// If the item can be moved without any issues...
+		if (_canMoveItem) then {
 
 			// Fetch the item's occupied slot(s)
 			private _slotPosOld = _itemData getVariable [MACRO_VARNAME_SLOTPOS, [0,0]];
@@ -56,7 +90,6 @@ case "ui_dragging_stop": {
 			};
 
 			// If the X position is negative, the item is going into a reserved slot
-			_slotPos params ["_slotPosX", "_slotPosY"];
 			if (_slotPosX < 0) then {
 
 				// Reset the rotation
@@ -80,10 +113,7 @@ case "ui_dragging_stop": {
 				};
 			};
 
-			// Fetch the target container
-			private _targetContainer = _targetContainerData getVariable [MACRO_VARNAME_CONTAINER, objNull];
-
-			// Now, we update the item's new occupied slots, position and parent
+			// Update the item's new occupied slots, position and parent
 			_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _occupiedSlots];
 			_itemData setVariable [MACRO_VARNAME_SLOTPOS, _slotPos];
 			_itemData setVariable [MACRO_VARNAME_PARENT, _targetContainer];

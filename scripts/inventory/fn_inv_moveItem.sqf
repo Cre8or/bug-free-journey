@@ -29,6 +29,11 @@ if (isNull _itemData or {isNull _targetContainer}) exitWith {false};
 
 
 
+// Set up some constants
+private _groundHolders = [
+	"GroundWeaponHolder"
+];
+
 // Set up some variables
 private _doNothing = false;
 
@@ -335,7 +340,20 @@ if (!_doNothing) then {
 
 			case MACRO_ENUM_CATEGORY_WEAPON;
 			case MACRO_ENUM_CATEGORY_MAGAZINE: {
-				[_targetContainer] call cre_fnc_inv_handleFakeMass;
+
+				// If the target container is a temporary ground holder, add the items manually
+				if (typeOf _targetContainer in _groundHolders) then {
+
+					if (_category == MACRO_ENUM_CATEGORY_WEAPON) then {
+						_targetContainer addWeaponCargoGlobal [_class, 1];
+					} else {
+						_targetContainer addMagazineCargoGlobal [_class, 1];
+					};
+
+				// Otherwise, use fake mass to handle the items
+				} else {
+					[_targetContainer] call cre_fnc_inv_handleFakeMass;
+				};
 			};
 
 			case MACRO_ENUM_CATEGORY_ITEM;
@@ -386,6 +404,7 @@ if (!_doNothing) then {
 	// Update the parent variable
 	_itemData setVariable [MACRO_VARNAME_PARENT, _targetContainer];
 };
+
 
 
 

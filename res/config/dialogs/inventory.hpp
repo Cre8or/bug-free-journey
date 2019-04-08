@@ -371,6 +371,16 @@ class MACRO_GUI_NAME {
 					w = 0;
 					h = 0;
 				};
+
+				// Drop frame (used to drop things out of the inventory)
+				class Ground_Drop_Frame : RscText {
+					idc = MACRO_IDC_GROUND_DROP_FRAME;
+					x = 0;
+					y = 0;
+					w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - 0.002);
+					h = _safeZoneH;
+					colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
+				};
 			};
 		};
 

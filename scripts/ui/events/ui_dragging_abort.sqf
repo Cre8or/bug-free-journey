@@ -37,12 +37,20 @@ case "ui_dragging_abort": {
 		} forEach (_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 		ctrlDelete _ctrlFrameTemp;
 
-		// Restore the original colour on the highlighted controls
+		// Restore the original colour on the highlighted controls (copied from ui_mouse_exit)
+		private _ctrlDrop = _inventory displayCtrl MACRO_IDC_GROUND_DROP_FRAME;
 		{
-			if (_x getVariable ["active", false]) then {
-				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+			// If the current control is the drop control, make it invisible
+			if (_x == _ctrlDrop) then {
+				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
+
+			// Otherwise, apply the usual behaviour
 			} else {
-				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+				if (_x getVariable ["active", false] and {_x != _draggedCtrl}) then {
+					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+				} else {
+					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+				};
 			};
 		} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
 		_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
@@ -64,6 +72,7 @@ case "ui_dragging_abort": {
 		} forEach (_allowedCtrls + _forbiddenCtrls);
 		_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
 		_inventory setVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []];
+
 
 		// If the control is a container slot, handle the hidden slot controls
 		private _containerCtrl = _draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];

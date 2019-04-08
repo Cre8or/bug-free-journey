@@ -47,7 +47,7 @@ case "ui_dragging_start": {
 
 				// Create a temporary picture that stays on the slot
 				if (_defaultIconPath != "") then {
-					private _ctrlIconTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MACRO_IDC_SCRIPTEDPICTURE, ctrlParentControlsGroup _draggedCtrl];
+					private _ctrlIconTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, ctrlParentControlsGroup _draggedCtrl];	// MACRO_IDC_SCRIPTEDPICTURE
 					_ctrlIconTemp ctrlSetText _defaultIconPath;
 					_ctrlIconTemp ctrlSetPosition _posCtrl;
 					_ctrlIconTemp ctrlCommit 0;

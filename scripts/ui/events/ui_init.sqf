@@ -62,16 +62,20 @@ case "ui_init": {
 					player setVariable [MACRO_VARNAME_DATA, _containerData];
 				};
 
+				// Update the ground menu
+				["ui_update_ground"] call cre_fnc_ui_inventory;
+
 				// Load the weapons menu (default)
 				["ui_menu_weapons"] call cre_fnc_ui_inventory;
 
-				// Load the storage menu
+				// Update the storage menu
 				["ui_update_storage"] call cre_fnc_ui_inventory;
 
 				// Set the pixel precision mode of all slot frames to "OFF"
 				{
 					_x ctrlSetPixelPrecision 2;
 				} forEach [
+					_inventory displayCtrl MACRO_IDC_GROUND_DROP_FRAME,
 					_inventory displayCtrl MACRO_IDC_NVGS_FRAME,
 					_inventory displayCtrl MACRO_IDC_HEADGEAR_FRAME,
 					_inventory displayCtrl MACRO_IDC_GOGGLES_FRAME,
@@ -91,6 +95,25 @@ case "ui_init": {
 
 				// Reset the focus
 				["ui_focus_reset"] call cre_fnc_ui_inventory;
+/*
+				// DEBUG - Print the cursor control
+				[_inventory] spawn {
+					disableSerialization;
+					params ["_inventory"];
+
+					while {!isNull _inventory} do {
+
+						private _str = str (_inventory getVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull]) + "<br />";
+						_str = _str + "count: " + str count (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
+
+						hint parseText _str;
+
+						sleep 0.1;
+					};
+
+					hint "";
+				};
+*/
 			};
 		};
 	};

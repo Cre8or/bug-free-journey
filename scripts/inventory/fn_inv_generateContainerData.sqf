@@ -8,7 +8,8 @@
 		NOTE: Due to how the algorithm works, some items may get lost in the process (due to item sizes)!
 	Arguments:
 		0:      <OBJECT>	Container object to generate data for
-		1:	<BOOL>		If the container is a unit, this bool will decide whether to also generate
+		1:	<STRING>	The class of the container (used for container proxies, such as uniforms/vests)
+		2:	<BOOL>		If the container is a unit, this bool will decide whether to also generate
 					container data for the unit's vest, uniform and backpack (true), or just
 					the unit's data (weapons and assigned items) (false)
 	Returns:

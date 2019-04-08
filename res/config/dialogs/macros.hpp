@@ -101,6 +101,7 @@
 	// Ground
 	#define MACRO_IDC_GROUND_CTRLGRP				1000
 	#define MACRO_IDC_GROUND_FOCUS_FRAME				1001
+	#define MACRO_IDC_GROUND_DROP_FRAME				1002
 
 	// Weapons / Medical
 	#define MACRO_IDC_WEAPONS_CTRLGRP				2000
@@ -160,8 +161,8 @@
 	#define MACRO_IDC_EMPTY_FOCUS_FRAME				4001
 
 	// Temporary frame and picture
-	#define MACRO_IDC_SCRIPTEDFRAME					4101
-	#define MACRO_IDC_SCRIPTEDPICTURE				4102
+	//#define MACRO_IDC_SCRIPTEDFRAME					4101
+	//#define MACRO_IDC_SCRIPTEDPICTURE				4102
 
 
 
@@ -257,6 +258,7 @@
 
 	// Default:							[0,0]
 	#define MACRO_ENUM_SLOTPOS_INVALID				-1
+	#define MACRO_ENUM_SLOTPOS_DROP					-2
 
 	#define MACRO_ENUM_SLOTPOS_PRIMARYWEAPON			-10
 	#define MACRO_ENUM_SLOTPOS_HANDGUNWEAPON			-11
