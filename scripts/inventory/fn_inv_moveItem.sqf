@@ -76,6 +76,11 @@ if (!isNull _originContainer) then {
 			case MACRO_ENUM_CATEGORY_BACKPACK: {
 				removeBackpack _originContainer;
 			};
+
+			case MACRO_ENUM_CATEGORY_ITEM: {
+				_originContainer unassignItem _class;
+				_originContainer removeITem _class;
+			};
 		};
 
 	// Otherwise, it's a container, so we use the regular (more complex) way
@@ -90,7 +95,7 @@ if (!isNull _originContainer) then {
 
 			// Determine what to do based on the class
 			switch (_category) do {
-;
+
 				case MACRO_ENUM_CATEGORY_BINOCULARS: {
 
 					// Figure out how many weapons of this type are inside the container
@@ -325,6 +330,24 @@ if (!_doNothing) then {
 					// Re-add the items that were inside the container
 					[_x, objNull, _container] call cre_fnc_inv_moveItem;
 				} forEach (_itemData getVariable [MACRO_VARNAME_ITEMS, []]);
+			};
+
+			case MACRO_ENUM_CATEGORY_ITEM: {
+				private _subCategory = [_class, MACRO_ENUM_CATEGORY_ITEM] call cre_fnc_cfg_getClassSubCategory;
+
+				switch (_subCategory) do {
+					case MACRO_ENUM_SUBCATEGORY_MAP;
+					case MACRO_ENUM_SUBCATEGORY_GPS;
+					case MACRO_ENUM_SUBCATEGORY_RADIO;
+					case MACRO_ENUM_SUBCATEGORY_COMPASS;
+					case MACRO_ENUM_SUBCATEGORY_WATCH: {
+						_targetContainer linkItem _class;
+					};
+
+					default {
+						_targetContainer addItem _class;
+					};
+				};
 			};
 		};
 

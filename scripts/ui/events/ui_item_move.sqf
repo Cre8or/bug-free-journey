@@ -125,23 +125,25 @@ case "ui_item_move": {
 			_targetCtrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 		};
 
-		// Reset the old slot data
-		private _itemData = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
-		_ctrl setVariable ["active", false];
-		_ctrl setVariable [MACRO_VARNAME_CLASS, ""];
-		_ctrl setVariable [MACRO_VARNAME_DATA, locationNull];
-		_ctrl setVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
-
 		// Set the allowed controls list to only contain the target slot control
 		//_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, [_targetCtrl]];
 
-		// Create new child controls on the original control (empty slot), provided it is not the same as the target slot
+		// If the target control is different from the original control...
 		if (_ctrl != _targetCtrl) then {
-			[_ctrl] call cre_fnc_ui_generateChildControls;
-		};
 
-		// Colour the original control
-		_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+			// Reset the old slot data
+			private _itemData = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
+			_ctrl setVariable ["active", false];
+			_ctrl setVariable [MACRO_VARNAME_CLASS, ""];
+			_ctrl setVariable [MACRO_VARNAME_DATA, locationNull];
+			_ctrl setVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
+
+			// Create new child controls on the original control (which should be an empty slot now)
+			[_ctrl] call cre_fnc_ui_generateChildControls;
+
+			// Colour the original control
+			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+		};
 
 		// Update the cursor variables
 		_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, _targetCtrl];

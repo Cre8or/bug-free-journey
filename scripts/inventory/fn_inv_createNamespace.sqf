@@ -24,5 +24,18 @@ private _UID = call cre_fnc_inv_generateUID;
 // Save the UID onto the namespace
 _data setVariable [MACRO_VARNAME_UID, _UID];
 
+// DEBUG
+if (isNil "allLocations") then {
+	allLocations = [];
+};
+for "_i" from (count allLocations) - 1 to 0 step -1 do {
+	private _location = allLocations param [_i, locationNull];
+
+	if (isNull _location) then {
+		allLocations deleteAt _i
+	};
+};
+allLocations pushBack _data;
+
 // Return both the namespace and the UID
 [_data, _UID];

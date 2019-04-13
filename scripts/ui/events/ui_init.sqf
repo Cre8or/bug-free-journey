@@ -104,7 +104,8 @@ case "ui_init": {
 					while {!isNull _inventory} do {
 
 						private _str = str (_inventory getVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull]) + "<br />";
-						_str = _str + "count: " + str count (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
+						_str = _str + "count: " + str count (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]) + "<br />";
+						_str = _str + "posNew: " + str (_inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []]);
 
 						hint parseText _str;
 

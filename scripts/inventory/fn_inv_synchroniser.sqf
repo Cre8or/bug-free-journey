@@ -2,8 +2,11 @@
 	Author:		Cre8or
 	Description:
 		Scheduled script that synchronises the player's actual inventory with the custom inventory data.
-		When a mismatch is found, this function will modify the actual inventory to match the custom
-		inventory, by means of adding or removing items.
+		If a mismatch is detected in a container, this function will modify the actual inventory to match the
+		custom inventory, by means of adding or removing items.
+		If a mismatch is detected on the player's container data (e.g. weapons/assigned items), this function
+		will modify the custom inventory to match the actual inventory, by modifying existing or creating new
+		item data.
 	Arguments:
 		(none)
 	Returns:
@@ -21,7 +24,7 @@ addMissionEventHandler ["EachFrame", {
 	private _time = time;
 
 	// Check if we should synchronise the inventory this frame
-	if (_time > (missionNamespace getVariable ["cre8ive_synchroniser_nextUpdate", 0]) or {missionNamespace getVariable ["cre8ive_synchroniser_forceUpdate", false]}) then {
+	if (_time > (missionNamespace getVariable ["cre8ive_synchroniser_nextUpdate", 0])) then {
 		disableSerialization;
 
 		// Fetch the inventory
@@ -30,35 +33,37 @@ addMissionEventHandler ["EachFrame", {
 		// Fetch the player's container data
 		private _playerContainerData = player getVariable [MACRO_VARNAME_DATA, locationNull];
 
-		// Determine the unit's assigned items
-		private _map = "";
-		private _GPS = "";
-		private _radio = "";
-		private _compass = "";
-		private _watch = "";
-		{
-			private _simulation = [configfile >> "CfgWeapons" >> _x, "simulation", ""] call BIS_fnc_returnConfigEntry;
-			switch (_simulation) do {
-				case "ItemMap": {_map = _x};
-				case "ItemGPS": {_GPS = _x};
-				case "ItemRadio": {_radio = _x};
-				case "ItemCompass": {_compass = _x};
-				case "ItemWatch": {_watch = _x};
-			};
-		} forEach assignedItems player;
+		// Only continue if the player's container data exists
+		if (!isNull _playerContainerData) then {
 
-		// Iterate through the player's weapons and reserved items
-		private _updateWeaponsMenu = false;
-		private _weaponsItems = weaponsItems player;
-		{
-			_x params ["_slotPosEnum", "_classNew"];
+			// Determine the unit's assigned items
+			private _map = "";
+			private _GPS = "";
+			private _radio = "";
+			private _compass = "";
+			private _watch = "";
+			{
+				private _subCategory = [_x, MACRO_ENUM_CATEGORY_ITEM] call cre_fnc_cfg_getClassSubCategory;
+				switch (_subCategory) do {
+					case MACRO_ENUM_SUBCATEGORY_MAP:	{_map = _x};
+					case MACRO_ENUM_SUBCATEGORY_GPS:	{_GPS = _x};
+					case MACRO_ENUM_SUBCATEGORY_RADIO:	{_radio = _x};
+					case MACRO_ENUM_SUBCATEGORY_COMPASS:	{_compass = _x};
+					case MACRO_ENUM_SUBCATEGORY_WATCH:	{_watch = _x};
+				};
+			} forEach assignedItems player;
 
-			// Fetch the item from the player's container data
-			private _itemData = _playerContainerData getVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, -1], locationNull];
-			private _shouldRecreateData = false;
+			// Iterate through the player's weapons and reserved items
+			private _updateWeaponsMenu = false;
+			private _weaponsItems = weaponsItems player;
+			{
+				_x params ["_slotPosEnum", "_classNew"];
 
-			// If there is anything in this slot...
-			if (!isNull _itemData) then {
+				// Fetch the item from the player's container data
+				private _itemData = _playerContainerData getVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, -1], locationNull];
+				private _shouldRecreateData = false;
+
+				// If there is anything in this slot...
 				private _classOld = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
 
 				// If the item class no longer matches, something happened to the item
@@ -66,7 +71,7 @@ addMissionEventHandler ["EachFrame", {
 					_updateWeaponsMenu = true;
 					_shouldRecreateData = true;
 
-					systemChat format ["(cre_fnc_inv_synchroniser) ITEM MISMATCH: %1", _classOld];
+					systemChat format ["(cre_fnc_inv_synchroniser) ITEM MISMATCH: '%1' / '%2'", _classOld, _classNew];
 
 					// TODO: Figure out how to make this MP compatible
 					(_itemData getVariable [MACRO_VARNAME_SLOTPOS, [MACRO_ENUM_SLOTPOS_INVALID, MACRO_ENUM_SLOTPOS_INVALID]]) params ["_slotPosX", "_slotPosY"];
@@ -88,8 +93,8 @@ addMissionEventHandler ["EachFrame", {
 					// For weapons, do some extra checks (for attachments/magazines)
 					if (_forEachIndex <= 2) then {
 						private _updateWeapon = false;
-						private _weaponsItemsReal = [player, _forEachIndex, true] call cre_fnc_inv_generateWeaponAccArray;
-						_weaponsItemsReal deleteAt 0;	// Ignore the weapon class (we'll check it later)
+						private _weaponsItemsActual = [player, _forEachIndex, true] call cre_fnc_inv_generateWeaponAccArray;
+						_weaponsItemsActual deleteAt 0;	// Ignore the weapon class for now (we'll check it later)
 
 						private _weaponsItemsCalc = [
 							(_itemData getVariable [MACRO_VARNAME_ACC_MUZZLE, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""],
@@ -118,23 +123,23 @@ addMissionEventHandler ["EachFrame", {
 
 						// Iterate through the weapon's attachments
 						{
-							private _xReal = _weaponsItemsReal param [_forEachIndex, [[], ""] select _xIsString];
-							private _xRealClass = _xReal;
+							private _xActual = _weaponsItemsActual param [_forEachIndex, [[], ""] select _xIsString];
+							private _xActualClass = _xActual;
 							private _isMagazine = _forEachIndex in [3,4];
 							private _accIsDifferent = false;
 
 							if (_isMagazine) then {
-								_accIsDifferent = (_x param [0, ""]) != (_xReal param [0, ""]) or {(_x param [1, 0]) != (_xReal param [1, 0])};
+								_accIsDifferent = (_x param [0, ""]) != (_xActual param [0, ""]) or {(_x param [1, 0]) != (_xActual param [1, 0])};
 							} else {
-								_accIsDifferent = !(_x isEqualTo _xReal);
+								_accIsDifferent = !(_x isEqualTo _xActual);
 							};
 
-							// Check if the calculated attachment matches the real one
+							// Check if the calculated attachment matches the real (actual) one
 							if (_accIsDifferent) then {
 
 								// If the current item is a magazine, fetch its classname
 								if (_isMagazine) then {
-									_xRealClass = _xReal param [0, ""];
+									_xActualClass = _xActual param [0, ""];
 								};
 
 								// Update the weapon (later)
@@ -146,15 +151,15 @@ addMissionEventHandler ["EachFrame", {
 								deleteLocation _accItemData;
 
 								// If there is a new attachment, create a new item data for it
-								if (_xRealClass != "") then {
+								if (_xActualClass != "") then {
 									_accItemData = (call cre_fnc_inv_createNamespace) select 0;
 
 									// Save some basic info onto it
-									_accItemData setVariable [MACRO_VARNAME_CLASS, _xRealClass];
+									_accItemData setVariable [MACRO_VARNAME_CLASS, _xActualClass];
 
 									// Fetch the ammo
 									if (_isMagazine) then {
-										private _ammo = _xReal param [1, 0];
+										private _ammo = _xActual param [1, 0];
 
 										// Save the ammo onto the magazine's item data
 										_accItemData setVariable [MACRO_VARNAME_MAG_AMMO, _ammo];
@@ -180,44 +185,46 @@ addMissionEventHandler ["EachFrame", {
 						};
 					};
 				};
-			};
 
-			// If the slot is not empty, we need to make a new item data
-			if (_shouldRecreateData and {_classNew != ""}) then {
+				// If the slot is not empty, we need to make a new item data
+				if (_shouldRecreateData and {_classNew != ""}) then {
 
-				// Create the new item data
-				_itemData = (call cre_fnc_inv_createNamespace) select 0;
+					// Create the new item data
+					_itemData = (call cre_fnc_inv_createNamespace) select 0;
 
-				// Save some basic info onto it
-				_itemData setVariable [MACRO_VARNAME_CLASS, _classNew];
-				_itemData setVariable [MACRO_VARNAME_PARENT, player];
-				_itemData setVariable [MACRO_VARNAME_PARENTDATA, _playerContainerData];
+					// Save some basic info onto it
+					_itemData setVariable [MACRO_VARNAME_CLASS, _classNew];
+					_itemData setVariable [MACRO_VARNAME_PARENT, player];
+					_itemData setVariable [MACRO_VARNAME_PARENTDATA, _playerContainerData];
 
-				// Save the slot position
-				_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
-				_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _itemData];
-			};
-		} forEach [
-			[MACRO_ENUM_SLOTPOS_PRIMARYWEAPON,	primaryWeapon player],
-			[MACRO_ENUM_SLOTPOS_HANDGUNWEAPON,	handgunWeapon player],
-			[MACRO_ENUM_SLOTPOS_SECONDARYWEAPON,	secondaryWeapon player],
-			[MACRO_ENUM_SLOTPOS_NVGS,		hmd player],
-			[MACRO_ENUM_SLOTPOS_HEADGEAR,		headgear player],
-			[MACRO_ENUM_SLOTPOS_BINOCULARS,		binocular player],
-			[MACRO_ENUM_SLOTPOS_GOGGLES,		goggles player],
-			[MACRO_ENUM_SLOTPOS_MAP,		_map],
-			[MACRO_ENUM_SLOTPOS_GPS,		_GPS],
-			[MACRO_ENUM_SLOTPOS_RADIO,		_radio],
-			[MACRO_ENUM_SLOTPOS_COMPASS,		_compass],
-			[MACRO_ENUM_SLOTPOS_WATCH,		_watch]
-		];
+					// Save the slot position
+					_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+					_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _itemData];
+				};
+			} forEach [
+				[MACRO_ENUM_SLOTPOS_PRIMARYWEAPON,	primaryWeapon player],
+				[MACRO_ENUM_SLOTPOS_HANDGUNWEAPON,	handgunWeapon player],
+				[MACRO_ENUM_SLOTPOS_SECONDARYWEAPON,	secondaryWeapon player],
+				[MACRO_ENUM_SLOTPOS_NVGS,		hmd player],
+				[MACRO_ENUM_SLOTPOS_HEADGEAR,		headgear player],
+				[MACRO_ENUM_SLOTPOS_BINOCULARS,		binocular player],
+				[MACRO_ENUM_SLOTPOS_GOGGLES,		goggles player],
+				[MACRO_ENUM_SLOTPOS_MAP,		_map],
+				[MACRO_ENUM_SLOTPOS_GPS,		_GPS],
+				[MACRO_ENUM_SLOTPOS_RADIO,		_radio],
+				[MACRO_ENUM_SLOTPOS_COMPASS,		_compass],
+				[MACRO_ENUM_SLOTPOS_WATCH,		_watch]
+			];
 
-		// If we changed anything, update the weapons menu (if the UI is open)
-		if (_updateWeaponsMenu) then {
-			if (!isNull _inventory) then {
-				["ui_update_weapons"] call cre_fnc_ui_inventory;
+			// If we changed anything, update the weapons menu (if the UI is open)
+			if (_updateWeaponsMenu) then {
+				if (!isNull _inventory) then {
+					["ui_update_weapons"] call cre_fnc_ui_inventory;
+				};
 			};
 		};
+
+
 
 
 

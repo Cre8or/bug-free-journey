@@ -49,14 +49,14 @@ case "ui_dragging_stop": {
 			// Set the container's size to that of the item
 			_targetContainerData setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
 
-			// Nullify the target control, as we don't handle drawing ground items here
+			// Nullify the target control, as we don't handle drawing ground/dropped items here
 			_targetContainerCtrl = controlNull;
 
 		// Otherwise...
 		} else {
 
 			// Try to fit the item on the slot
-			_canFit = ([_itemData, _targetContainerData, _slotPos, _slotSize] call cre_fnc_inv_canFitItem) params ["_canFit"];
+			([_itemData, _targetContainerData, _slotPos, _slotSize] call cre_fnc_inv_canFitItem) params ["_canFit"];
 			//systemChat format ["(%1) - origin: %2 - target: %3 - pos: %4 - size: %5 - canFit: %6", time, ctrlIDC (_draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull]), ctrlIDC _targetContainerCtrl, _slotPos, _slotSize, _canFit];
 
 			// If the item can fit there, move it

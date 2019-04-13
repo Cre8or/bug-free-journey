@@ -1,4 +1,5 @@
 TODO:
+- Add an item list to the player for weapons/assigned items?
 - Add slotPos enums for weapon attachments/magazines?
 - Update weapon's magazine ammo counts when firing (using an EH)
 - Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
@@ -9,8 +10,8 @@ TODO:
 - Add the ability to interact with the world
  	* Detect ground holders and inventories in a certain radius around the player
 	* Update the list (and alongside it, the UI) of nearby inventories when moving
-- Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
 - Add a global scale multiplier (macro) for slot pictures?
+- Add a garbage collector to get rid of unused/removed locations that are building up over time (potential memory leak!)
 - Search for "TODO" and "DEBUG" comments and address them
 
 
@@ -18,6 +19,9 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Detect changes to the player's weapons/attached items and call ui_update_weapons
+- Fix moving assigned items (map, compass, GPS, watch, radio) not removing the original items
+- Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!
 - Fix generateContainerData ignoring the last Y-line's slots count when filling a container
 - Fix cre_fnc_inv_moveItem not reapplying the correct ammo count to weapon magazines (when moving to reserved weapon slots)
 - Add getInvMass ( -> containerData) and getRealMass ( -> container) functions
