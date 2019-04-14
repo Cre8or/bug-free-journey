@@ -10,7 +10,7 @@ case "ui_dragging": {
 	];
 
 	// Position the dragged controls
-	private _ctrlFrameTemp = _ctrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
+	private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
 	private _posCtrl = ctrlPosition _ctrlFrameTemp;
 	{
 		// Fetch the offset

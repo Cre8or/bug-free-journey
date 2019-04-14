@@ -93,6 +93,25 @@ case "ui_init": {
 					_inventory displayCtrl MACRO_IDC_BACKPACK_FRAME
 				];
 
+				// Add an event handler to the mission that handles the inventory's onEachFrame code
+				private _EH = addMissionEventHandler ["EachFrame", {
+
+					// Fetch the inventory display
+					private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
+
+					// Check if the temporary frame exists
+					private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
+					if (!isNull _ctrlFrameTemp) then {
+
+						// If it exists, but we're not dragging anything, call the abort event (which then removes it)
+						private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
+						if (isNull _draggedCtrl) then {
+							["ui_dragging_abort"] call cre_fnc_ui_inventory;
+						};
+					};
+				}];
+				missionNamespace setVariable [MACRO_VARNAME_UI_EH_EACHFRAME, _EH, false];
+
 				// Reset the focus
 				["ui_focus_reset"] call cre_fnc_ui_inventory;
 /*
@@ -103,9 +122,10 @@ case "ui_init": {
 
 					while {!isNull _inventory} do {
 
-						private _str = str (_inventory getVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull]) + "<br />";
-						_str = _str + "count: " + str count (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]) + "<br />";
-						_str = _str + "posNew: " + str (_inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []]);
+						private _str = str (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull]) + "<br />";
+						_str = _str + str (_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]) + "<br />";
+						//_str = _str + "count: " + str count (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]) + "<br />";
+						//_str = _str + "posNew: " + str (_inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []]);
 
 						hint parseText _str;
 

@@ -18,7 +18,7 @@ case "ui_dragging_rotate": {
 		private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
 
 		// Fetch the old temporary frame
-		private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
+		private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
 		private _posCtrl = ctrlPosition _ctrlFrameTemp;
 		_posCtrl params [["_posCtrlX", 0], ["_posCtrlY", 0]];
 
@@ -46,7 +46,7 @@ case "ui_dragging_rotate": {
 		_ctrlFrameTemp ctrlCommit 0;
 		_ctrlFrameTemp ctrlShow true;
 		_ctrlFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-		_draggedCtrl setVariable [MACRO_VARNAME_UI_FRAMETEMP, _ctrlFrameTemp];
+		_inventory setVariable [MACRO_VARNAME_UI_FRAMETEMP, _ctrlFrameTemp];
 
 		// Set the frame's pixel precision mode to off, disables rounding
 		_ctrlFrameTemp ctrlSetPixelPrecision 2;

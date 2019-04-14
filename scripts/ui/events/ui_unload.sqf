@@ -12,4 +12,10 @@ case "ui_unload": {
 	inGameUISetEventHandler ["NextAction", "false"];
 	inGameUISetEventHandler ["Action", "false"];
 
+	// Remove the eachFrame EH
+	private _EH = missionNamespace getVariable [MACRO_VARNAME_UI_EH_EACHFRAME, -1];
+	if (_EH >= 0) then {
+		removeMissionEventHandler ["EachFrame", _EH];
+	 	missionNamespace setVariable [MACRO_VARNAME_UI_EH_EACHFRAME, -1, false];
+	};
 };

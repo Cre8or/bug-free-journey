@@ -19,6 +19,9 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Modify ui_update_weapons and ui_update_storage events to recreate the slot controls rather than modifying them (allowing the eachFrame dragging fix to fire)
+- Modify the ui_dragging_abort event so that it always resets highlit controls and removes temporary controls
+- Move the MACRO_VARNAME_UI_FRAMETEMP macro onto the inventory, rather than the dragged control
 - Detect changes to the player's weapons/attached items and call ui_update_weapons
 - Fix moving assigned items (map, compass, GPS, watch, radio) not removing the original items
 - Fix ui_update_weapons and ui_update_storage recreating child controls on slots that haven't changed!

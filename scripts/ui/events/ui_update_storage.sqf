@@ -18,6 +18,10 @@ case "ui_update_storage": {
 	private _offsetY = 0;
 	private _shouldMoveCtrls = false;
 
+	// Fetch some inventory data
+	private _storageCtrlGrp = _inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP;
+	private _forbiddenCtrls = _inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []];
+
 	// Fetch the player's container data
 	private _playerContainerData = player getVariable [MACRO_VARNAME_DATA, locationNull];
 
@@ -71,7 +75,6 @@ case "ui_update_storage": {
 			_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _containerData];
 		};
 
-
 		// Fetch the container's dimensions
 		private _containerSize = _containerData getVariable [MACRO_VARNAME_CONTAINERSIZE, [0,0]];
 
@@ -91,13 +94,29 @@ case "ui_update_storage": {
 			_containerData setVariable [MACRO_VARNAME_PARENTDATA, _playerContainerData];
 			_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _containerData];
 
-			// Delete the container frame's child controls
+			// Fetch the old frame's data
+			private _pos = ctrlPosition _containerFrame;
+			private _IDC = ctrlIDC _containerFrame;
+			private _isForbiddenControl = (_forbiddenCtrls findIf {_x == _containerFrame});
+			private _allSlotFrames = _containerFrame getVariable [MACRO_VARNAME_UI_ALLSLOTFRAMES, []];
+
+			// Delete the old frame control and all of its child controls
 			{
 				ctrlDelete _x;
 			} forEach (_containerFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
+			ctrlDelete (_containerFrame getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
+			ctrlDelete _containerFrame;
+
+			// Create the new frame control
+			_containerFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", _IDC, _storageCtrlGrp];
+			_containerFrame ctrlSetPosition _pos;
+			_containerFrame ctrlCommit 0;
+			_containerFrame ctrlSetPixelPrecision 2;
+			if (_isForbiddenControl >= 0) then {
+				_forbiddenCtrls set [_isForbiddenControl, _containerFrame];
+			};
 
 			// Delete all controls of the previous container
-			private _allSlotFrames = _containerFrame getVariable ["allSlotFrames", []];
 			{
 				// Delete all child controls of the slot controls
 				{
@@ -177,7 +196,7 @@ case "ui_update_storage": {
 				};
 
 				// Save this container's new slot controls
-				_containerFrame setVariable ["allSlotFrames", _allSlotFrames];
+				_containerFrame setVariable [MACRO_VARNAME_UI_ALLSLOTFRAMES, _allSlotFrames];
 
 				// Iterate through the items
 				private _items = _containerData getVariable [MACRO_VARNAME_ITEMS, []];
@@ -235,14 +254,19 @@ case "ui_update_storage": {
 
 			// Otherwise, if the container is null...
 			} else {
-
-				// Change the frame's colour
-				if !(_containerFrame in (_inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []])) then {
-					_containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-				};
-
 				_containerFrame setVariable ["active", false];
 				_containerFrame setVariable [MACRO_VARNAME_CLASS, ""];
+			};
+
+			// Set the frame's control based on what we're dragging
+			if (_isForbiddenControl > 0) then {
+				_containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_DRAGGING_RED);
+			} else {
+				if (isNull _container) then {
+					_containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+				} else {
+					_containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+				};
 			};
 
 		// If the container hasn't changed, check if we need to reposition its controls
@@ -275,7 +299,7 @@ case "ui_update_storage": {
 						_x ctrlSetPosition _posXX;
 						_x ctrlCommit 0;
 					} forEach _slotFrameCtrls;
-				} forEach (_containerFrame getVariable ["allSlotFrames", []]);
+				} forEach (_containerFrame getVariable [MACRO_VARNAME_UI_ALLSLOTFRAMES, []]);
 			};
 		};
 
@@ -313,4 +337,6 @@ case "ui_update_storage": {
 
 	// Save the new list of storage containers
 	_inventory setvariable [MACRO_VARNAME_UI_STORAGE_CONTAINERS, _storageContainersNew];
+	_inventory setVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, _forbiddenCtrls];
+
 };

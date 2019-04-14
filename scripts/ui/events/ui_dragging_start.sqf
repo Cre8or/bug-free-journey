@@ -11,6 +11,13 @@ case "ui_dragging_start": {
 	// Only register left-clicks
 	if (_button == 0) then {
 
+		// Remove the MouseButtonUp event handler
+		private _EH = _inventory getVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONUP, -1];
+		if (_EH >= 0) then {
+			_inventory displayRemoveEventHandler ["MouseButtonUp", _EH];
+			_inventory setVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONUP, -1];
+		};
+
 		// Fetch the control
 		private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
 
@@ -72,7 +79,7 @@ case "ui_dragging_start": {
 				_ctrlFrameTemp ctrlCommit 0;
 				_ctrlFrameTemp ctrlShow true;
 				_ctrlFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-				_draggedCtrl setVariable [MACRO_VARNAME_UI_FRAMETEMP, _ctrlFrameTemp];
+				_inventory setVariable [MACRO_VARNAME_UI_FRAMETEMP, _ctrlFrameTemp];
 
 				// Set the frame's pixel precision mode to off, disables rounding
 				_ctrlFrameTemp ctrlSetPixelPrecision 2;
@@ -232,10 +239,6 @@ case "ui_dragging_start": {
 					_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, []];
 				};
 
-				// Remove the MouseButtonUp event handler
-				private _EH = _inventory getVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONUP, -1];
-				_inventory displayRemoveEventHandler ["MouseButtonUp", _EH];
-
 				// Move the temporary controls if the mouse is moving
 				_inventory displayAddEventHandler ["MouseMoving", {
 					params ["_inventory"];
@@ -254,7 +257,7 @@ case "ui_dragging_start": {
 				["ui_mouse_moving", [_draggedCtrl]] call cre_fnc_ui_inventory;
 
 				// Add an event handler to the inventory to detect mouse presses
-				private _EH = _inventory displayAddEventHandler ["MouseButtonDown", {
+				_EH = _inventory displayAddEventHandler ["MouseButtonDown", {
 					_this params ["", "_button"];
 
 					switch (_button) do {

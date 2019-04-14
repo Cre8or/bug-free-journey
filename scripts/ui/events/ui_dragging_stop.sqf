@@ -24,7 +24,7 @@ case "ui_dragging_stop": {
 		private _targetContainerCtrl = _cursorCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, _cursorCtrl];	// Fallback for reserved slots that don't have a container control
 
 		// If the control is rotated, flip the width and height
-		private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
+		private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
 		private _isRotated = _ctrlFrameTemp getVariable [MACRO_VARNAME_ISROTATED, false];
 		if (_isRotated) then {
 			private _widthTemp = _slotSize select 0;
@@ -47,7 +47,8 @@ case "ui_dragging_stop": {
 			_targetContainerData = [_targetContainer] call cre_fnc_inv_generateContainerData;
 
 			// Set the container's size to that of the item
-			_targetContainerData setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
+			_targetContainerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _slotSize];
+			_targetContainerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _slotSize param [0, 0]];
 
 			// Nullify the target control, as we don't handle drawing ground/dropped items here
 			_targetContainerCtrl = controlNull;
@@ -145,7 +146,7 @@ case "ui_dragging_stop": {
 			_inventory displayRemoveAllEventHandlers "MouseMoving";
 
 			// Finally, complete the dragging process once the button is released
-			private _EH = _inventory displayAddEventHandler ["MouseButtonUp", {
+			_EH = _inventory displayAddEventHandler ["MouseButtonUp", {
 				["ui_dragging_complete", _this] call cre_fnc_ui_inventory;
 			}];
 			_inventory setVariable [MACRO_VARNAME_UI_EH_MOUSEBUTTONUP, _EH];

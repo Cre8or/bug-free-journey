@@ -42,7 +42,7 @@ case "ui_mouse_moving": {
 		(_draggedCtrl getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]]) params ["_slotSizeW", "_slotSizeH"];
 
 		// Fetch the temporary frame, aswell as the target control's slot position
-		private _ctrlFrameTemp = _draggedCtrl getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
+		private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
 
 		// Fetch the item and container data
 		private _containerData = _ctrl getVariable [MACRO_VARNAME_PARENTDATA, locationNull];

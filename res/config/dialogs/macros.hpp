@@ -297,6 +297,7 @@
 	#define MACRO_VARNAME_UI_CTRLSLOTICON				"ctrlSlotIcon"
 	#define MACRO_VARNAME_UI_CTRLOUTLINE				"ctrlOutline"
 	#define MACRO_VARNAME_UI_CTRLPARENT				"ctrlParent"
+	#define MACRO_VARNAME_UI_ALLSLOTFRAMES				"allSlotFrames"
 
 	#define MACRO_VARNAME_UI_WEAPONS_ITEMDATAS			"weaponsItemData"
 	#define MACRO_VARNAME_UI_STORAGE_CONTAINERS			"storageContainers"
@@ -312,6 +313,7 @@
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONUP			"EH_mouseButtonUp"
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			"EH_mouseButtonDown"
 	#define MACRO_VARNAME_UI_EH_KEYDOWN				"EH_keyDown"
+	#define MACRO_VARNAME_UI_EH_EACHFRAME				"EH_eachFrame"
 	#define MACRO_VARNAME_UI_CTRL_HAS_EHS				"ctrlHasEHs"
 
 	// Items and containers

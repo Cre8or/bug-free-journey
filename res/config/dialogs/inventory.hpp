@@ -18,6 +18,62 @@ __EXEC(uiNamespace setVariable ["Cre8ive_Inventory_SafeZoneH", _safeZoneH])
 
 
 
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+// SCRIPTED CONTROLS
+class Cre8ive_Inventory_ScriptedBox : RscBox {
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
+};
+
+class Cre8ive_Inventory_ScriptedFrame : RscText {
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
+};
+
+class Cre8ive_Inventory_ScriptedPicture : RscPicture {
+	style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
+};
+
+class Cre8ive_Inventory_ScriptedPictureNoAR : RscPicture {
+	style = ST_PICTURE;
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
+};
+
+class Cre8ive_Inventory_ScriptedOutline : RscBox {
+	style = ST_WITH_RECT;
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
+};
+
+class Cre8ive_Inventory_ScriptedText : RscText {
+	style = ST_LEFT;
+	font = "PuristaLight";
+	sizeEx = _safeZoneW * 0.025;
+	x = 0;
+	y = 0;
+	w = 0;
+	h = 0;
+};
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+// INVENTORY UI
 class MACRO_GUI_NAME {
 	idd = -1;
 	name = STR(MACRO_GUI_NAME);
@@ -177,8 +233,9 @@ class MACRO_GUI_NAME {
 				// ------------------------------------------------------------------------------------------------------------------------------------------------
 				// TOP SLOTS
 					// NVGs
-					class NVGs_Frame : RscText {
+					class NVGs_Frame : Cre8ive_Inventory_ScriptedFrame {
 						idc = MACRO_IDC_NVGS_FRAME;
+						deletable = 1;
 						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
 						y = _safeZoneH * (0.1);
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
@@ -208,8 +265,9 @@ class MACRO_GUI_NAME {
 				// ------------------------------------------------------------------------------------------------------------------------------------------------
 				// WEAPONS
 					// Primary Weapon
-					class PrimaryWeapon_Frame : RscText {
+					class PrimaryWeapon_Frame : Cre8ive_Inventory_ScriptedFrame {
 						idc = MACRO_IDC_PRIMARYWEAPON_FRAME;
+						deletable = 1;
 						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
 						y = _safeZoneH * (0.1 + 0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 3);
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 6;
@@ -231,8 +289,9 @@ class MACRO_GUI_NAME {
 				// ------------------------------------------------------------------------------------------------------------------------------------------------
 				// BOTTOM SLOTS
 					// Map
-					class Map_Frame : RscText {
+					class Map_Frame : Cre8ive_Inventory_ScriptedFrame {
 						idc = MACRO_IDC_MAP_FRAME;
+						deletable = 1;
 						x = _safeZoneW * (0.15 - 0.002 - 0.003 * 2 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
 						y = _safeZoneH * 0.65;
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
@@ -320,8 +379,9 @@ class MACRO_GUI_NAME {
 				};
 
 				// Uniform
-				class Storage_Uniform_Frame : RscText {
+				class Storage_Uniform_Frame : Cre8ive_Inventory_ScriptedFrame {
 					idc = MACRO_IDC_UNIFORM_FRAME;
+					deletable = 1;
 					x = _safeZoneW * 0.002 * 2;
 					y = _safeZoneH * 0.005;
 					w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
@@ -405,58 +465,4 @@ class MACRO_GUI_NAME {
 			};
 		};
 	};
-};
-
-
-
-
-
-// ------------------------------------------------------------------------------------------------------------------------------------------------
-// SCRIPTED CONTROLS
-class Cre8ive_Inventory_ScriptedBox : RscBox {
-	x = 0;
-	y = 0;
-	w = 0;
-	h = 0;
-};
-
-class Cre8ive_Inventory_ScriptedFrame : RscText {
-	x = 0;
-	y = 0;
-	w = 0;
-	h = 0;
-};
-
-class Cre8ive_Inventory_ScriptedPicture : RscPicture {
-	style = ST_PICTURE + ST_KEEP_ASPECT_RATIO;
-	x = 0;
-	y = 0;
-	w = 0;
-	h = 0;
-};
-
-class Cre8ive_Inventory_ScriptedPictureNoAR : RscPicture {
-	style = ST_PICTURE;
-	x = 0;
-	y = 0;
-	w = 0;
-	h = 0;
-};
-
-class Cre8ive_Inventory_ScriptedOutline : RscBox {
-	style = ST_WITH_RECT;
-	x = 0;
-	y = 0;
-	w = 0;
-	h = 0;
-};
-
-class Cre8ive_Inventory_ScriptedText : RscText {
-	style = ST_LEFT;
-	font = "PuristaLight";
-	sizeEx = _safeZoneW * 0.025;
-	x = 0;
-	y = 0;
-	w = 0;
-	h = 0;
 };
