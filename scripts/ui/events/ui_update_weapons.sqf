@@ -8,9 +8,8 @@ case "ui_update_weapons": {
 	// Fetch the weapons data list (used to determine which control(s) need updating)
 	private _weaponsItemDatas = _inventory getVariable [MACRO_VARNAME_UI_WEAPONS_ITEMDATAS, []];
 
-	// Fetch some inventory data
+	// Fetch the weapons controls group
 	private _weaponsCtrlGrp = _inventory displayCtrl MACRO_IDC_WEAPONS_CTRLGRP;
-	private _forbiddenCtrls = _inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []];
 
 	// Determine the icon paths for the items and weapons that we have
 	{
@@ -25,27 +24,7 @@ case "ui_update_weapons": {
 			private _class = "";
 			private _category = MACRO_ENUM_CATEGORY_EMPTY;
 			private _slotSize = [1,1];
-
-			// Fetch the old frame's data
-			private _pos = ctrlPosition _ctrlFrame;
-			private _IDC = ctrlIDC _ctrlFrame;
-			private _isForbiddenControl = (_forbiddenCtrls findIf {_x == _ctrlFrame});
-
-			// Delete the old frame control and all of its child controls
-			{
-				ctrlDelete _x;
-			} forEach (_ctrlFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-			ctrlDelete (_ctrlFrame getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
-			ctrlDelete _ctrlFrame;
-
-			// Create the new frame control
-			_ctrlFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", _IDC, _weaponsCtrlGrp];
-			_ctrlFrame ctrlSetPosition _pos;
-			_ctrlFrame ctrlCommit 0;
-			_ctrlFrame ctrlSetPixelPrecision 2;
-			if (_isForbiddenControl >= 0) then {
-				_forbiddenCtrls set [_isForbiddenControl, _ctrlFrame];
-			};
+			private _isForbiddenControl = false;
 
 			// Only continue if we have this item
 			if (!isNull _itemData) then {
@@ -66,36 +45,38 @@ case "ui_update_weapons": {
 
 			// If the slot is empty, mark the slot as inactive
 			} else {
-				_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
-
 				_ctrlFrame setVariable ["active", false];
 				_ctrlFrame setVariable [MACRO_VARNAME_CLASS, ""];
 				_ctrlFrame setVariable [MACRO_VARNAME_DATA, locationNull];
 			};
 
-			// Set the frame's control based on what we're dragging
-			if (_isForbiddenControl > 0) then {
+			// Next, if the slot is currently being dragged, cancel the dragging
+			if (_ctrlFrame getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
+				["ui_dragging_abort"] call cre_fnc_ui_inventory;
+			} else {
+				private _forbiddenCtrls = _inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []];
+				_isForbiddenControl = _ctrlFrame in _forbiddenCtrls;
+			};
+
+			// Following that, set the frame's control based on what we're dragging
+			if (_isForbiddenControl) then {
+				systemChat format ["(%1) Forbidden control", _slotPosEnum];
 				_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_DRAGGING_RED);
 			} else {
 				if (isNull _itemData) then {
+					systemChat format ["(%1) No itemData", _slotPosEnum];
 					_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 				} else {
+					systemChat format ["(%1) itemData: %2", _slotPosEnum, _itemData getVariable [MACRO_VARNAME_UID, "???"]];
 					_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 				};
 			};
 
-			// TODO: Recreate the slot controls instead of repopulating them, so that the ui_dragging_abort event fires automatically
-/*
-			// If the slot is being dragged, cancel the dragging
-			if (_ctrlFrame getVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false]) then {
-				["ui_dragging_abort"] call cre_fnc_ui_inventory;
-			};
-
-			// Delete the old child controls
+			// Delete all of the frame's child controls
 			{
 				ctrlDelete _x;
 			} forEach (_ctrlFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-*/
+			ctrlDelete (_ctrlFrame getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
 
 			// Generate new child controls
 			[_ctrlFrame, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
@@ -107,12 +88,12 @@ case "ui_update_weapons": {
 			_ctrlFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
 			_ctrlFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
 			_ctrlFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];
-		};
 
-		// Save the slot's default icon path and slot position
-		_ctrlFrame setVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, _defaultIconPath];
-		_ctrlFrame setVariable [MACRO_VARNAME_SLOTPOS, _slotPos];
-		_ctrlFrame setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
+			// Save the slot's default icon path and slot position
+			_ctrlFrame setVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, _defaultIconPath];
+			_ctrlFrame setVariable [MACRO_VARNAME_SLOTPOS, _slotPos];
+			_ctrlFrame setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
+		};
 
 	} forEach [	// NOTE: the order below matters! (see cre_fnc_inv_synchroniser)
 		[MACRO_ENUM_SLOTPOS_PRIMARYWEAPON,	_inventory displayCtrl MACRO_IDC_PRIMARYWEAPON_FRAME, 		MACRO_PICTURE_PRIMARYWEAPON],
@@ -131,5 +112,4 @@ case "ui_update_weapons": {
 
 	// Update the weapons item datas list
 	_inventory setVariable [MACRO_VARNAME_UI_WEAPONS_ITEMDATAS, _weaponsItemDatas];
-	_inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, _forbiddenCtrls];
 };

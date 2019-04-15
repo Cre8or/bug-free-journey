@@ -19,6 +19,7 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Remodify ui_update_weapons and ui_update_storage events to call ui_dragging_abort if any current control is being dragged instead of recreating it ( -> less hacky)
 - Modify ui_update_weapons and ui_update_storage events to recreate the slot controls rather than modifying them (allowing the eachFrame dragging fix to fire)
 - Modify the ui_dragging_abort event so that it always resets highlit controls and removes temporary controls
 - Move the MACRO_VARNAME_UI_FRAMETEMP macro onto the inventory, rather than the dragged control

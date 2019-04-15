@@ -235,7 +235,6 @@ class MACRO_GUI_NAME {
 					// NVGs
 					class NVGs_Frame : Cre8ive_Inventory_ScriptedFrame {
 						idc = MACRO_IDC_NVGS_FRAME;
-						deletable = 1;
 						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
 						y = _safeZoneH * (0.1);
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
@@ -267,7 +266,6 @@ class MACRO_GUI_NAME {
 					// Primary Weapon
 					class PrimaryWeapon_Frame : Cre8ive_Inventory_ScriptedFrame {
 						idc = MACRO_IDC_PRIMARYWEAPON_FRAME;
-						deletable = 1;
 						x = _safeZoneW * (0.15 - 0.002 - MACRO_SCALE_SLOT_SIZE_W * 3);
 						y = _safeZoneH * (0.1 + 0.005 * 2 + MACRO_SCALE_SLOT_SIZE_H * 3);
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 6;
@@ -291,7 +289,6 @@ class MACRO_GUI_NAME {
 					// Map
 					class Map_Frame : Cre8ive_Inventory_ScriptedFrame {
 						idc = MACRO_IDC_MAP_FRAME;
-						deletable = 1;
 						x = _safeZoneW * (0.15 - 0.002 - 0.003 * 2 - MACRO_SCALE_SLOT_SIZE_W * 2.5);
 						y = _safeZoneH * 0.65;
 						w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
@@ -381,7 +378,6 @@ class MACRO_GUI_NAME {
 				// Uniform
 				class Storage_Uniform_Frame : Cre8ive_Inventory_ScriptedFrame {
 					idc = MACRO_IDC_UNIFORM_FRAME;
-					deletable = 1;
 					x = _safeZoneW * 0.002 * 2;
 					y = _safeZoneH * 0.005;
 					w = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W * 1.5;
