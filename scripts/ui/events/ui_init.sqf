@@ -96,7 +96,8 @@ case "ui_init": {
 				// Add an event handler to the mission that handles the inventory's onEachFrame code
 				private _EH = addMissionEventHandler ["EachFrame", {
 
-					// Fetch the inventory display
+					// Fetch the time and the inventory display
+					private _time = time;
 					private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
 
 					// Check if the temporary frame exists
@@ -108,6 +109,13 @@ case "ui_init": {
 						if (isNull _draggedCtrl) then {
 							["ui_dragging_abort"] call cre_fnc_ui_inventory;
 						};
+					};
+
+					// Check if we should update the ground menu
+					if (_time > (_inventory getVariable [MACRO_VARNAME_UI_NEXTUPDATE_GROUND, 0])) then {
+						_inventory setVariable [MACRO_VARNAME_UI_NEXTUPDATE_GROUND, _time + MACRO_GROUND_UPDATE_DELAY];
+
+						["ui_update_ground"] call cre_fnc_ui_inventory;
 					};
 				}];
 				missionNamespace setVariable [MACRO_VARNAME_UI_EH_EACHFRAME, _EH, false];

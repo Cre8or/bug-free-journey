@@ -38,7 +38,7 @@ case "ui_dragging_stop": {
 			_canMoveItem = true;
 
 			// Create the ground weapon holder for the dropped item
-			_targetContainer = "GroundWeaponHolder" createVehicle (getPosATL player);
+			_targetContainer = (MACRO_CLASSES_GROUNDHOLDERS select 0) createVehicle (getPosATL player);
 			_targetContainer setPosASL getPosASL player;
 			_targetContainer setDir random 360;
 			player reveal _targetContainer;

@@ -220,6 +220,97 @@ if (_container isKindOf "Man") then {
 		"Cre8ive_DummyWeight_10000"
 	];
 
+	// If no container class was provided, fetch it from the object (not reliable on uniforms/vests!)
+	if (_containerClass == "") then {
+		_containerClass = typeOf _container;
+	};
+
+	// Fetch all items inside the container
+	private _contents = [
+		magazinesAmmoCargo _container,
+		weaponsItemsCargo _container,
+		itemCargo _container,
+		everyContainer _container
+	];
+
+	// If the container is a ground holder...
+	if (_containerClass in MACRO_CLASSES_GROUNDHOLDERS) then {
+
+		// Check if it has more than one item in it
+		private _count = 0;
+		{
+			_count = _count + count _x;
+		} forEach _contents;
+
+		// If it does, we need to distribute the items into multiple other holders
+		if (_count > 1) exitWith {
+			private _containerPosASL = getPosASL _container;
+			systemChat format ["Found a ground holer with %1 items! Breaking it up...", _count];
+
+			{
+				private _formatType = _forEachIndex;
+				{
+					// Fetch the item class
+					private _itemClass = _x;
+					if (_formatType == 0 or _formatType == 3) then {
+						 _itemClass = _x select 0;
+					};
+
+					// Only contineu if the class isn't blacklisted
+					if !(_itemClass in _filteredClasses) then {
+						systemChat format ["Adding: '%1'", _itemClass];
+
+						// Create a new ground holder
+						private _containerX = _containerClass createVehicle _containerPosASL;
+						_containerX setPosASL _containerPosASL;
+						_containerX setDir random 360;
+						player reveal _containerX;
+
+						// Determine how to add the item based on its category
+						private _categoryX = [_itemClass] call cre_fnc_cfg_getClassCategory;
+						switch (_categoryX) do {
+							case MACRO_ENUM_CATEGORY_BINOCULARS;
+							case MACRO_ENUM_CATEGORY_WEAPON: {
+								_containerX addWeaponCargoGlobal [_itemClass, 1];
+							};
+							case MACRO_ENUM_CATEGORY_MAGAZINE: {
+								_containerX addMagazineCargoGlobal [_itemClass, 1];
+							};
+							case MACRO_ENUM_CATEGORY_ITEM;
+							case MACRO_ENUM_CATEGORY_NVGS;
+							case MACRO_ENUM_CATEGORY_HEADGEAR;
+							case MACRO_ENUM_CATEGORY_GOGGLES;
+							case MACRO_ENUM_CATEGORY_CONTAINER;
+							case MACRO_ENUM_CATEGORY_UNIFORM;
+							case MACRO_ENUM_CATEGORY_VEST: {
+								_containerX addItemCargoGlobal [_itemClass, 1];
+							};
+							case MACRO_ENUM_CATEGORY_BACKPACK: {
+								_containerX addBackpackCargoGlobal [_itemClass, 1];
+							};
+
+							// If no behaviour is specified, output an error
+							default {
+								private _str = format ["ERROR [cre_fnc_inv_generateContainerData]: Could not add item '%1' to a new ground holder!", _itemClass];
+								systemChat _str;
+								hint _str;
+							};
+						};
+
+						// Recursively call the generateContainerData function on the new ground holder
+						[_containerX, _containerClass] call cre_fnc_inv_generateContainerData;
+					};
+				} forEach _x;
+			} forEach _contents;
+
+			// Delete the original ground holder
+			deleteVehicle _container;
+
+			// Return an empty location
+			locationNull;
+		};
+	};
+
 	// Create some temporary namespaces
 	private _slotAreaNamespace = createLocation ["NameVillage", [0,0,0], 0, 0];
 	private _itemsListNamespace = createLocation ["NameVillage", [0,0,0], 0, 0];
@@ -280,13 +371,7 @@ if (_container isKindOf "Man") then {
 			};
 		} forEach _x;
 
-	} forEach [
-		magazinesAmmoCargo _container,
-		weaponsItemsCargo _container,
-		itemCargo _container,
-		everyContainer _container
-	];
-
+	} forEach _contents;
 
 
 
@@ -327,11 +412,6 @@ if (_container isKindOf "Man") then {
 
 	// Create a new namespace for the container
 	_containerData = (call cre_fnc_inv_createNamespace) select 0;
-
-	// If no container class was provided, fetch it from the object (not reliable on uniforms/vests!)
-	if (_containerClass == "") then {
-		_containerClass = typeOf _container;
-	};
 
 	// Iterate through the sorted list of items and fit them into the container
 	([_containerClass] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
@@ -476,6 +556,9 @@ if (_container isKindOf "Man") then {
 		};
 
 	} forEach _itemsSorted;
+
+	// Delete the temporary items list location
+	deleteLocation _itemsListNamespace;
 
 	// Save the list of items for quick access
 	_containerData setVariable [MACRO_VARNAME_ITEMS, _containerItems];

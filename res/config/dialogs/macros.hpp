@@ -298,6 +298,7 @@
 	#define MACRO_VARNAME_UI_CTRLOUTLINE				"ctrlOutline"
 	#define MACRO_VARNAME_UI_CTRLPARENT				"ctrlParent"
 	#define MACRO_VARNAME_UI_ALLSLOTFRAMES				"allSlotFrames"
+	#define MACRO_VARNAME_UI_NEXTUPDATE_GROUND			"nextUpdate_ground"
 
 	#define MACRO_VARNAME_UI_WEAPONS_ITEMDATAS			"weaponsItemData"
 	#define MACRO_VARNAME_UI_STORAGE_CONTAINERS			"storageContainers"
@@ -394,6 +395,13 @@
 
 	// Overall inventory storage capacity scaling
 	#define MACRO_STORAGE_CAPACITY_MULTIPLIER			0.5
+
+	// Ground menu settings
+	#define MACRO_GROUND_UPDATE_DELAY				0.1
+	#define MACRO_GROUND_MAX_DISTANCE				3
+
+	// Ground holder classnames
+	#define MACRO_CLASSES_GROUNDHOLDERS				["GroundWeaponHolder", "GroundWeaponHolder_Scripted"]
 
 	// Name of the UI
 	#define MACRO_GUI_NAME						Rsc_Cre8ive_Inventory

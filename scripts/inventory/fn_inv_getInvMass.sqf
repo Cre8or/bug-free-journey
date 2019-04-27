@@ -6,9 +6,9 @@
 		completely ignores its actual content.
 	Arguments:
 		0:      <LOCATION>	Item data of the container object
-		1:	<BOOL>		Whether or not exceptional items (magazines and weapon items) should
+		1:	<BOOL>		Whether or not exceptional items (magazines and weapon attachments) should
 					be considered (default: true)
-		2:	<BOOL>		Whether or not non-exceptional items should be considered
+		2:	<BOOL>		Whether or not non-exceptional items (anything else) should be considered
 					(default: true)
 	Returns:
 		0:      <NUMBER>	Total mass of all objects inside the container object

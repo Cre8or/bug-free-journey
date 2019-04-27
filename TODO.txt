@@ -1,4 +1,5 @@
 TODO:
+- Generating container data on ground holders with multiple items should split it into multiple holders with one item each (so that the containerSize fits it)
 - Add an item list to the player for weapons/assigned items?
 - Add slotPos enums for weapon attachments/magazines?
 - Update weapon's magazine ammo counts when firing (using an EH)

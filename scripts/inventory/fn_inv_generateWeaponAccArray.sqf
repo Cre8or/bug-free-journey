@@ -43,14 +43,21 @@ private _getLoadedMagazines = {
 			// If it is loaded in a muzzle that is a sub-class of the weapon, it's an alt magazine
 			if (isClass (configFile >> "CfgWeapons" >> _weapon >> _loadedMuzzle)) then {
 				_magazines set [1, [_magazine, _ammo]];
-				breakTo "loop";
+
+				if ((_magazines select 0) isEqualTo []) then {
+					breakTo "loop";
+				} else {
+					breakTo "magazines";
+				};
 			};
 
 			// Otherwise, it's a primary magazine
 			if (toLower _weapon == toLower _loadedMuzzle) then {
 				_magazines set [0, [_magazine, _ammo]];
 
-				if (count _magazines == 2) then {
+				if (_includeAltMag and {(_magazines select 1) isEqualTo []}) then {
+					breakTo "loop";
+				} else {
 					breakTo "magazines";
 				};
 			};

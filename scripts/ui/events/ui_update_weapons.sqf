@@ -60,14 +60,11 @@ case "ui_update_weapons": {
 
 			// Following that, set the frame's control based on what we're dragging
 			if (_isForbiddenControl) then {
-				systemChat format ["(%1) Forbidden control", _slotPosEnum];
 				_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_DRAGGING_RED);
 			} else {
 				if (isNull _itemData) then {
-					systemChat format ["(%1) No itemData", _slotPosEnum];
 					_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 				} else {
-					systemChat format ["(%1) itemData: %2", _slotPosEnum, _itemData getVariable [MACRO_VARNAME_UID, "???"]];
 					_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 				};
 			};

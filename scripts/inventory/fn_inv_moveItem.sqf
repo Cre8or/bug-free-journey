@@ -31,7 +31,8 @@ if (isNull _itemData or {isNull _targetContainer}) exitWith {false};
 
 // Set up some constants
 private _groundHolders = [
-	"GroundWeaponHolder"
+	"GroundWeaponHolder",
+	"GroundWeaponHolder_Scripted"
 ];
 
 // Set up some variables
@@ -64,7 +65,6 @@ if (!isNull _originContainer) then {
 				removeGoggles _originContainer;
 			};
 
-
 			case MACRO_ENUM_CATEGORY_UNIFORM: {
 				removeUniform _originContainer;
 			};
@@ -81,6 +81,14 @@ if (!isNull _originContainer) then {
 				_originContainer unassignItem _class;
 				_originContainer removeITem _class;
 			};
+
+			// If no behaviour is specified, output an error
+			default {
+				private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not remove item '%1' from unit!", _class];
+				systemChat _str;
+				hint _str;
+			};
+
 		};
 
 	// Otherwise, it's a container, so we use the regular (more complex) way
@@ -212,6 +220,13 @@ if (!isNull _originContainer) then {
 						_backpackContainer setVariable [MACRO_VARNAME_DATA, _x];
 					} forEach _backpacks;
 				};
+
+				// If no behaviour is specified, output an error
+				default {
+					private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not remove item '%1' from origin container!", _class];
+					systemChat _str;
+					hint _str;
+				};
 			};
 		};
 	};
@@ -239,6 +254,7 @@ if (!_doNothing) then {
 			};
 
 			case MACRO_ENUM_CATEGORY_WEAPON: {
+
 				_targetContainer addWeaponGlobal _class;
 
 				// Re-add the attachments
@@ -349,6 +365,13 @@ if (!_doNothing) then {
 					};
 				};
 			};
+
+			// If no behaviour is specified, output an error
+			default {
+				private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not readd item '%1' to unit!", _class];
+				systemChat _str;
+				hint _str;
+			};
 		};
 
 	// Otherwise, it's a container object
@@ -361,17 +384,49 @@ if (!_doNothing) then {
 				_targetContainer addWeaponCargoGlobal [_class, 1];
 			};
 
-			case MACRO_ENUM_CATEGORY_WEAPON;
+			case MACRO_ENUM_CATEGORY_WEAPON: {
+
+				// Fetch the magazines' item data
+				private _magData = _itemData getVariable [MACRO_VARNAME_MAG, locationNull];
+				private _magAltData = _itemData getVariable [MACRO_VARNAME_MAGALT, locationNull];
+
+				private _accMuzzle = (_itemData getVariable [MACRO_VARNAME_ACC_MUZZLE, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""];
+				private _accSide = (_itemData getVariable [MACRO_VARNAME_ACC_SIDE, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""];
+				private _accOptic = (_itemData getVariable [MACRO_VARNAME_ACC_OPTIC, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""];
+				private _accBipod = (_itemData getVariable [MACRO_VARNAME_ACC_BIPOD, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""];
+				private _mag = _magData getVariable [MACRO_VARNAME_CLASS, ""];
+				private _magAlt = _magAltData getVariable [MACRO_VARNAME_CLASS, ""];
+
+				// Workaround for a bug in v1.93.145618 (empty strings/invalid classnames prevent the command from executing)
+				if (_accMuzzle == "") then	{_accMuzzle = "optic_Aco"};
+				if (_accSide == "") then	{_accSide = "optic_Aco"};
+				if (_accOptic == "") then	{_accOptic = "acc_pointer_IR"};
+				if (_accBipod == "") then	{_accBipod = "optic_Aco"};
+				if (_mag == "") then		{_mag = "CA_Magazine"};
+				if (_magAlt == "") then		{_magAlt = "CA_Magazine"};
+
+				// Re-add the weapon with attachments (ty BI for the new command, very cool)
+				_targetContainer addWeaponWithAttachmentsCargoGlobal [
+					_class,
+					_accMuzzle,
+					_accSide,
+					_accOptic,
+					_accBipod,
+					[
+						_mag,
+						_magData getVariable [MACRO_VARNAME_MAG_AMMO, 0],
+						_magAlt,
+						_magAltData getVariable [MACRO_VARNAME_MAG_AMMO, 0]
+					]
+				];
+			};
+
 			case MACRO_ENUM_CATEGORY_MAGAZINE: {
 
 				// If the target container is a temporary ground holder, add the items manually
 				if (typeOf _targetContainer in _groundHolders) then {
 
-					if (_category == MACRO_ENUM_CATEGORY_WEAPON) then {
-						_targetContainer addWeaponCargoGlobal [_class, 1];
-					} else {
-						_targetContainer addMagazineCargoGlobal [_class, 1];
-					};
+					_targetContainer addMagazineCargoGlobal [_class, 1];
 
 				// Otherwise, use fake mass to handle the items
 				} else {
@@ -420,7 +475,12 @@ if (!_doNothing) then {
 				_container setVariable [MACRO_VARNAME_DATA, _itemData];
 			};
 
-			// TODO: Handle the vehicle category (e.g. small boxes, pouches, crates, jars, cases, etc.)
+			// If no behaviour is specified, output an error
+			default {
+				private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not readd item '%1' to target container!", _class];
+				systemChat _str;
+				hint _str;
+			};
 		};
 	};
 
