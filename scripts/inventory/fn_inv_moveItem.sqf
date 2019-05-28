@@ -37,6 +37,7 @@ private _groundHolders = [
 
 // Set up some variables
 private _doNothing = false;
+private _return = true;
 
 // Fetch the item's category
 private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
@@ -84,6 +85,7 @@ if (!isNull _originContainer) then {
 
 			// If no behaviour is specified, output an error
 			default {
+				_return = false;
 				private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not remove item '%1' from unit!", _class];
 				systemChat _str;
 				hint _str;
@@ -223,6 +225,7 @@ if (!isNull _originContainer) then {
 
 				// If no behaviour is specified, output an error
 				default {
+					_return = false;
 					private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not remove item '%1' from origin container!", _class];
 					systemChat _str;
 					hint _str;
@@ -236,8 +239,8 @@ if (!isNull _originContainer) then {
 
 
 
-// Only continue if we should do something
-if (!_doNothing) then {
+// Only continue if we should do something (and we didn't error yet)
+if (!_doNothing and {_return}) then {
 
 	// If the target container is a unit
 	if (_targetContainer isKindOf "Man") then {
@@ -254,7 +257,6 @@ if (!_doNothing) then {
 			};
 
 			case MACRO_ENUM_CATEGORY_WEAPON: {
-
 				_targetContainer addWeaponGlobal _class;
 
 				// Re-add the attachments
@@ -368,6 +370,7 @@ if (!_doNothing) then {
 
 			// If no behaviour is specified, output an error
 			default {
+				_return = false;
 				private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not readd item '%1' to unit!", _class];
 				systemChat _str;
 				hint _str;
@@ -425,8 +428,7 @@ if (!_doNothing) then {
 
 				// If the target container is a temporary ground holder, add the items manually
 				if (typeOf _targetContainer in _groundHolders) then {
-
-					_targetContainer addMagazineCargoGlobal [_class, 1];
+					_targetContainer addMagazineAmmoCargo [_class, 1, _itemData getVariable [MACRO_VARNAME_MAG_AMMO, 0]];
 
 				// Otherwise, use fake mass to handle the items
 				} else {
@@ -477,6 +479,7 @@ if (!_doNothing) then {
 
 			// If no behaviour is specified, output an error
 			default {
+				_return = false;
 				private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not readd item '%1' to target container!", _class];
 				systemChat _str;
 				hint _str;
@@ -492,5 +495,5 @@ if (!_doNothing) then {
 
 
 
-// Return true
-true;
+// Return whether we were able to move the item or not
+_return;

@@ -41,7 +41,7 @@ case "ui_init": {
 				};
 
 				// Start the post-process effect and save the handle for later use
-				_blurFX ppEffectAdjust [5];
+				_blurFX ppEffectAdjust [3];
 				_blurFX ppEffectCommit 0;
 				missionNamespace setVariable  ["Cre8ive_Inventory_blurFX", _blurFX, false];
 

@@ -31,6 +31,7 @@ cre_fnc_inv_getRealMass = compile preprocessFileLineNumbers "scripts\inventory\f
 cre_fnc_inv_getClassCountsByCategory = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_getClassCountsByCategory.sqf";
 cre_fnc_inv_getEveryContainer = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_getEveryContainer.sqf";
 cre_fnc_inv_getItemsByCategory = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_getItemsByCategory.sqf";
+//cre_fnc_inv_isContainer = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_isContainer.sqf";
 
 
 if (isNil "cre_inv_synchroniser") then {cre_inv_synchroniser = scriptNull}; terminate cre_inv_synchroniser;

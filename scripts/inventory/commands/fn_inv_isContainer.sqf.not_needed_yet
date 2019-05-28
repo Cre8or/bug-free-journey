@@ -1,0 +1,36 @@
+/* --------------------------------------------------------------------------------------------------------------------
+	Author:		Cre8or
+	Description:
+		Checks whether the provided itemData is a container or not.
+	Arguments:
+		0:	<LOCATION>	Item data of the item to be inspected
+	Returns:
+		0:	<BOOLEAN>	true if the itemData is a container, otherwise false
+-------------------------------------------------------------------------------------------------------------------- */
+
+#include "..\..\..\res\config\dialogs\macros.hpp"
+
+// Fetch the params
+params [
+	["_itemData", locationNull, [locationNull]]
+];
+
+// If the item data doesn't exist, exit and return false
+if (isNull _itemData) exitWith {false};
+
+
+
+
+
+// Define some variables
+private _res = false;
+private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
+private _category = [_class] call cre_fnc_cfg_getClassCategory;
+
+// Return the results
+_category in [
+	MACRO_ENUM_CATEGORY_UNIFORM,
+	MACRO_ENUM_CATEGORY_VEST,
+	MACRO_ENUM_CATEGORY_BACKPACK,
+	MACRO_ENUM_CATEGORY_CONTAINER
+];

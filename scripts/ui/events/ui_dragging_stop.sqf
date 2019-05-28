@@ -43,12 +43,17 @@ case "ui_dragging_stop": {
 			_targetContainer setDir random 360;
 			player reveal _targetContainer;
 
-			// Generate the container data
-			_targetContainerData = [_targetContainer] call cre_fnc_inv_generateContainerData;
+			// Generate the container data *manually*
+			//_targetContainerData = [_targetContainer] call cre_fnc_inv_generateContainerData;
+			_targetContainerData = (call cre_fnc_inv_createNamespace) select 0;
 
 			// Set the container's size to that of the item
 			_targetContainerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _slotSize];
 			_targetContainerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _slotSize param [0, 0]];
+
+			// Link the container and its data together
+			_targetContainerData setVariable [MACRO_VARNAME_CONTAINER, _targetContainer];
+			_targetContainer setVariable [MACRO_VARNAME_DATA, _targetContainerData, false];
 
 			// Nullify the target control, as we don't handle drawing ground/dropped items here
 			_targetContainerCtrl = controlNull;
@@ -80,7 +85,7 @@ case "ui_dragging_stop": {
 			_slotPosOld params ["_slotPosOldX", "_slotPosOldY"];
 
 			// First, clear the old slot position
-			_originContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosOld select 0, _slotPosOld select 1], locationNull];
+			_originContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosOldX, _slotPosOldY], locationNull];
 
 			// Next, clear the previously occupied slots on the old container
 			if (_slotPosOldX > 0) then {
@@ -92,6 +97,13 @@ case "ui_dragging_stop": {
 
 			// If the X position is negative, the item is going into a reserved slot
 			if (_slotPosX < 0) then {
+
+				// If the item is being dropped, set the slot position to [1,1] (required for containers to work)
+				if (_slotPosX == MACRO_ENUM_SLOTPOS_DROP) then {
+					_slotPos = [1,1];
+					_slotPosX = 1;
+					_slotPosY = 1;
+				};
 
 				// Reset the rotation
 				_isRotated = false;

@@ -18,4 +18,7 @@ case "ui_unload": {
 		removeMissionEventHandler ["EachFrame", _EH];
 	 	missionNamespace setVariable [MACRO_VARNAME_UI_EH_EACHFRAME, -1, false];
 	};
+
+	// Remove the ground namespace
+	deleteLocation (_inventory getVariable [MACRO_VARNAME_UI_GROUND_NAMESPACE, locationNull]);
 };

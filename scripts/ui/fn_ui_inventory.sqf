@@ -32,7 +32,7 @@ if (_event == "") exitWith {systemChat "No event specified!"};
 disableSerialization;
 private _eventExists = false;
 private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
-if (_event != "ui_init" and {isNull _inventory}) exitWith {systemChat "Inventory isn't open!"};
+if (isNull _inventory and {_event != "ui_init"}) exitWith {systemChat "Inventory isn't open!"};
 
 
 
