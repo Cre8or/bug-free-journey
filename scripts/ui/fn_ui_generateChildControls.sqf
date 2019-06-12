@@ -536,6 +536,17 @@ private _childControls = [];
 	};
 } forEach _requiredControls;
 
+// Determine the offset of the child controls in relation to the temporary frame
+(ctrlPosition _ctrl) params ["_posCtrlX", "_posCtrlY"];
+{
+	private _posX = ctrlPosition _x;
+	private _posOffset = [
+		(_posX select 0) - _posCtrlX,
+		(_posX select 1) - _posCtrlY
+	];
+	_x setVariable [MACRO_VARNAME_UI_OFFSET, _posOffset];
+} forEach _childControls;
+
 // Save the child controls onto the parent control
 _ctrl setVariable [MACRO_VARNAME_UI_CHILDCONTROLS, _childControls];
 

@@ -98,11 +98,7 @@ case "ui_update_storage": {
 			// Delete all controls of the previous container
 			{
 				// Delete all child controls of the slot controls
-				{
-					ctrlDelete _x;
-				} forEach (_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-				ctrlDelete (_x getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]);
-				ctrlDelete _x;
+				[_x] call cre_fnc_ui_deleteSlotCtrl;
 			} forEach _allSlotFrames;
 			_allSlotFrames = [];
 
@@ -256,11 +252,8 @@ case "ui_update_storage": {
 				};
 			};
 
-			// Delete all of the frame's child controls
-			{
-				ctrlDelete _x;
-			} forEach (_containerFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-			ctrlDelete (_containerFrame getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
+			// Delete all of the frame's child controls (but not the control itself)
+			[_containerFrame, false] call cre_fnc_ui_deleteSlotCtrl;
 
 		// If the container hasn't changed, check if we need to reposition its controls
 		} else {

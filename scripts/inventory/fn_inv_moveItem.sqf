@@ -29,12 +29,6 @@ if (isNull _itemData or {isNull _targetContainer}) exitWith {false};
 
 
 
-// Set up some constants
-private _groundHolders = [
-	"GroundWeaponHolder",
-	"GroundWeaponHolder_Scripted"
-];
-
 // Set up some variables
 private _doNothing = false;
 private _return = true;
@@ -102,133 +96,144 @@ if (!isNull _originContainer) then {
 
 		// Otherwise...
 		} else {
+			// Fetch the origin container's data
+			private _originContainerData = _originContainer getVariable [MACRO_VARNAME_DATA, locationNull];
 
-			// Determine what to do based on the class
-			switch (_category) do {
+			// If the origin container is a ground holder...
+			if (typeOf _originContainer in MACRO_CLASSES_GROUNDHOLDERS) then {
 
-				case MACRO_ENUM_CATEGORY_BINOCULARS: {
+				// Delete it (along with its data)
+				deleteLocation _originContainerData;
+				deleteVehicle _originContainer;
 
-					// Figure out how many weapons of this type are inside the container
-					private _index = 0;
-					private _count = 0;
-					private _classLower = toLower _class;
-					private _weapons = getWeaponCargo _originContainer;
-					private _allCounts = _weapons select 1;
-					scopeName "switch";
-					{
-						if (toLower _x == _classLower) then {
-							_count = _allCounts select _forEachIndex;
-							_index = _forEachIndex;
-							breakTo "switch";
-						};
-					} forEach (_weapons select 0);
+			// Otherwise...
+			} else {
 
-					// Remove all weapons from the cargo (if only there was a better command...)
-					clearWeaponCargoGlobal _originContainer;
+				// Determine what to do based on the class
+				switch (_category) do {
 
-					// Re-add the weapons
-					{
-						if (_forEachIndex != _index) then {
-							_originContainer addWeaponCargoGlobal [_x, _allCounts select _forEachIndex];
-						} else {
-							if (_count > 1) then {
-								_originContainer addWeaponCargoGlobal [_x, _count - 1];
+					case MACRO_ENUM_CATEGORY_BINOCULARS: {
+
+						// Figure out how many weapons of this type are inside the container
+						private _index = 0;
+						private _count = 0;
+						private _classLower = toLower _class;
+						private _weapons = getWeaponCargo _originContainer;
+						private _allCounts = _weapons select 1;
+						scopeName "switch";
+						{
+							if (toLower _x == _classLower) then {
+								_count = _allCounts select _forEachIndex;
+								_index = _forEachIndex;
+								breakTo "switch";
 							};
-						};
-					} forEach (_weapons select 0);;
-				};
+						} forEach (_weapons select 0);
 
-				case MACRO_ENUM_CATEGORY_WEAPON;
-				case MACRO_ENUM_CATEGORY_MAGAZINE: {
-					[_originContainer] call cre_fnc_inv_handleFakeMass;
-				};
+						// Remove all weapons from the cargo (if only there was a better command...)
+						clearWeaponCargoGlobal _originContainer;
 
-				case MACRO_ENUM_CATEGORY_ITEM;
-				case MACRO_ENUM_CATEGORY_NVGS;
-				case MACRO_ENUM_CATEGORY_HEADGEAR;
-				case MACRO_ENUM_CATEGORY_GOGGLES;
-				case MACRO_ENUM_CATEGORY_UNIFORM;
-				case MACRO_ENUM_CATEGORY_CONTAINER;
-				case MACRO_ENUM_CATEGORY_VEST: {
-
-					private _items = [];
-					private _itemCargo = getItemCargo _originContainer;
-					private _forbiddenCategories = [
-						MACRO_ENUM_CATEGORY_UNIFORM,
-						MACRO_ENUM_CATEGORY_VEST,
-						MACRO_ENUM_CATEGORY_CONTAINER
-					];
-
-					// Fetch the items that are not containers
-					{
-						private _category = [_x] call cre_fnc_cfg_getClassCategory;
-
-						if !(_category in _forbiddenCategories) then {
-							if (_x == _itemData getVariable [MACRO_VARNAME_CLASS, ""]) then {	// Substract 1 from the count of this class
-								_items pushBack [_x, ((_itemCargo select 1) select _forEachIndex) - 1];
+						// Re-add the weapons
+						{
+							if (_forEachIndex != _index) then {
+								_originContainer addWeaponCargoGlobal [_x, _allCounts select _forEachIndex];
 							} else {
-								_items pushBack [_x, (_itemCargo select 1) select _forEachIndex];
+								if (_count > 1) then {
+									_originContainer addWeaponCargoGlobal [_x, _count - 1];
+								};
 							};
-						};
-					} forEach (_itemCargo select 0);
+						} forEach (_weapons select 0);;
+					};
 
-					// Remove all items from the cargo (if only there was a better command...)
-					clearItemCargoGlobal _originContainer;
+					case MACRO_ENUM_CATEGORY_WEAPON;
+					case MACRO_ENUM_CATEGORY_MAGAZINE: {
+						[_originContainer] call cre_fnc_inv_handleFakeMass;
+					};
 
-					// Re-add the deleted items that are not containers
-					{
-						_originContainer addItemCargoGlobal _x;
-					} forEach _items;
+					case MACRO_ENUM_CATEGORY_ITEM;
+					case MACRO_ENUM_CATEGORY_NVGS;
+					case MACRO_ENUM_CATEGORY_HEADGEAR;
+					case MACRO_ENUM_CATEGORY_GOGGLES;
+					case MACRO_ENUM_CATEGORY_UNIFORM;
+					case MACRO_ENUM_CATEGORY_CONTAINER;
+					case MACRO_ENUM_CATEGORY_VEST: {
 
-					// Re-add the item containers
-					private _originContainerData = _originContainer getVariable [MACRO_VARNAME_DATA, locationNull];
-					private _containers = [_originContainerData, _forbiddenCategories] call cre_fnc_inv_getEveryContainer;
-					{
-						private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-						_originContainer addItemCargoGlobal [_class, 1];
-					} forEach _containers;
+						private _items = [];
+						private _itemCargo = getItemCargo _originContainer;
+						private _forbiddenCategories = [
+							MACRO_ENUM_CATEGORY_UNIFORM,
+							MACRO_ENUM_CATEGORY_VEST,
+							MACRO_ENUM_CATEGORY_CONTAINER
+						];
 
-					// Reassign the containers' item data to the new containers
-					private _everyContainer = everyContainer _originContainer;
-					{
-						_containerX = (_everyContainer select _forEachIndex) select 1;
+						// Fetch the items that are not containers
+						{
+							private _category = [_x] call cre_fnc_cfg_getClassCategory;
 
-						_x setVariable [MACRO_VARNAME_CONTAINER, _containerX];
-						_containerX setVariable [MACRO_VARNAME_DATA, _x];
-					} forEach _containers;
-				};
+							if !(_category in _forbiddenCategories) then {
+								if (_x == _itemData getVariable [MACRO_VARNAME_CLASS, ""]) then {	// Substract 1 from the count of this class
+									_items pushBack [_x, ((_itemCargo select 1) select _forEachIndex) - 1];
+								} else {
+									_items pushBack [_x, (_itemCargo select 1) select _forEachIndex];
+								};
+							};
+						} forEach (_itemCargo select 0);
 
-				case MACRO_ENUM_CATEGORY_BACKPACK: {
+						// Remove all items from the cargo (if only there was a better command...)
+						clearItemCargoGlobal _originContainer;
 
-					// Remove all backpacks from the cargo
-					clearBackpackCargoGlobal _originContainer;
+						// Re-add the deleted items that are not containers
+						{
+							_originContainer addItemCargoGlobal _x;
+						} forEach _items;
 
-					// Fetch a list of all the backpacks that should be there
-					private _originContainerData = _originContainer getVariable [MACRO_VARNAME_DATA, locationNull];
-					private _backpacks = [_originContainerData, [MACRO_ENUM_CATEGORY_BACKPACK]] call cre_fnc_inv_getEveryContainer;
+						// Re-add the item containers
+						private _containers = [_originContainerData, _forbiddenCategories] call cre_fnc_inv_getEveryContainer;
+						{
+							private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
+							_originContainer addItemCargoGlobal [_class, 1];
+						} forEach _containers;
 
-					// Re-add the backpacks
-					{
-						private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-						_originContainer addBackpackCargoGlobal [_class, 1];
-					} forEach _backpacks;
+						// Reassign the containers' item data to the new containers
+						private _everyContainer = everyContainer _originContainer;
+						{
+							_containerX = (_everyContainer select _forEachIndex) select 1;
 
-					// Reassign the containers' item data to the new containers
-					private _allBackpackContainers = everyBackpack _originContainer;
-					{
-						private _backpackContainer = _allBackpackContainers param [_forEachIndex, objNull];
+							_x setVariable [MACRO_VARNAME_CONTAINER, _containerX];
+							_containerX setVariable [MACRO_VARNAME_DATA, _x];
+						} forEach _containers;
+					};
 
-						_x setVariable [MACRO_VARNAME_CONTAINER, _backpackContainer];
-						_backpackContainer setVariable [MACRO_VARNAME_DATA, _x];
-					} forEach _backpacks;
-				};
+					case MACRO_ENUM_CATEGORY_BACKPACK: {
 
-				// If no behaviour is specified, output an error
-				default {
-					_return = false;
-					private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not remove item '%1' from origin container!", _class];
-					systemChat _str;
-					hint _str;
+						// Remove all backpacks from the cargo
+						clearBackpackCargoGlobal _originContainer;
+
+						// Fetch a list of all the backpacks that should be there
+						private _backpacks = [_originContainerData, [MACRO_ENUM_CATEGORY_BACKPACK]] call cre_fnc_inv_getEveryContainer;
+
+						// Re-add the backpacks
+						{
+							private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
+							_originContainer addBackpackCargoGlobal [_class, 1];
+						} forEach _backpacks;
+
+						// Reassign the containers' item data to the new containers
+						private _allBackpackContainers = everyBackpack _originContainer;
+						{
+							private _backpackContainer = _allBackpackContainers param [_forEachIndex, objNull];
+
+							_x setVariable [MACRO_VARNAME_CONTAINER, _backpackContainer];
+							_backpackContainer setVariable [MACRO_VARNAME_DATA, _x];
+						} forEach _backpacks;
+					};
+
+					// If no behaviour is specified, output an error
+					default {
+						_return = false;
+						private _str = format ["ERROR [cre_fnc_inv_moveItem]: Could not remove item '%1' from origin container!", _class];
+						systemChat _str;
+						hint _str;
+					};
 				};
 			};
 		};
@@ -427,7 +432,7 @@ if (!_doNothing and {_return}) then {
 			case MACRO_ENUM_CATEGORY_MAGAZINE: {
 
 				// If the target container is a temporary ground holder, add the items manually
-				if (typeOf _targetContainer in _groundHolders) then {
+				if (typeOf _targetContainer in MACRO_CLASSES_GROUNDHOLDERS) then {
 					_targetContainer addMagazineAmmoCargo [_class, 1, _itemData getVariable [MACRO_VARNAME_MAG_AMMO, 0]];
 
 				// Otherwise, use fake mass to handle the items

@@ -19,6 +19,7 @@ if (is3DEN) then {createDialog "Rsc_Cre8ive_Inventory"} else {["ui_init"] call c
 //cre_fnc_cfg_getContainerSize = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getContainerSize.sqf";
 
 cre_fnc_ui_inventory = compile preprocessFileLineNumbers "scripts\ui\fn_ui_inventory.sqf";
+cre_fnc_ui_deleteSlotCtrl = compile preprocessFileLineNumbers "scripts\ui\fn_ui_deleteSlotCtrl.sqf";
 cre_fnc_ui_generateChildControls = compile preprocessFileLineNumbers "scripts\ui\fn_ui_generateChildControls.sqf";
 
 cre_fnc_inv_generateContainerData = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateContainerData.sqf";
@@ -33,6 +34,10 @@ cre_fnc_inv_getEveryContainer = compile preprocessFileLineNumbers "scripts\inven
 cre_fnc_inv_getItemsByCategory = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_getItemsByCategory.sqf";
 //cre_fnc_inv_isContainer = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_isContainer.sqf";
 
+cre_fnc_util_quickSort = compile preprocessFileLineNumbers "scripts\util\quickSort\fn_util_quickSort.sqf";
+cre_fnc_util_quickSort_internal = compile preprocessFileLineNumbers "scripts\util\quickSort\fn_util_quickSort_internal.sqf";
+cre_fnc_util_quickSort_partition = compile preprocessFileLineNumbers "scripts\util\quickSort\fn_util_quickSort_partition.sqf";
+cre_fnc_util_quickSort_swap = compile preprocessFileLineNumbers "scripts\util\quickSort\fn_util_quickSort_swap.sqf";
 
 if (isNil "cre_inv_synchroniser") then {cre_inv_synchroniser = scriptNull}; terminate cre_inv_synchroniser;
 cre_inv_synchroniser = [] spawn compile preprocessFileLineNumbers "scripts\inventory\fn_inv_synchroniser.sqf";

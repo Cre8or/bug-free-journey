@@ -298,11 +298,12 @@
 	#define MACRO_VARNAME_UI_CTRLSLOTICON				"ctrlSlotIcon"
 	#define MACRO_VARNAME_UI_CTRLOUTLINE				"ctrlOutline"
 	#define MACRO_VARNAME_UI_CTRLPARENT				"ctrlParent"
+	#define MACRO_VARNAME_UI_OFFSET					"offset"
 	#define MACRO_VARNAME_UI_ALLSLOTFRAMES				"allSlotFrames"
 	#define MACRO_VARNAME_UI_NEXTUPDATE_GROUND			"nextUpdate_ground"
+	#define MACRO_VARNAME_UI_FORCEREDRAW_GROUND			"forceRedraw_ground"
 
 	#define MACRO_VARNAME_UI_GROUND_CTRLS				"groundHolderCtrls"
-//	#define MACRO_VARNAME_UI_GROUND_CONTAINERS			"groundContainers"
 	#define MACRO_VARNAME_UI_GROUND_NAMESPACE			"groundNamespace"
 	#define MACRO_VARNAME_UI_WEAPONS_ITEMDATAS			"weaponsItemData"
 	#define MACRO_VARNAME_UI_STORAGE_CONTAINERS			"storageContainers"

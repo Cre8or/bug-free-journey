@@ -24,27 +24,47 @@ case "ui_update_ground": {
 	private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
 	private _slotSizeW = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
 	private _slotSizeH = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
-	private _posX = 0;
-	private _posY = 0;
+	private _startDrawX = _safeZoneW * 0.002 * 2;
+	private _startDrawY = _safeZoneH * 0.005;
 	private _distMaxSqr = MACRO_GROUND_MAX_DISTANCE ^ 2;
-
-
+	private _doUpdate = false;
 
 
 
 
 
 	// Fetch the list of ground containers and container controls
+	// (Using this namespace, we make sure not to accidentally detect ground items more than once, and subsequently create multiple controls per item)
 	private _namespace = _inventory getVariable [MACRO_VARNAME_UI_GROUND_NAMESPACE, locationNull];
 
 	if (isNull _namespace) then {
 		_namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
 	};
 
+	// Fetch the groundHolder controls
+	private _groundHolderCtrls = _namespace getVariable [MACRO_VARNAME_UI_GROUND_CTRLS, []];
 
+	// If a request was made to force updating the ground UI, clear all existing controls (useful for custom item functions that need to update the child controls)
+	if (_inventory getVariable [MACRO_VARNAME_UI_FORCEREDRAW_GROUND, false]) then {
+		_inventory setVariable [MACRO_VARNAME_UI_FORCEREDRAW_GROUND, false];
+		systemChat "Forced a ground UI redraw";
+
+		{
+			// Blank out the UID on the namespace
+			private _container = _x getVariable [MACRO_VARNAME_CONTAINER, objNull];
+			private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
+			private _UID = _containerData getVariable [MACRO_VARNAME_UID, ""];
+			_namespace setVariable [_UID, controlNull];
+
+			// Delete all controls
+			[_x] call cre_fnc_ui_deleteSlotCtrl;
+		} forEach _groundHolderCtrls;
+
+		// Clear the array
+		_groundHolderCtrls = [];
+	};
 
 	// Filter out old ground holders that are too far
-	private _groundHolderCtrls = _namespace getVariable [MACRO_VARNAME_UI_GROUND_CTRLS, []];
 	for "_i" from (count _groundHolderCtrls) - 1 to 0 step -1 do {
 		private _slotFrame = _groundHolderCtrls param [_i, controlNull];
 		private _container = _slotFrame getVariable [MACRO_VARNAME_CONTAINER, objNull];
@@ -53,7 +73,7 @@ case "ui_update_ground": {
 		if (player distanceSqr _container > _distMaxSqr) then {
 			_groundHolderCtrls deleteAt _i;
 
-			if (!isNUll _container) then {
+			if (!isNull _container) then {
 				private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
 				private _UID = _containerData getVariable [MACRO_VARNAME_UID, ""];
 
@@ -65,11 +85,9 @@ case "ui_update_ground": {
 			};
 
 			// Also delete the associated slot frame and its child controls
-			{
-				ctrlDelete _x;
-			} forEach (_slotFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-			ctrlDelete (_slotFrame getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
-			ctrlDelete _slotFrame;
+			[_slotFrame] call cre_fnc_ui_deleteSlotCtrl;
+
+			_doUpdate = true;
 		};
 	};
 
@@ -94,6 +112,7 @@ case "ui_update_ground": {
 					// Fetch the item data of the first item inside of it
 					private _itemData = _containerData getVariable [format [MACRO_VARNAME_SLOT_X_Y, 1, 1], locationNull];
 
+					// If the item data is not null, we passed all tests, so we create the new control
 					if (!isNull _itemData) then {
 						private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
 						private _category = [_class] call cre_fnc_cfg_getClassCategory;
@@ -106,17 +125,14 @@ case "ui_update_ground": {
 						// Set the frame's pixel precision mode to off, disables rounding
 						_slotFrame ctrlSetPixelPrecision 2;
 
-						// Move the slot controls
+						// Resize the slot controls
 						_slotFrame ctrlSetPosition  [
-							_posX * _slotSizeW,
-							_posY * _slotSizeH,
+							0,
+							0,
 							_slotSizeW * (_slotSize select 0),
 							_slotSizeH * (_slotSize select 1)
 						];
 						_slotFrame ctrlCommit 0;
-
-						// Increase the position (TODO: Apply a sorting system for ground items)
-						_posY = _posY + (_slotSize select 1);
 
 						// Add some event handlers to the slot controls
 						_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
@@ -127,26 +143,156 @@ case "ui_update_ground": {
 						_slotFrame setVariable ["active", true];
 						_slotFrame setVariable [MACRO_VARNAME_CLASS, _class];
 						_slotFrame setVariable [MACRO_VARNAME_DATA, _itemData];
-						_slotFrame setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
+						_slotFrame setVariable [MACRO_VARNAME_SLOTPOS, [0,0]];
 						_slotFrame setVariable [MACRO_VARNAME_CONTAINER, _container];
 						_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
 
 						// Generate the child controls
+						// TODO: Generate them once they are in their final position?
 						[_slotFrame, _class, _category] call cre_fnc_ui_generateChildControls;
 
 						// Save the slot control onto the namespace
 						_namespace setVariable [_UID, _slotFrame];
 						_groundHolderCtrls pushBack _slotFrame;
 						systemChat format ["Added %1", _UID];
+
+						_doUpdate = true;
 					};
 				};
 			};
 		} forEach (player nearObjects [_x, MACRO_GROUND_MAX_DISTANCE + 5]);
 	} forEach MACRO_CLASSES_GROUNDHOLDERS;
-	_namespace setVariable [MACRO_VARNAME_UI_GROUND_CTRLS, _groundHolderCtrls];
+
+	// If anything changed in this execution, update the UI
+	if (_doUpdate) then {
+
+		// Determine the size of every item
+		private _sizeArray = [];
+		{
+			private _slotSize = _x getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
+			_sizeArray pushBack ((_slotSize select 0) * (_slotSize select 1));
+		} forEach _groundHolderCtrls;
+
+		// Sort the items by order of increasing slot size (and then reverse it
+		[_sizeArray, _groundHolderCtrls] call cre_fnc_util_quickSort;
+		reverse _groundHolderCtrls;
+
+		// Create a temporary namespace to keep track of the slot positions
+		private _namespaceSlots = createLocation ["NameVillage", [0,0,0], 0, 0];
+
+		// Next, we iterate through our controls and see where we can fit them
+		private _lastFreeY = 0;
+		{
+			scopeName "loopItems";
+
+			private _slotSize = _x getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
+			_slotSize params ["_itemWidth", "_itemHeight"];
+
+			// Iterate through all slot positions till we find one that can fit the item
+			for "_posY" from _lastFreeY to 999 do {
+				private _yHasFreeSlot = false;
+
+				for "_posX" from 1 to MACRO_SCALE_SLOT_COUNT_PER_LINE do {
+					scopeName "loopSlots";
+
+					private _slotStr = format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY];
+
+					// If this slot is empty, check if the item can fit in it
+					if (_namespaceSlots getVariable [_slotStr, true]) then {
+						_yhasFreeSlot = true;
+
+						// First of all, test if the item even fits in this position
+						private _posEndX = _posX + _itemWidth - 1;
+						private _posEndY = _posY + _itemHeight - 1;
+						if (_posEndX <= MACRO_SCALE_SLOT_COUNT_PER_LINE) then {
+
+							// The dimensions fit, now we check if the required slots are all free
+							private _requiredSlotsStrArray = [];
+							for "_posItemY" from _posY to _posEndY do {
+								for "_posItemX" from _posX to _posEndX do {
+									private _requiredSlotStr = format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
+
+									// If the slot is empty, add it to the list
+									if (_namespaceSlots getVariable [_requiredSlotStr, true]) then {
+										_requiredSlotsStrArray pushBack _requiredSlotStr;
+
+									// Otherwise, abort and look for a new slot
+									} else {
+										breakTo "loopSlots";
+									};
+								};
+							};
+
+							systemChat format ["%1 in X: %2..%3", (_x getVariable [MACRO_VARNAME_DATA, locationNull]) getVariable [MACRO_VARNAME_UID, "???"], _posX, _posEndX];
+
+							// If we didn't exit yet, that means the item can fit!
+							// Mark the required slots as taken ("available?"" -> false)
+							{
+								_namespaceSlots setVariable [_x, false];
+							} forEach _requiredSlotsStrArray;
+
+							// Determine the new UI position for this control
+							private _posCtrlX = _startDrawX + (_posX - 1) * _slotSizeW;
+							private _posCtrlY = _startDrawY + _posY * _slotSizeH;
+
+							// Move the control to this position
+							_x ctrlSetPosition [_posCtrlX, _posCtrlY];
+							_x ctrlCommit 0;
+
+							// Move the child controls along
+							{
+								// Fetch the offset
+								private _posOffset = _x getVariable [MACRO_VARNAME_UI_OFFSET, [0,0]];
+
+								// Apply the offset
+								private _pos = ctrlPosition _x;
+								_pos set [0, _posCtrlX + (_posOffset select 0)];
+								_pos set [1, _posCtrlY + (_posOffset select 1)];
+
+								_x ctrlSetPosition _pos;
+								_x ctrlCommit 0;
+							} forEach (_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
+
+							// Move on to the next item
+							breakTo "loopItems";
+						};
+					};
+				};
+			};
+		} forEach _groundHolderCtrls;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// Delete the temporary slots namespace
+		deleteLocation _namespaceSlots;
+
+		// Save the new ground controls list onto the namespace
+		_namespace setVariable [MACRO_VARNAME_UI_GROUND_CTRLS, _groundHolderCtrls];
+	};
 
 	// Save the namespace onto the inventory
 	_inventory setVariable [MACRO_VARNAME_UI_GROUND_NAMESPACE, _namespace];

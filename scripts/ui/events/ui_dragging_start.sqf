@@ -92,16 +92,6 @@ case "ui_dragging_start": {
 				// Generate additional temporary child controls
 				private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 
-				// Determine the offset of the child controls in relation to the temporary frame
-				{
-					private _posX = ctrlPosition _x;
-					private _posOffset = [
-						(_posX select 0) - _posCtrlX,
-						(_posX select 1) - _posCtrlY
-					];
-					_x setVariable ["offset", _posOffset];
-				} forEach _tempChildControls;
-
 				// Mark the control as being dragged
 				_draggedCtrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, true];
 

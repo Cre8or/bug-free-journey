@@ -24,7 +24,7 @@ private _UID = call cre_fnc_inv_generateUID;
 // Save the UID onto the namespace
 _data setVariable [MACRO_VARNAME_UID, _UID];
 
-// DEBUG
+// DEBUG - Store all existing locations in a global array
 if (isNil "allLocations") then {
 	allLocations = [];
 };

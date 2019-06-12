@@ -26,10 +26,7 @@ case "ui_dragging_rotate": {
 		private _isRotated = !(_ctrlFrameTemp getVariable [MACRO_VARNAME_ISROTATED, false]);
 
 		// Delete the old temporary frame (and it's child controls)
-		{
-			ctrlDelete _x;
-		} forEach (_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-		ctrlDelete _ctrlFrameTemp;
+		[_ctrlFrameTemp] call cre_fnc_ui_deleteSlotCtrl;
 
 		// Update the size
 		if (_isRotated) then {	// Rotated
@@ -60,16 +57,6 @@ case "ui_dragging_rotate": {
 
 		// Generate additional temporary child controls
 		private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
-
-		// Determine the offset of the child controls in relation to the temporary frame
-		{
-			private _posX = ctrlPosition _x;
-			private _posOffset = [
-				(_posX select 0) - _posCtrlX,
-				(_posX select 1) - _posCtrlY
-			];
-			_x setVariable ["offset", _posOffset];
-		} forEach _tempChildControls;
 
 		// Move the temporary controls in place initially
 		getMousePosition params ["_posX", "_posY"];

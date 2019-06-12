@@ -2,7 +2,7 @@
 	Author:		Cre8or
 	Description:
 		Generates the data for a given inventory container, including slot position of items.
-		ALso works on units. In this case, it will generate item data for the weapon's units and assigned items,
+		Also works on units. In this case, it will generate item data for the weapon's units and assigned items,
 		and recursively run the function on the unit's vest, uniform and backpack containers (true by default,
 		see argument #1).
 		NOTE: Due to how the algorithm works, some items may get lost in the process (due to item sizes)!
@@ -527,8 +527,8 @@ if (_container isKindOf "Man") then {
 				// Iterate through the container to see where we can fit the item
 				for "_posY" from _lastFreeY to _sizeH do {
 					private _yHasFreeSlot = false;
+					private _newW = [_sizeW, _containerSlotsOnLastY] select (_posY == _sizeH);
 
-					_newW = [_sizeW, _containerSlotsOnLastY] select (_posY == _sizeH);
 					for "_posX" from 1 to _newW do {
 						scopeName "loopSlots";
 

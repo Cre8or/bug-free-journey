@@ -14,7 +14,7 @@ case "ui_dragging": {
 	private _posCtrl = ctrlPosition _ctrlFrameTemp;
 	{
 		// Fetch the offset
-		private _posOffset = _x getVariable ["offset", [0,0]];
+		private _posOffset = _x getVariable [MACRO_VARNAME_UI_OFFSET, [0,0]];
 
 		// Apply the offset
 		private _pos = ctrlPosition _x;

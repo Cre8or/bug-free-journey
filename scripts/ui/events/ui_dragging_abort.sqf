@@ -13,11 +13,7 @@ case "ui_dragging_abort": {
 	["ui_focus_reset", [_draggedCtrl]] call cre_fnc_ui_inventory;
 
 	// Delete the control and its child controls
-	private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
-	{
-		ctrlDelete _x;
-	} forEach (_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-	ctrlDelete _ctrlFrameTemp;
+	[_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]] call cre_fnc_ui_deleteSlotCtrl;
 
 	// Fetch the dragged control and the drop control
 	private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];

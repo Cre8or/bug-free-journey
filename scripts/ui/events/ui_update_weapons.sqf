@@ -69,11 +69,8 @@ case "ui_update_weapons": {
 				};
 			};
 
-			// Delete all of the frame's child controls
-			{
-				ctrlDelete _x;
-			} forEach (_ctrlFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-			ctrlDelete (_ctrlFrame getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
+			// Delete all of the frame's child controls (but not the control itself)
+			[_ctrlFrame, false] call cre_fnc_ui_deleteSlotCtrl;
 
 			// Generate new child controls
 			[_ctrlFrame, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;

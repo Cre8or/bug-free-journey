@@ -35,9 +35,9 @@ class CfgFunctions {
 			file = "scripts\ui";
 			// Abbreviation:	ui
 
-			//class ui_inventory {};
-
+			//class ui_deleteSlotCtrl {};
 			//class ui_generateChildControls {};
+			//class ui_inventory {};
 		};
 
 		class inventory {
@@ -93,6 +93,17 @@ class CfgFunctions {
 			class cfg_getMagazineMaxAmmo {};
 			class cfg_getWeaponMagazines {};
 			class cfg_getWeaponMuzzles {};
+		};
+
+		class util_quickSort {
+			file = "scripts\util\quickSort";
+			// Abbreviation:	util
+
+			//class util_quickSort {};
+			//class util_quickSort_internal {};
+			//class util_quickSort_partition {};
+			//class util_quickSort_swap {};
+
 		};
 	};
 };

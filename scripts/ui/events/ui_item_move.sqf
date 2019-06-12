@@ -29,11 +29,7 @@ case "ui_item_move": {
 		ctrlDelete (_ctrl getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
 
 		// Remove the temporary dragging controls
-		private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
-		{
-			ctrlDelete _x;
-		} forEach (_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
-		ctrlDelete _ctrlFrameTemp;
+		[_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]] call cre_fnc_ui_deleteSlotCtrl;
 
 		// Restore the original colour on the highlighted controls
 		{
