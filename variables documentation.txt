@@ -40,6 +40,7 @@ SLOT CONTROLS:
 		MACRO_VARNAME_PARENTDATA
 		MACRO_VARNAME_UI_CHILDCONTROLS
 		MACRO_VARNAME_UI_CTRL_HAS_EHS
+		MACRO_VARNAME_UI_CTRLICON			// Icon control of the slot (if there is an item, it's the class's previewIcon, otherwise it may be a specific default icon path)
 
 	Only Regular slots:
 		MACRO_VARNAME_ISROTATED

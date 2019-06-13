@@ -57,8 +57,6 @@ case "ui_mouse_moving": {
 
 			// If we're hovering over a drop control, highlight it (don't check if the item fits)
 			if (_targetSlotPosX == MACRO_ENUM_SLOTPOS_DROP) then {
-				//private _ctrlIconTemp = _ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull];
-				//_ctrlIconTemp ctrlSetTextColor [0,1,0,1];
 				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);	// MACRO_COLOUR_ELEMENT_DRAGGING_GREEN
 
 				// Add the drop frame to the highlit controls array
@@ -71,9 +69,9 @@ case "ui_mouse_moving": {
 			// Otherwise...
 			} else {
 
-				// Fetch the allowed controls and the temporary icon
+				// Fetch the allowed controls and the temporary frame's icon
 				private _allowedCtrls = _inventory getVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
-				private _ctrlIconTemp = _ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull];
+				private _ctrlFrameTempIcon = _ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull];
 
 				// If the item is allowed to go in the target control, paint it green
 				if (_ctrl in _allowedCtrls) then {
@@ -83,12 +81,12 @@ case "ui_mouse_moving": {
 
 					if (_canFit) then {
 						_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_DRAGGING_GREEN);
-						_ctrlIconTemp ctrlSetTextColor [0,1,0,1];
+						_ctrlFrameTempIcon ctrlSetTextColor [0,1,0,1];
 					} else {
-						_ctrlIconTemp ctrlSetTextColor [1,0,0,1];
+						_ctrlFrameTempIcon ctrlSetTextColor [1,0,0,1];
 					};
 				} else {
-					_ctrlIconTemp ctrlSetTextColor [1,0,0,1];
+					_ctrlFrameTempIcon ctrlSetTextColor [1,0,0,1];
 				};
 			};
 

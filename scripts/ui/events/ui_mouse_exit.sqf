@@ -11,7 +11,7 @@ case "ui_mouse_exit": {
 	private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
 	private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
 
-	// Reset the temporary frame's colour
+	// Reset the temporary frame's icon's colour
 	(_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull]) ctrlSetTextColor [1,1,1,1];
 
 	// If the control was an allowed reserved slot, paint it in the inactive (hover) colour

@@ -1,16 +1,13 @@
 TODO:
-- Generating container data on ground holders with multiple items should split it into multiple holders with one item each (so that the containerSize fits it)
+- Add a check in ui_update_ground to delete empty ground holders when they are detected (sometimes they don't auto-clean -> potential duplicating exploit)
+- Add a way to quickly move items across containers, similar to modded Minecraft
+	* Holding ctrl/shift while clicking on items to instantly drag them across?
+- Implement the Quicksort algorithm into generateContainerData
+- Fix the ground UI background box not rescaling to match the items count (vertically)
 - Add an item list to the player for weapons/assigned items?
 - Add slotPos enums for weapon attachments/magazines?
 - Update weapon's magazine ammo counts when firing (using an EH)
-- Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
-	* Detect changes to the reserved slots and update the weapons UI
-	* Detect magazine changes
-	* Detect weapon items (attachments/loaded magazines)
 - Look for an alternative to isNil {} in ui_init, as it may permanently freeze the game when encountering a script error
-- Add the ability to interact with the world
- 	* Detect ground holders and inventories in a certain radius around the player
-	* Update the list (and alongside it, the UI) of nearby inventories when moving
 - Add a global scale multiplier (macro) for slot pictures?
 - Add a garbage collector to get rid of unused/removed locations that are building up over time (potential memory leak!)
 - Search for "TODO" and "DEBUG" comments and address them
@@ -20,6 +17,20 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Investigate why getClassIcon receives a weapon accessories array when drawing weapons that were not dropped through the custom inventory UI
+- Fix uniforms/vests/backpacks slots highlighting as red when dragging an item of the appropriate category
+	* Use isEqualTo instead of == when you want compare two objNulls
+- Add the ability to interact with the world
+ 	* Detect ground holders and inventories in a certain radius around the player
+	* Update the list (and alongside it, the UI) of nearby inventories when moving
+- Detect changes done to the actual inventory container (outside manipulation via e.g. scripting commands)
+	* Detect changes to the reserved slots and update the weapons UI
+	* Detect magazine changes
+	* Detect weapon items (attachments/loaded magazines)
+- Write a sorting algorithm to sort items by any criteria (size, mass, etc.)
+	-> Quicksort algorithm
+- Write a function to handle deleting slot controls and all of their child controls
+- Generating container data on ground holders with multiple items should split it into multiple holders with one item each (so that the containerSize fits it)
 - Remodify ui_update_weapons and ui_update_storage events to call ui_dragging_abort if any current control is being dragged instead of recreating it ( -> less hacky)
 - Modify ui_update_weapons and ui_update_storage events to recreate the slot controls rather than modifying them (allowing the eachFrame dragging fix to fire)
 - Modify the ui_dragging_abort event so that it always resets highlit controls and removes temporary controls

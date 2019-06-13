@@ -223,8 +223,6 @@ case "ui_update_ground": {
 								};
 							};
 
-							systemChat format ["%1 in X: %2..%3", (_x getVariable [MACRO_VARNAME_DATA, locationNull]) getVariable [MACRO_VARNAME_UID, "???"], _posX, _posEndX];
-
 							// If we didn't exit yet, that means the item can fit!
 							// Mark the required slots as taken ("available?"" -> false)
 							{
@@ -260,32 +258,6 @@ case "ui_update_ground": {
 				};
 			};
 		} forEach _groundHolderCtrls;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		// Delete the temporary slots namespace
 		deleteLocation _namespaceSlots;

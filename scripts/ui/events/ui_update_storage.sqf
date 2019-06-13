@@ -46,7 +46,6 @@ case "ui_update_storage": {
 	{
 		_x params ["_containerSlotPosEnum", "_containerFrame", "_defaultIconPath"];
 
-
 		private _class = _classes param [_forEachIndex, ""];
 		private _category = MACRO_ENUM_CATEGORY_EMPTY;
 		private _slotSize = [1,1];
@@ -85,7 +84,7 @@ case "ui_update_storage": {
 		_containerFrame ctrlCommit 0;
 
 		// If the container has changed, or was removed, delete the old controls
-		if (_container != _storageContainer) then {
+		if !(_container isEqualTo _storageContainer) then {	// Using == would return false if both objects are objNull, but isEqualTo works fine
 			_shouldMoveCtrls = true;
 			private _allSlotFrames = _containerFrame getVariable [MACRO_VARNAME_UI_ALLSLOTFRAMES, []];
 			private _isForbiddenControl = false;

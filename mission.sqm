@@ -16,7 +16,7 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=233;
+		nextID=238;
 	};
 	class Camera
 	{
@@ -1623,7 +1623,7 @@ class Mission
 							};
 							id=51;
 							type="C_SUV_01_F";
-							atlOffset=0.00018787384;
+							atlOffset=0.0020618439;
 						};
 						class Item1
 						{
@@ -1712,7 +1712,7 @@ class Mission
 						};
 					};
 					id=570;
-					atlOffset=-0.022827148;
+					atlOffset=-0.022871017;
 				};
 				class Item1
 				{
@@ -4505,7 +4505,7 @@ class Mission
 				};
 			};
 			id=571;
-			atlOffset=-7.5427608;
+			atlOffset=-7.5427723;
 		};
 		class Item3
 		{

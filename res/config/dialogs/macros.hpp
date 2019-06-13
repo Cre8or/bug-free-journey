@@ -406,7 +406,7 @@
 	#define MACRO_GROUND_MAX_DISTANCE				3
 
 	// Ground holder classnames
-	#define MACRO_CLASSES_GROUNDHOLDERS				["GroundWeaponHolder", "GroundWeaponHolder_Scripted"]
+	#define MACRO_CLASSES_GROUNDHOLDERS				["GroundWeaponHolder", "GroundWeaponHolder_Scripted", "WeaponHolderSimulated", "WeaponHolderSimulated_Scripted"]
 
 	// Name of the UI
 	#define MACRO_GUI_NAME						Rsc_Cre8ive_Inventory

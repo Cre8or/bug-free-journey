@@ -257,11 +257,12 @@ if (_container isKindOf "Man") then {
 			{
 				private _formatType = _forEachIndex;
 				{
-					// Fetch the item class
-					private _args = _x;
-					private _class = _args;
-					if (_formatType == 0 or _formatType == 3) then {
-						 _class = _x select 0;
+					// Fetch the class
+					private _class = _x;
+					if (_x isEqualType []) then {
+						_class = _x select 0;
+					} else {
+						_x = [_class];
 					};
 
 					// Only contineu if the class isn't blacklisted
@@ -281,7 +282,7 @@ if (_container isKindOf "Man") then {
 								_containerX addWeaponCargoGlobal [_class, 1];
 							};
 							case MACRO_ENUM_CATEGORY_MAGAZINE: {
-								_containerX addMagazineAmmoCargo [_class, 1, _args select 1];
+								_containerX addMagazineAmmoCargo [_class, 1, _x select 1];
 							};
 							case MACRO_ENUM_CATEGORY_ITEM;
 							case MACRO_ENUM_CATEGORY_NVGS;
@@ -321,8 +322,8 @@ if (_container isKindOf "Man") then {
 		// Fetch the item class
 		private _args = (_contents select _formatTypeItem) param [0, []];
 		private _class = _args;
-		if (_formatTypeItem == 0 or _formatTypeItem == 3) then {
-			 _class = _args param [0, ""];
+		if (_args isEqualType []) then {
+			_class = _args select 0;
 		};
 
 		// Create a new namespace for the container
