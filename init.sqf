@@ -18,9 +18,9 @@ if (is3DEN) then {createDialog "Rsc_Cre8ive_Inventory"} else {["ui_init"] call c
 //cre_fnc_cfg_getClassSlotSize = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getClassSlotSize.sqf";
 //cre_fnc_cfg_getContainerSize = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getContainerSize.sqf";
 
-cre_fnc_ui_inventory = compile preprocessFileLineNumbers "scripts\ui\fn_ui_inventory.sqf";
 cre_fnc_ui_deleteSlotCtrl = compile preprocessFileLineNumbers "scripts\ui\fn_ui_deleteSlotCtrl.sqf";
 cre_fnc_ui_generateChildControls = compile preprocessFileLineNumbers "scripts\ui\fn_ui_generateChildControls.sqf";
+cre_fnc_ui_inventory = compile preprocessFileLineNumbers "scripts\ui\fn_ui_inventory.sqf";
 
 cre_fnc_inv_generateContainerData = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateContainerData.sqf";
 cre_fnc_inv_canFitItem = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_canFitItem.sqf";
@@ -49,3 +49,10 @@ cre_warfare = [] spawn compile preprocessFileLineNumbers "scripts\AI\fn_handleWa
 
 // Test script
 player addAction ["<t color='#00DD00'>test.sqf</t>", {if (isNil "cre_handle") then {cre_handle = scriptNull}; terminate cre_handle; cre_handle = [] spawn compile preprocessFileLineNumbers "debug\test.sqf"}, nil, 10, false, false];
+
+
+
+// Arsenal handling (translate custom inventory data to actual items, to prevent fakeMass items from interfering)
+[missionNamespace, "arsenalOpened", {
+	call compile preprocessFileLineNumbers "debug\onOpenArsenal.sqf";
+}] call BIS_fnc_addScriptedEventHandler;

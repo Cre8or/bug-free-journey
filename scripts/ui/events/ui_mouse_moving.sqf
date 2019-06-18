@@ -183,10 +183,10 @@ case "ui_mouse_moving": {
 			// Paint the old controls in whichever colour they were before
 			{
 				if (ctrlShown _x) then {
-					if (_x getVariable ["active", false] and {_x != _draggedCtrl}) then {
-						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-					} else {
+					if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull]) or {_x == _draggedCtrl}) then {
 						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+					} else {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 					};
 				};
 			} forEach _ctrlsToReset;
@@ -205,19 +205,19 @@ case "ui_mouse_moving": {
 			private _ctrlsOld = _inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
 			{
 				if (ctrlShown _x) then {
-					if (_x getVariable ["active", false]) then {
-						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-					} else {
+					if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull])) then {
 						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+					} else {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 					};
 				};
 			} forEach _ctrlsOld;
 
 			// Paint the control under the cursor
-			if (_ctrl getVariable ["active", false]) then {
-				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE_HOVER);
-			} else {
+			if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull])) then {
 				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);
+			} else {
+				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE_HOVER);
 			};
 
 			// Update the list of highlighted controls

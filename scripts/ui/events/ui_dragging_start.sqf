@@ -193,40 +193,30 @@ case "ui_dragging_start": {
 				} forEach _allowedCtrlsIDCs;
 				_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, _allowedCtrls];
 
-				// Fetch the parent control
-				private _containerCtrl = _draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];
-				if (!isNull _containerCtrl and {_draggedCtrl != _containerCtrl}) then {
+				// If the dragged control is a dropped item, hide its frame control
+				if (typeOf (_itemData getVariable [MACRO_VARNAME_PARENT, objNull]) in MACRO_CLASSES_GROUNDHOLDERS) then {
+					_draggedCtrl ctrlShow false;
 
-					// Fetch the slot position
-					(_draggedCtrl getVariable [MACRO_VARNAME_SLOTPOS, [0,0]]) params ["_posSlotX", "_posSlotY"];
+				// Otherwise, if the item is inside a container, rescale and unhide the item's occupied slot controls
+				} else {
+					private _containerCtrl = _draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];
+					if (!isNull _containerCtrl and {_draggedCtrl != _containerCtrl}) then {
 
-					// Fetch the occupied slots
-					private _occupiedSlots = +(_itemData getVariable [MACRO_VARNAME_OCCUPIEDSLOTS, []]);
-					private _hiddenSlots = [];
-					_occupiedSlots deleteAt 0;
+						// Fetch the slot position
+						(_draggedCtrl getVariable [MACRO_VARNAME_SLOTPOS, [0,0]]) params ["_posSlotX", "_posSlotY"];
 
-					// Unhide the occupied slot controls
-					if (_hiddenSlots isEqualType []) then {
+						// Unhide all occupied slot controls
 						{
 							private _slot = _containerCtrl getVariable [format [MACRO_VARNAME_SLOT_X_Y, _x select 0, _x select 1], controlNull];
-							_hiddenSlots pushback _slot;
 							_slot ctrlShow true;
-						} forEach _occupiedSlots;
+						} forEach (_itemData getVariable [MACRO_VARNAME_OCCUPIEDSLOTS, []]);
 
-						// Save the hidden controls
-						_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, _hiddenSlots];
-					} else {
-						_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, []];
+						// Rescale the original slot control
+						_posCtrl set [2, _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
+						_posCtrl set [3, _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
+						_draggedCtrl ctrlSetPosition _posCtrl;
+						_draggedCtrl ctrlCommit 0;
 					};
-
-					// Rescale the original slot control
-					_posCtrl set [2, _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
-					_posCtrl set [3, _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
-					_draggedCtrl ctrlSetPosition _posCtrl;
-					_draggedCtrl ctrlCommit 0;
-
-				} else {
-					_inventory setVariable [MACRO_VARNAME_UI_HIDDENSLOTCONTROLS, []];
 				};
 
 				// Move the temporary controls if the mouse is moving

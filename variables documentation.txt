@@ -1,57 +1,57 @@
 ITEM DATA:
 	Shared:
-		MACRO_VARNAME_CLASS
-		MACRO_VARNAME_UID
-		MACRO_VARNAME_SLOTPOS
-		MACRO_VARNAME_PARENT
-		MACRO_VARNAME_PARENTDATA
-		MACRO_VARNAME_ISROTATED
+		MACRO_VARNAME_CLASS				// The item's class
+		MACRO_VARNAME_UID				// The item's unique ID
+		MACRO_VARNAME_SLOTPOS				// The slot position that this item is in, in format [PosX, PosY] (e.g. inside a container). NOTE: If the value of PosX is negative, the item is in a reserved slot (e.g. a player's weapon slots, or linked items)! See the slotPos enums in macros.hpp
+		MACRO_VARNAME_PARENT				// The item's parent object (e.g. the container it is inside of) - NOT its item data! NOTE: For dropped items, this points at the ground holder it's in (even for backpacks!)
+		MACRO_VARNAME_PARENTDATA			// The item data of the parent object (e.g. the item data of the container that an item is inside of)
+		MACRO_VARNAME_ISROTATED				// Whether or not the control is rotated 90°
 
 	Outside of reserved slots:
-		MACRO_VARNAME_OCCUPIEDSLOTS
+		MACRO_VARNAME_OCCUPIEDSLOTS			// Returns a list of slot position variables that are in use by this item (see MACRO_VARNAME_SLOT_X_Y for format). Each occupied slot points back at the item data of the item that occupies it
 
 	Only magazines:
-		MACRO_VARNAME_MAG_AMMO
+		MACRO_VARNAME_MAG_AMMO				// The amount of ammo left in this magazine
 
 	Only weapons:
-		MACRO_VARNAME_ACC_MUZZLE
-		MACRO_VARNAME_ACC_BIPOD
-		MACRO_VARNAME_ACC_SIDE
-		MACRO_VARNAME_ACC_OPTIC
-		MACRO_VARNAME_MAG
-		MACRO_VARNAME_MAGALT
+		MACRO_VARNAME_ACC_MUZZLE			// Points to the item data of this weapon's muzzle attachment
+		MACRO_VARNAME_ACC_BIPOD				// Points to the item data of this weapon's bipod attachment
+		MACRO_VARNAME_ACC_OPTIC				// Points to the item data of this weapon's optic attachment
+		MACRO_VARNAME_ACC_SIDE				// Points to the item data of this weapon's side attachment
+		MACRO_VARNAME_MAG				// Points to the item data of this weapon's primary magazine
+		MACRO_VARNAME_MAGALT				// Points to the item data of this weapon's secondary magazine
 
 	Only containers:
-		MACRO_VARNAME_CONTAINER
-		MACRO_VARNAME_CONTAINERSIZE
-		MACRO_VARNAME_CONTAINERSLOTSONLASTY
-		MACRO_VARNAME_ITEMS
-		MACRO_VARNAME_SLOT_X_Y
+		MACRO_VARNAME_CONTAINER				// Points to the container object that this container's item data belongs to. Only used on container objects, as regular items do not have an object associated to them
+		MACRO_VARNAME_CONTAINERSIZE			// Returns the size of the container in format [Width,Height] (in slot counts). Includes the last line of slots, even if it has fewer slots than the other ones
+		MACRO_VARNAME_CONTAINERSLOTSONLASTY		// Returns how many slots the last line of the container has. Can return anything between 1 and the container size's width (default)
+		MACRO_VARNAME_ITEMS				// Holds a list of items that are inside the container. Used to determine what items the container currently has - anything NOT inside this list is not "there" to the inventory! Be cautious with how you use this variable!
+		MACRO_VARNAME_SLOT_X_Y				// Used to turn a slot position (X, Y) into a string that can be used as a variable name (for use in setVariable/getVariable)
 
 -------------------------------------------------------
 SLOT CONTROLS:
 
 	Shared:
-		MACRO_VARNAME_UI_ISBEINGDRAGGED
-		MACRO_VARNAME_CLASS
-		MACRO_VARNAME_DATA
-		MACRO_VARNAME_SLOTSIZE
-		MACRO_VARNAME_SLOTPOS
-		MACRO_VARNAME_PARENTDATA
-		MACRO_VARNAME_UI_CHILDCONTROLS
-		MACRO_VARNAME_UI_CTRL_HAS_EHS
+		MACRO_VARNAME_CLASS				// The class of the item inside this slot
+		MACRO_VARNAME_DATA				// Points to the itemData of the item in the slot. Also used to determine whether a slot is active (full) or not (empty)
+		MACRO_VARNAME_SLOTSIZE				// Holds the size of the slot in format [width,height] (in slot counts)
+		MACRO_VARNAME_SLOTPOS				// Holds the position of the slot in format [posX,posY] (in slot counts)
+		MACRO_VARNAME_PARENTDATA			// Points to the data of the parent container the item is inside of
+		MACRO_VARNAME_UI_CHILDCONTROLS			// Returns a list of all child controls associated with the slot (weapon attachments, text, ammo bar, etc.)
+		MACRO_VARNAME_UI_CTRL_HAS_EHS			// Whether or not the slot control already has EHs applied to it (for dragging)
 		MACRO_VARNAME_UI_CTRLICON			// Icon control of the slot (if there is an item, it's the class's previewIcon, otherwise it may be a specific default icon path)
+		MACRO_VARNAME_UI_ISBEINGDRAGGED			// Whether the control is being dragged. Only used on the original control that was clicked on (which goes invisible upon starting dragging), NOT on the control that follows the cursor (that one can be fetched via MACRO_VARNAME_UI_DRAGGEDCTRL)!
 
 	Only Regular slots:
-		MACRO_VARNAME_ISROTATED
-		MACRO_VARNAME_UI_CTRLPARENT
+		MACRO_VARNAME_ISROTATED				// Whether or not the control is rotated 90°
+		MACRO_VARNAME_UI_CTRLPARENT			// Points to the slot control of the parent container (e.g. an item slot inside a backpack points at the backpack's slot control)
 
 	Only reserved slots:
-		MACRO_VARNAME_SLOT_X_Y
+		MACRO_VARNAME_SLOT_X_Y				// Used to turn a slot position (X, Y) into a string that can be used as a variable name (for use in setVariable/getVariable)
 		MACRO_VARNAME_UI_DEFAULTICONPATH
 
 	Only container slots:
-		MACRO_VARNAME_UI_ALLSLOTFRAMES
+		MACRO_VARNAME_UI_ALLSLOTFRAMES			// Returns a list of all slot controls under this container slot control (e.g. all item slot controls inside a backpack)
 
 -------------------------------------------------------
 INVENTORY:
@@ -60,15 +60,14 @@ INVENTORY:
 	MACRO_VARNAME_UI_HIGHLITCONTROLS
 	MACRO_VARNAME_UI_ALLOWEDCONTROLS
 	MACRO_VARNAME_UI_FORBIDDENCONTROLS
-	MACRO_VARNAME_UI_HIDDENSLOTCONTROLS
-	MACRO_VARNAME_UI_NEXTUPDATE_GROUND
-	MACRO_VARNAME_UI_FORCEREDRAW_GROUND		// Used to forcefully update the ground UI when, as an example, an item's size was changed (so all items need to be sorted again)
+	MACRO_VARNAME_UI_NEXTUPDATE_GROUND			// Saves the time when the next ground UI update is scheduled (polling nearby items). Time is based on the `time` command and is evaluated each frame
+	MACRO_VARNAME_UI_FORCEREDRAW_GROUND			// Used to forcefully update the ground UI when, as an example, an item's size was changed (so all items need to be sorted again)
 
-	MACRO_VARNAME_UI_EH_MOUSEBUTTONUP
-	MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN
-	MACRO_VARNAME_UI_EH_KEYDOWN
+	MACRO_VARNAME_UI_EH_MOUSEBUTTONUP			// Storesthe ID of the inventory's MouseButtonUp event handler (used to detect dragging)
+	MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			// Storesthe ID of the inventory's MouseButtonDown event handler (used to detect dragging)
+	MACRO_VARNAME_UI_EH_KEYDOWN				// Storesthe ID of the inventory's KeyDown event handler (used to rotate items while dragging)
 
 -------------------------------------------------------
 MISSION NAMESPACE:
 
-	MACRO_VARNAME_UI_EH_EACHFRAME
+	MACRO_VARNAME_UI_EH_EACHFRAME				// Stores the ID of the stackable eachFrame event handler

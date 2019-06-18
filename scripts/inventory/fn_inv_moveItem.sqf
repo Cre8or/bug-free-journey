@@ -3,12 +3,15 @@
 	Description:
 		Moves an item from one inventory container to another.
 
-		NOTE: Does not modify item/container data, nor does it move items visually (in the inventory UI).
+		NOTE: Modifies the item data (parent, parentData, container, etc.), but does NOT modify container data
+		(e.g. items list), nor does it move items visually (in the inventory UI).
 		For that, see the "ui_dragging_stop" and "ui_item_move" events in cre_fnc_ui_inventory.
 	Arguments:
 		0:	<LOCATION>	Item data of the item to be moved
-		1:	<OBJECT>	Origin container from which the item should be taken
+		1:	<OBJECT>	Origin container from which the item should be taken (default: objNull)
 		2:	<OBJECT>	Target container in which the item should be moved
+		3:	<BOOLEAN>	Whether or not we should handle the fake mass on the target container
+					(default: true)
 	Returns:
 		0:	<BOOL>		True if the item was moved successfully, otherwise false
 -------------------------------------------------------------------------------------------------------------------- */
@@ -19,7 +22,8 @@
 params [
 	["_itemData", locationNull, [locationNull]],
 	["_originContainer", objNull, [objNull]],
-	["_targetContainer", objNull, [objNull]]
+	["_targetContainer", objNull, [objNull]],
+	["_shouldHandleFakeMass", true, [true]]
 ];
 
 // If the item or the target containers is null, exit and return false
@@ -432,7 +436,7 @@ if (!_doNothing and {_return}) then {
 			case MACRO_ENUM_CATEGORY_MAGAZINE: {
 
 				// If the target container is a temporary ground holder, add the items manually
-				if (typeOf _targetContainer in MACRO_CLASSES_GROUNDHOLDERS) then {
+				if (!_shouldHandleFakeMass or {typeOf _targetContainer in MACRO_CLASSES_GROUNDHOLDERS}) then {
 					_targetContainer addMagazineAmmoCargo [_class, 1, _itemData getVariable [MACRO_VARNAME_MAG_AMMO, 0]];
 
 				// Otherwise, use fake mass to handle the items

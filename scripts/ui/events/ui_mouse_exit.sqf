@@ -38,10 +38,10 @@ case "ui_mouse_exit": {
 
 					// Otherwise, apply the usual behaviour
 					} else {
-						if (_x getVariable ["active", false] and {_x != _draggedCtrl}) then {
-							_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-						} else {
+						if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull]) or {_x == _draggedCtrl}) then {
 							_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+						} else {
+							_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 						};
 					};
 				} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
@@ -51,10 +51,10 @@ case "ui_mouse_exit": {
 			} else {
 
 				{
-					if (_x getVariable ["active", false]) then {
-						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-					} else {
+					if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull])) then {
 						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+					} else {
+						_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 					};
 				} forEach ((_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]) - [_draggedCtrl]);
 				_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];

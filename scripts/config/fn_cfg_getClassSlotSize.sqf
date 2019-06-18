@@ -79,9 +79,20 @@ if (_slotSize isEqualTo []) then {
 
 		switch (_category) do {
 			case MACRO_ENUM_CATEGORY_WEAPON: {
-				private _x = round (1.0 * _mass ^ (1/3));     // Cubic root
-				private _y = round (1 + 0.4 * _mass ^ (1/3));
-				_slotSize = [_x, _y];
+				private _subCategory = [_class, _category] call cre_fnc_cfg_getClassSubCategory;
+
+				switch (_subCategory) do {
+					case MACRO_ENUM_SUBCATEGORY_HANDGUNWEAPON : {
+						private _x = round (1.5 + 0.7 * _mass ^ (1/3));     // Cubic root
+						private _y = round (1.5 + 0.3 * _mass ^ (1/3));
+						_slotSize = [_x, _y];
+					};
+					default {
+						private _x = round (3 + 1.3 * _mass ^ (1/3));     // Cubic root
+						private _y = round (1.5 + 0.5 * _mass ^ (1/3));
+						_slotSize = [_x, _y];
+					};
+				};
 			};
 			case MACRO_ENUM_CATEGORY_MAGAZINE: {
 				private _x = floor (1.0 * _mass ^ (1/3));     // Cubic root
@@ -92,13 +103,17 @@ if (_slotSize isEqualTo []) then {
 			case MACRO_ENUM_CATEGORY_NVGS;
 			case MACRO_ENUM_CATEGORY_HEADGEAR;
 			case MACRO_ENUM_CATEGORY_BINOCULARS;
-			case MACRO_ENUM_CATEGORY_GOGGLES;
+			case MACRO_ENUM_CATEGORY_GOGGLES: {
+				private _x = round (1.0 * _mass ^ (1/3));     // Cubic root
+				private _y = floor (1.0 * _mass ^ (1/3));
+				_slotSize = [_x, _y];
+			};
 			case MACRO_ENUM_CATEGORY_CONTAINER;
 			case MACRO_ENUM_CATEGORY_UNIFORM;
 			case MACRO_ENUM_CATEGORY_VEST;
 			case MACRO_ENUM_CATEGORY_BACKPACK: {
-				private _x = round (1.0 * _mass ^ (1/3));     // Cubic root
-				private _y = floor (1.0 * _mass ^ (1/3));
+				private _x = floor (1.3 * _mass ^ (1/3));     // Cubic root
+				private _y = round (1.5 * _mass ^ (1/3));
 				_slotSize = [_x, _y];
 			};
 			default {

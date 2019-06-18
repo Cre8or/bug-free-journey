@@ -200,6 +200,8 @@
 	#define MACRO_SCALE_SLOT_SIZE_H					0.055 * 0.84
 	#define MACRO_SCALE_SLOT_COUNT_PER_LINE				12
 
+	#define MACRO_EMPTY_SLOTS_UNDER_GROUND_ITEMS			3
+
 
 
 
@@ -314,7 +316,6 @@
 	#define MACRO_VARNAME_UI_HIGHLITCONTROLS			"dragging_highlitControls"
 	#define MACRO_VARNAME_UI_ALLOWEDCONTROLS			"dragging_allowedControls"
 	#define MACRO_VARNAME_UI_FORBIDDENCONTROLS			"dragging_forbiddenControls"
-	#define MACRO_VARNAME_UI_HIDDENSLOTCONTROLS			"dragging_hiddenSlotControls"
 
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONUP			"EH_mouseButtonUp"
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			"EH_mouseButtonDown"
@@ -402,8 +403,8 @@
 	#define MACRO_STORAGE_CAPACITY_MULTIPLIER			0.5
 
 	// Ground menu settings
-	#define MACRO_GROUND_UPDATE_DELAY				0.1
-	#define MACRO_GROUND_MAX_DISTANCE				3
+	#define MACRO_GROUND_UPDATE_DELAY				0.05
+	#define MACRO_GROUND_MAX_DISTANCE				2.5
 
 	// Ground holder classnames
 	#define MACRO_CLASSES_GROUNDHOLDERS				["GroundWeaponHolder", "GroundWeaponHolder_Scripted", "WeaponHolderSimulated", "WeaponHolderSimulated_Scripted"]

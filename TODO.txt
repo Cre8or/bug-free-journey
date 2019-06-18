@@ -1,4 +1,6 @@
 TODO:
+- Prevent the ground UI from showing items that are obstructed (e.g. behind a wall)
+- Position dropped items on the first surface under the player's current position (otherwise items may float in the air if the player dropped while jumping/on a ladder)
 - Add a check in ui_update_ground to delete empty ground holders when they are detected (sometimes they don't auto-clean -> potential duplicating exploit)
 - Add a way to quickly move items across containers, similar to modded Minecraft
 	* Holding ctrl/shift while clicking on items to instantly drag them across?
@@ -17,6 +19,10 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Make ground items hide their frame control when dragging, so they can be dropped back in the exact space they were in
+- Fix items with a width greater than the max slots per line count being positioned incorrectly in the ground UI
+- Make the ground UI distance check use the player's eyes position instead of the base of the model (feet)
+- Fix the arsenal breaking the container data of the uniform/vest/backpack, by clearing the fakeMass items and re-adding the real ones upon opening it
 - Investigate why getClassIcon receives a weapon accessories array when drawing weapons that were not dropped through the custom inventory UI
 - Fix uniforms/vests/backpacks slots highlighting as red when dragging an item of the appropriate category
 	* Use isEqualTo instead of == when you want compare two objNulls

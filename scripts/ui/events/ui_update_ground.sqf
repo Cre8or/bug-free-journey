@@ -28,6 +28,7 @@ case "ui_update_ground": {
 	private _startDrawY = _safeZoneH * 0.005;
 	private _distMaxSqr = MACRO_GROUND_MAX_DISTANCE ^ 2;
 	private _doUpdate = false;
+	private _eyePos = eyePos player;
 
 
 
@@ -70,7 +71,7 @@ case "ui_update_ground": {
 		private _container = _slotFrame getVariable [MACRO_VARNAME_CONTAINER, objNull];
 
 		// If this container is too far away, delete it from the list
-		if (player distanceSqr _container > _distMaxSqr) then {
+		if (_eyePos distanceSqr getPosASL _container > _distMaxSqr) then {
 			_groundHolderCtrls deleteAt _i;
 
 			if (!isNull _container) then {
@@ -79,9 +80,9 @@ case "ui_update_ground": {
 
 				// Blank out the entry in the namespace
 				_namespace setVariable [_UID, controlNull];
-				systemChat format ["Removed %1", _UID];
+				//systemChat format ["Removed %1", _UID];
 			} else {
-				systemChat format ["Removed an unknown container (at %1)", _i];
+				//systemChat format ["Removed an unknown container (at %1)", _i];
 			};
 
 			// Also delete the associated slot frame and its child controls
@@ -95,7 +96,7 @@ case "ui_update_ground": {
 	{
 		{
 			private _container = _x;
-			if (player distanceSqr _container <= _distMaxSqr) then {
+			if (_eyePos distanceSqr getPosASL _container <= _distMaxSqr) then {
 
 				// If the object doesn't have any container data (yet), create it
 				private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
@@ -140,7 +141,6 @@ case "ui_update_ground": {
 						_slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];
 
 						// Save some data onto the slot
-						_slotFrame setVariable ["active", true];
 						_slotFrame setVariable [MACRO_VARNAME_CLASS, _class];
 						_slotFrame setVariable [MACRO_VARNAME_DATA, _itemData];
 						_slotFrame setVariable [MACRO_VARNAME_SLOTPOS, [0,0]];
@@ -154,7 +154,7 @@ case "ui_update_ground": {
 						// Save the slot control onto the namespace
 						_namespace setVariable [_UID, _slotFrame];
 						_groundHolderCtrls pushBack _slotFrame;
-						systemChat format ["Added %1", _UID];
+						//systemChat format ["Added %1", _UID];
 
 						_doUpdate = true;
 					};
@@ -181,16 +181,18 @@ case "ui_update_ground": {
 		private _namespaceSlots = createLocation ["NameVillage", [0,0,0], 0, 0];
 
 		// Next, we iterate through our controls and see where we can fit them
-		private _lastFreeY = 0;
+		private _lastFreeY = 1;
+		private _highestPosY = 1;
 		{
 			scopeName "loopItems";
 
+			private _yHasFreeSlot = false;
 			private _slotSize = _x getVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
 			_slotSize params ["_itemWidth", "_itemHeight"];
+			_itemWidth = _itemWidth min MACRO_SCALE_SLOT_COUNT_PER_LINE;		// Support items with unreasonable item size (rather than failing and giving up)
 
 			// Iterate through all slot positions till we find one that can fit the item
 			for "_posY" from _lastFreeY to 999 do {
-				private _yHasFreeSlot = false;
 
 				for "_posX" from 1 to MACRO_SCALE_SLOT_COUNT_PER_LINE do {
 					scopeName "loopSlots";
@@ -199,7 +201,12 @@ case "ui_update_ground": {
 
 					// If this slot is empty, check if the item can fit in it
 					if (_namespaceSlots getVariable [_slotStr, true]) then {
-						_yhasFreeSlot = true;
+
+						// Remember the Y position of the first free slot that we found (meaning everything above this Y is full, should optimise the search a little)
+						if (!_yhasFreeSlot) then {
+							_yhasFreeSlot = true;
+							_lastFreeY = _posY;
+						};
 
 						// First of all, test if the item even fits in this position
 						private _posEndX = _posX + _itemWidth - 1;
@@ -231,7 +238,7 @@ case "ui_update_ground": {
 
 							// Determine the new UI position for this control
 							private _posCtrlX = _startDrawX + (_posX - 1) * _slotSizeW;
-							private _posCtrlY = _startDrawY + _posY * _slotSizeH;
+							private _posCtrlY = _startDrawY + (_posY - 1) * _slotSizeH;
 
 							// Move the control to this position
 							_x ctrlSetPosition [_posCtrlX, _posCtrlY];
@@ -251,6 +258,9 @@ case "ui_update_ground": {
 								_x ctrlCommit 0;
 							} forEach (_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
+							// Save the Y position of the highest slot that was filled
+							_highestPosY = _highestPosY max (_posY + _itemHeight - 1);
+
 							// Move on to the next item
 							breakTo "loopItems";
 						};
@@ -264,6 +274,11 @@ case "ui_update_ground": {
 
 		// Save the new ground controls list onto the namespace
 		_namespace setVariable [MACRO_VARNAME_UI_GROUND_CTRLS, _groundHolderCtrls];
+
+		// Rescale the drop control to match the amount of items displayed
+		private _heightMin = (ctrlPosition _groundCtrlGrp) select 3;
+		_ctrlDrop ctrlSetPositionH (_heightMin max ((_highestPosY + MACRO_EMPTY_SLOTS_UNDER_GROUND_ITEMS) * _slotSizeH));
+		_ctrlDrop ctrlCommit 0;
 	};
 
 	// Save the namespace onto the inventory

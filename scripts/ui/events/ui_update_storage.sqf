@@ -112,7 +112,6 @@ case "ui_update_storage": {
 				_containerFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 				// Mark the slot as active
-				_containerFrame setVariable ["active", true];
 				_containerFrame setVariable [MACRO_VARNAME_CLASS, _class];
 				_containerFrame setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
 
@@ -221,15 +220,14 @@ case "ui_update_storage": {
 						_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 						// Save some more info onto the slot control
-						_slotFrame setVariable ["active", true];
 						_slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
 					};
 				} forEach _items;
 
 			// Otherwise, if the container is null...
 			} else {
-				_containerFrame setVariable ["active", false];
 				_containerFrame setVariable [MACRO_VARNAME_CLASS, ""];
+				_containerFrame setVariable [MACRO_VARNAME_DATA, locationNull];
 			};
 
 			// Next, if the container is currently being dragged, cancel the dragging

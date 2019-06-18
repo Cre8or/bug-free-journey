@@ -33,10 +33,10 @@ case "ui_item_move": {
 
 		// Restore the original colour on the highlighted controls
 		{
-			if (_x getVariable ["active", false]) then {
-				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-			} else {
+			if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull])) then {
 				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+			} else {
+				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 			};
 		} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
 		_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
@@ -50,10 +50,10 @@ case "ui_item_move": {
 		private _allowedCtrls = _inventory getVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
 		private _forbiddenCtrls = _inventory getVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []];
 		{
-			if (_x getVariable ["active", false]) then {
-				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-			} else {
+			if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull])) then {
 				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+			} else {
+				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 			};
 		} forEach (_allowedCtrls + _forbiddenCtrls);
 		_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
@@ -103,7 +103,6 @@ case "ui_item_move": {
 			};
 
 			// Fill out the target slot data
-			_targetCtrl setVariable ["active", true];
 			_targetCtrl setVariable [MACRO_VARNAME_CLASS, _class];
 			_targetCtrl setVariable [MACRO_VARNAME_DATA, _itemData];
 			_targetCtrl setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
@@ -129,7 +128,6 @@ case "ui_item_move": {
 
 			// Reset the old slot data
 			private _itemData = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
-			_ctrl setVariable ["active", false];
 			_ctrl setVariable [MACRO_VARNAME_CLASS, ""];
 			_ctrl setVariable [MACRO_VARNAME_DATA, locationNull];
 			_ctrl setVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];

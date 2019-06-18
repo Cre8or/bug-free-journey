@@ -247,6 +247,9 @@ addMissionEventHandler ["EachFrame", {
 			// Only continue if the container data exists
 			if (!isNull _containerData) then {
 
+				// DEBUG: Save the item data onto the playerContainer directly so it can be restored when entering the arsenal
+				_playerContainerData setVariable [format ["playerContainer_%1", _containerIndex], _containerData];
+
 				private _foundError = false;
 				private _items = [_containerData, [MACRO_ENUM_CATEGORY_MAGAZINE], true] call cre_fnc_inv_getItemsByCategory;
 				private _fakeMass = [_containerData] call cre_fnc_inv_getInvMass;

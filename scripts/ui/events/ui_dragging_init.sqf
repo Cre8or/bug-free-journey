@@ -15,7 +15,7 @@ case "ui_dragging_init": {
 		["ui_focus_reset", [_ctrl]] call cre_fnc_ui_inventory;
 
 		// If we're not dragging anything yet, set everything up (phase 1)
-		if (!isNull _ctrl and {_ctrl getVariable ["active", false]} and {isNull (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull])} and {ctrlShown _ctrl}) then {
+		if (!isNull _ctrl and {!isNull (_ctrl getVariable [MACRO_VARNAME_DATA, locationNull])} and {isNull (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull])} and {ctrlShown _ctrl}) then {
 
 			if (isNull (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull])) then {
 

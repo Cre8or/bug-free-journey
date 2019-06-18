@@ -38,14 +38,12 @@ case "ui_update_weapons": {
 				_slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 				// Mark the slot as active and save some info on the control
-				_ctrlFrame setVariable ["active", true];
 				_ctrlFrame setVariable [MACRO_VARNAME_CLASS, _class];
 				_ctrlFrame setVariable [MACRO_VARNAME_DATA, _itemData];
 				_ctrlFrame setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
 
 			// If the slot is empty, mark the slot as inactive
 			} else {
-				_ctrlFrame setVariable ["active", false];
 				_ctrlFrame setVariable [MACRO_VARNAME_CLASS, ""];
 				_ctrlFrame setVariable [MACRO_VARNAME_DATA, locationNull];
 			};
