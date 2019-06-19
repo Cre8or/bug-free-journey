@@ -82,9 +82,9 @@ if (_slotStartX < 0) then {
 			_slotCategory =		MACRO_ENUM_CATEGORY_WEAPON;
 			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_HANDGUNWEAPON;
 		};
-		case MACRO_ENUM_SLOTPOS_HANDGUNWEAPON: {
+		case MACRO_ENUM_SLOTPOS_SECONDARYWEAPON: {
 			_slotCategory =		MACRO_ENUM_CATEGORY_WEAPON;
-			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_HANDGUNWEAPON;
+			_slotSubCategory =	MACRO_ENUM_SUBCATEGORY_SECONDARYWEAPON;
 		};
 
 		// Item slots (top)
