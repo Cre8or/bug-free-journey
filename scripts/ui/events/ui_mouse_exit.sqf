@@ -62,6 +62,7 @@ case "ui_mouse_exit": {
 		};
 	};
 
-	// Reset the cursor control on the inventory
+	// Reset the cursor control and slot position on the inventory
 	_inventory setVariable [MACRO_VARNAME_UI_CURSORCTRL, controlNull];
+	_inventory setVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []];
 };

@@ -69,9 +69,11 @@ switch (_event) do {
 private _filteredEvents = [
 	"ui_focus_reset",
 	"ui_mouse_exit",
-	"ui_mouse_moving",
+//	"ui_mouse_moving",
 	"ui_dragging_init",
-	"ui_dragging"
+	"ui_dragging",
+	"ui_update_ground",
+	"ui_update_storage"
 ];
 if !(_event in _filteredEvents) then {
 	systemChat format ["(%1) %2", time, _event];

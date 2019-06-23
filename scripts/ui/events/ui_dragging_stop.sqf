@@ -55,6 +55,9 @@ case "ui_dragging_stop": {
 			_targetContainerData setVariable [MACRO_VARNAME_CONTAINER, _targetContainer];
 			_targetContainer setVariable [MACRO_VARNAME_DATA, _targetContainerData, false];
 
+			// Set up some other variables
+			_targetContainerData setVariable [MACRO_VARNAME_CLASS, MACRO_CLASSES_GROUNDHOLDERS select 0];
+
 			// Nullify the target control, as we don't handle drawing ground/dropped items here
 			_targetContainerCtrl = controlNull;
 

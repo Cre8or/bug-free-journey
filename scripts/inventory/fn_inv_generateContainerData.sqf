@@ -330,6 +330,7 @@ if (_container isKindOf "Man") then {
 		_containerData = (call cre_fnc_inv_createNamespace) select 0;
 
 		// Fill the container data with some basic information
+		_containerData setVariable [MACRO_VARNAME_CLASS, _containerClass];
 		_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, [1,1]];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, 1];
@@ -495,6 +496,7 @@ if (_container isKindOf "Man") then {
 
 		// Iterate through the sorted list of items and fit them into the container
 		([_containerClass] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
+		_containerData setVariable [MACRO_VARNAME_CLASS, _containerClass];
 		_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _containerSize];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _containerSlotsOnLastY];

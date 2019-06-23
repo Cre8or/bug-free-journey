@@ -1,17 +1,18 @@
 TODO:
+- Write a function that checks if a given object should generate container data (e.g. if it can fit inventory) and implement it into the ground update/init events
 - Prevent the ground UI from showing items that are obstructed (e.g. behind a wall)
 - Position dropped items on the first surface under the player's current position (otherwise items may float in the air if the player dropped while jumping/on a ladder)
 - Add a check in ui_update_ground to delete empty ground holders when they are detected (sometimes they don't auto-clean -> potential duplicating exploit)
 - Add a way to quickly move items across containers, similar to modded Minecraft
 	* Holding ctrl/shift while clicking on items to instantly drag them across?
 - Implement the Quicksort algorithm into generateContainerData
-- Fix the ground UI background box not rescaling to match the items count (vertically)
 - Add an item list to the player for weapons/assigned items?
 - Add slotPos enums for weapon attachments/magazines?
 - Update weapon's magazine ammo counts when firing (using an EH)
 - Look for an alternative to isNil {} in ui_init, as it may permanently freeze the game when encountering a script error
 - Add a global scale multiplier (macro) for slot pictures?
 - Add a garbage collector to get rid of unused/removed locations that are building up over time (potential memory leak!)
+- Ensure dragging items to/from objects with simulation disabled is handled properly (ideally, forbid dragging to/from them!)
 - Search for "TODO" and "DEBUG" comments and address them
 
 
@@ -19,6 +20,10 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Write a function check if an object is within distance to open its inventory (compare to Arma 3's inventory distance handling)
+- Fix the container controls group obstructing the drop control when it not shown
+- Fix the inventory's cursor position not being reset when exiting a control, making it possible to drop items by hovering over the drop control and the moving the mouse away (e.g. over empty space) and left-clicking
+- Fix the ground drop control not rescaling to match the items count (vertically)
 - Make ground items hide their frame control when dragging, so they can be dropped back in the exact space they were in
 - Fix items with a width greater than the max slots per line count being positioned incorrectly in the ground UI
 - Make the ground UI distance check use the player's eyes position instead of the base of the model (feet)

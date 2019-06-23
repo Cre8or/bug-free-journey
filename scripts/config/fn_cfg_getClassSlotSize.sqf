@@ -69,7 +69,7 @@ if (_slotSize isEqualTo []) then {
 	};
 
 	// Look up the slot size in the config (in case it's specifically defined for this class)
-	_slotSize = [configfile >> _configPath >> _class, "cre8ive_slotSize", []] call BIS_fnc_returnConfigEntry;
+	_slotSize = [configfile >> _configPath >> _class, MACRO_VARNAME_CFG_SLOTSIZE, []] call BIS_fnc_returnConfigEntry;
 
 	// If we didn't find a specific slot size, we have to determine it
 	if (_slotSize isEqualTo []) then {

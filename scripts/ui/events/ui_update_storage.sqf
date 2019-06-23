@@ -287,7 +287,7 @@ case "ui_update_storage": {
 		};
 
 		// Increase the Y position offset
-		_offsetY = _offsetY + _slotSizeH * ((_containerSize select 1) + 0.1) + _sizeY;
+		_offsetY = _offsetY + _slotSizeH * (_containerSize select 1) + _safeZoneH * MACRO_POS_SPACER_Y * 2 + _sizeY;
 
 		// Create the container frame's child controls, if it doesn't have any yet
 		if (isNull (_containerFrame getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull])) then {

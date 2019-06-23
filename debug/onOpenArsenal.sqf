@@ -46,6 +46,8 @@ if (isNil "cre_fnc_inv_moveItem") exitWith {};
 		};
 
 		// Delete the container data (so it gets re-created when we leave the arsenal)
-		deleteLocation _containerData;
+		if (isNull (_containerData getVariable [MACRO_VARNAME_CONTAINER, objNull])) then {
+			deleteLocation _containerData;
+		};
 	};
 };

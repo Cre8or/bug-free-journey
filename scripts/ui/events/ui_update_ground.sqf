@@ -8,6 +8,10 @@ case "ui_update_ground": {
 	// Fetch the drop control
 	private _ctrlDrop = _groundCtrlGrp controlsGroupCtrl MACRO_IDC_GROUND_DROP_FRAME;
 
+	// Fetch the container object
+	private _activeContainer = _inventory getVariable [MACRO_VARNAME_UI_ACTIVECONTAINER, objNull];
+	private _activeContainerData = _activeContainer getVariable [MACRO_VARNAME_DATA, locationNull];
+
 	// Add some event handlers for mouse moving across the drop control, and exiting it
 	if !(_ctrlDrop getVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, false]) then {
 		_ctrlDrop ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
@@ -20,15 +24,84 @@ case "ui_update_ground": {
 	};
 
 	// Determine some UI variables
+	//private _safeZoneY = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneY", 0];
 	private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 	private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
 	private _slotSizeW = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
 	private _slotSizeH = _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
-	private _startDrawX = _safeZoneW * 0.002 * 2;
-	private _startDrawY = _safeZoneH * 0.005;
+	private _startDrawX = _safeZoneW * MACRO_POS_SPACER_X * 2;
+	private _startDrawY = _safeZoneH * MACRO_POS_SPACER_Y * 2;
 	private _distMaxSqr = MACRO_GROUND_MAX_DISTANCE ^ 2;
 	private _doUpdate = false;
 	private _eyePos = eyePos player;
+
+
+
+
+
+	// Check if the active container is within range
+	if (!isNull _activeContainerData and {[player, _activeContainer] call cre_fnc_inv_canOpenContainer}) then {
+		private _containerCtrlGrp = _inventory displayCtrl MACRO_IDC_CONTAINER_CTRLGRP;
+
+		// Rescale the controls group so that the container UI becomes visible
+		if !(_inventory getVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false]) then {
+			_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, true];
+
+			// Rescale the ground controls group
+			private _pos = ctrlPosition _groundCtrlGrp;
+			private _heightNew = _safeZoneH * (MACRO_POS_SEPARATOR_CONTAINER - MACRO_POS_SPACER_Y);
+			_pos set [3, _heightNew];
+			{
+				_x ctrlSetPositionH _heightNew;
+				_x ctrlCommit 0;
+			} forEach [
+				_groundCtrlGrp,
+				_inventory displayCtrl MACRO_IDC_GROUND_FRAME
+			];
+
+			// Show the container UI
+			{
+				_x ctrlShow true;
+			} forEach [
+				_containerCtrlGrp,
+				_inventory displayCtrl MACRO_IDC_CONTAINER_FRAME
+			];
+
+			// Rescale the drop control inside the ground controls group
+			private _highestPosY = _inventory getVariable [MACRO_VARNAME_UI_GROUND_HIGHESTPOSY, 0];
+			_ctrlDrop ctrlSetPositionH (_heightNew max ((_highestPosY + MACRO_EMPTY_SLOTS_UNDER_GROUND_ITEMS) * _slotSizeH));
+			_ctrlDrop ctrlCommit 0;
+		};
+
+	// Otherwise, get rid of the container UI controls group
+	} else {
+		if (_inventory getVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false]) then {
+			_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false];
+
+			// Rescale the ground controls group
+			{
+				_x ctrlSetPositionH _safeZoneH;
+				_x ctrlCommit 0;
+			} forEach [
+				_groundCtrlGrp,
+				_inventory displayCtrl MACRO_IDC_GROUND_FRAME
+			];
+
+			// Hide the container UI
+			private _containerCtrlGrp = _inventory displayCtrl MACRO_IDC_CONTAINER_CTRLGRP;
+			{
+				_x ctrlShow false;
+			} forEach [
+				_containerCtrlGrp,
+				_inventory displayCtrl MACRO_IDC_CONTAINER_FRAME
+			];
+
+			// Rescale the drop control inside the ground controls group
+			private _highestPosY = _inventory getVariable [MACRO_VARNAME_UI_GROUND_HIGHESTPOSY, 0];
+			_ctrlDrop ctrlSetPositionH (_safeZoneH max ((_highestPosY + MACRO_EMPTY_SLOTS_UNDER_GROUND_ITEMS) * _slotSizeH));
+			_ctrlDrop ctrlCommit 0;
+		};
+	};
 
 
 
@@ -279,6 +352,8 @@ case "ui_update_ground": {
 		private _heightMin = (ctrlPosition _groundCtrlGrp) select 3;
 		_ctrlDrop ctrlSetPositionH (_heightMin max ((_highestPosY + MACRO_EMPTY_SLOTS_UNDER_GROUND_ITEMS) * _slotSizeH));
 		_ctrlDrop ctrlCommit 0;
+
+		_inventory setVariable [MACRO_VARNAME_UI_GROUND_HIGHESTPOSY, _highestPosY];
 	};
 
 	// Save the namespace onto the inventory

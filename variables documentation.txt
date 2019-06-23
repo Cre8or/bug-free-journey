@@ -60,8 +60,12 @@ INVENTORY:
 	MACRO_VARNAME_UI_HIGHLITCONTROLS
 	MACRO_VARNAME_UI_ALLOWEDCONTROLS
 	MACRO_VARNAME_UI_FORBIDDENCONTROLS
+
 	MACRO_VARNAME_UI_NEXTUPDATE_GROUND			// Saves the time when the next ground UI update is scheduled (polling nearby items). Time is based on the `time` command and is evaluated each frame
 	MACRO_VARNAME_UI_FORCEREDRAW_GROUND			// Used to forcefully update the ground UI when, as an example, an item's size was changed (so all items need to be sorted again)
+	MACRO_VARNAME_UI_ACTIVECONTAINER			// Points to the container object that the inventory was opened on (e.g. a vehicle, corpse, ammo crate, etc.)
+	MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE		// Whether or not the active container is currently visible. Used in ui_update_ground to rescale the ground controls group and show/hide the container controls group
+	MACRO_VARNAME_UI_GROUND_HIGHESTPOSY			// Saves the highest Y position that is occupied by an item in the ground UI. Used in ui_update_ground to rescale the drop control in order to fit the entire controls group
 
 	MACRO_VARNAME_UI_EH_MOUSEBUTTONUP			// Storesthe ID of the inventory's MouseButtonUp event handler (used to detect dragging)
 	MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			// Storesthe ID of the inventory's MouseButtonDown event handler (used to detect dragging)
@@ -71,3 +75,12 @@ INVENTORY:
 MISSION NAMESPACE:
 
 	MACRO_VARNAME_UI_EH_EACHFRAME				// Stores the ID of the stackable eachFrame event handler
+
+
+-------------------------------------------------------
+CONFIG ENTRIES:							// NOTE: The following macros are to be used inside the config class of items/weapons/vehicles and are used to manipulate the way they interact with the inventory. They are not used in-game!
+
+	MACRO_VARNAME_CFG_SLOTSIZE				// The slot size of an item (in format [X,Y]). Used to overwrite an item's size to a custom value
+	MACRO_VARNAME_CFG_CONTAINERSIZE				// The size of a container item. Determines how many items can fit inside of it
+	MACRO_VARNAME_CFG_SLOTSONLASTY				// How many slots are on the last line of a container. Only used on containers. If not provided, assumes the width of the container size (-> all lines have the same amount of slots)
+	MACRO_VARNAME_CFG_INVDISTANCE				// The distance (measured between the container object's memorySupplyPoint and the player's eyePos), below which the container's inventory can be accessed. If not provided, determines a value based on the bounding size of the class

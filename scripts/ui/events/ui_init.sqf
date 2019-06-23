@@ -2,8 +2,14 @@
 case "ui_init": {
 	_eventExists = true;
 
-	[] spawn {
+	_args spawn {
 
+		// Fetch our params
+		_this params [
+			["_activeContainer", objNull, [objNull]]
+		];
+
+		// Create the inventory display
 		(findDisplay 46) createDisplay "Rsc_Cre8ive_Inventory";
 		//createDialog "Rsc_Cre8ive_Inventory";
 
@@ -17,6 +23,18 @@ case "ui_init": {
 			isNil {
 				// Fetch the inventory
 				private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
+
+				// Validate the active container object and write it onto the inventory display
+				if !(typeOf _activeContainer in MACRO_CLASSES_GROUNDHOLDERS) then {
+
+					private _activeContainerData = _activeContainer getVariable [MACRO_VARNAME_DATA, locationNull];
+					if (isNull _activeContainerData) then {
+						cre_location = [_activeContainer] call cre_fnc_inv_generateContainerData;
+					};
+
+					_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER, _activeContainer];
+				};
+				_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, true];
 
 				// Write down the player's name
 				(_inventory displayCtrl MACRO_IDC_PLAYER_NAME) ctrlSetText name player;

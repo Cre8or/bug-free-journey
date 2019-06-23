@@ -16,14 +16,14 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=249;
+		nextID=261;
 	};
 	class Camera
 	{
-		pos[]={27099.477,32.13274,24014.744};
-		dir[]={-0.42646697,-0.46925691,-0.77335119};
-		up[]={-0.22668464,0.88296789,-0.41106653};
-		aside[]={-0.87574935,1.0440126e-006,0.48293248};
+		pos[]={27123.043,41.185753,24114.057};
+		dir[]={0.58117586,-0.73422736,0.35092443};
+		up[]={0.62856221,0.67886823,0.3795374};
+		aside[]={0.51689804,1.8626451e-008,-0.85604906};
 	};
 };
 binarizationWanted=0;
@@ -1586,13 +1586,12 @@ class Mission
 								angles[]={6.2698536,3.9044385,6.2471976};
 							};
 							side="Empty";
-							flags=4;
 							class Attributes
 							{
 							};
 							id=445;
 							type="Land_Ammobox_rounds_F";
-							atlOffset=0.01817131;
+							atlOffset=0.12369823;
 						};
 						class Item1
 						{
@@ -1728,7 +1727,7 @@ class Mission
 							};
 							id=473;
 							type="Land_FirstAidKit_01_closed_F";
-							atlOffset=-9.059906e-005;
+							atlOffset=0.17905903;
 						};
 						class Item9
 						{
@@ -5031,7 +5030,7 @@ class Mission
 					};
 					id=818;
 					type="Land_ConcretePanels_01_F";
-					atlOffset=0.0099973679;
+					atlOffset=0.0099983215;
 				};
 				class Item6
 				{
@@ -5298,7 +5297,7 @@ class Mission
 					};
 					id=834;
 					type="Land_ConcretePanels_01_F";
-					atlOffset=0.019997597;
+					atlOffset=0.01999855;
 				};
 				class Item22
 				{
@@ -5569,7 +5568,7 @@ class Mission
 					};
 					id=850;
 					type="Land_ConcretePanels_01_F";
-					atlOffset=0.0099973679;
+					atlOffset=0.0099983215;
 				};
 				class Item38
 				{
@@ -5841,7 +5840,7 @@ class Mission
 					};
 					id=866;
 					type="Land_ConcretePanels_01_F";
-					atlOffset=0.0099973679;
+					atlOffset=0.0099983215;
 				};
 				class Item54
 				{
@@ -6113,7 +6112,7 @@ class Mission
 					};
 					id=882;
 					type="Land_ConcretePanels_01_F";
-					atlOffset=0.055774689;
+					atlOffset=0.055775642;
 				};
 				class Item70
 				{
@@ -6385,7 +6384,7 @@ class Mission
 					};
 					id=898;
 					type="Land_ConcretePanels_01_F";
-					atlOffset=0.019997597;
+					atlOffset=0.01999855;
 				};
 				class Item86
 				{
@@ -6657,7 +6656,7 @@ class Mission
 					};
 					id=914;
 					type="Land_ConcretePanels_01_F";
-					atlOffset=0.0099973679;
+					atlOffset=0.0099983215;
 				};
 				class Item102
 				{
@@ -6929,7 +6928,7 @@ class Mission
 					};
 					id=930;
 					type="Land_ConcretePanels_01_F";
-					atlOffset=0.032924652;
+					atlOffset=0.032925606;
 				};
 				class Item118
 				{
@@ -7222,7 +7221,7 @@ class Mission
 			class PositionInfo
 			{
 				position[]={27055.375,11.84,23933.809};
-				angles[]={-0,2.2050397,0};
+				angles[]={0,2.2050397,0};
 			};
 			areaSize[]={10.078341,0,13.382391};
 			areaIsRectangle=1;

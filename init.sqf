@@ -1,5 +1,7 @@
 enableSaving [false, false];
 
+#include "res\config\dialogs\macros.hpp"
+
 
 
 // Functions
@@ -13,34 +15,41 @@ if (is3DEN) then {createDialog "Rsc_Cre8ive_Inventory"} else {["ui_init"] call c
 */
 
 
+// Add a keybinding to open the inventory (Tab)
+[] spawn {
+	waitUntil {!isNull findDisplay 46};
 
-// TODO: Push these functions to description.ext
-//cre_fnc_cfg_getClassSlotSize = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getClassSlotSize.sqf";
-//cre_fnc_cfg_getContainerSize = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getContainerSize.sqf";
+	(findDisplay 46) displayAddEventHandler ["KeyDown", {
+		params ["", "_key"];
 
-cre_fnc_ui_deleteSlotCtrl = compile preprocessFileLineNumbers "scripts\ui\fn_ui_deleteSlotCtrl.sqf";
-cre_fnc_ui_generateChildControls = compile preprocessFileLineNumbers "scripts\ui\fn_ui_generateChildControls.sqf";
-cre_fnc_ui_inventory = compile preprocessFileLineNumbers "scripts\ui\fn_ui_inventory.sqf";
+		if (_key == 15 and {inputAction "lookAround" == 0}) then {
 
-cre_fnc_inv_generateContainerData = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateContainerData.sqf";
-cre_fnc_inv_canFitItem = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_canFitItem.sqf";
-cre_fnc_inv_moveItem = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_moveItem.sqf";
-cre_fnc_inv_handleFakeMass = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_handleFakeMass.sqf";
-cre_fnc_inv_getInvMass = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_getInvMass.sqf";
-cre_fnc_inv_getRealMass = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_getRealMass.sqf";
+			call compile preprocessFileLineNumbers "debug\recompileInventory.sqf";
+			["ui_init", [cursorTarget]] call cre_fnc_ui_inventory;
 
-cre_fnc_inv_getClassCountsByCategory = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_getClassCountsByCategory.sqf";
-cre_fnc_inv_getEveryContainer = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_getEveryContainer.sqf";
-cre_fnc_inv_getItemsByCategory = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_getItemsByCategory.sqf";
-//cre_fnc_inv_isContainer = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_isContainer.sqf";
+			[] spawn {
+				private _inventory = displayNull;
+				waitUntil {
+					_inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
+					!isNull _inventory;
+				};
 
-cre_fnc_util_quickSort = compile preprocessFileLineNumbers "scripts\util\quickSort\fn_util_quickSort.sqf";
-cre_fnc_util_quickSort_internal = compile preprocessFileLineNumbers "scripts\util\quickSort\fn_util_quickSort_internal.sqf";
-cre_fnc_util_quickSort_partition = compile preprocessFileLineNumbers "scripts\util\quickSort\fn_util_quickSort_partition.sqf";
-cre_fnc_util_quickSort_swap = compile preprocessFileLineNumbers "scripts\util\quickSort\fn_util_quickSort_swap.sqf";
+				_inventory displayAddEventHandler ["KeyDown", {
+					params ["_display", "_key"];
 
-if (isNil "cre_inv_synchroniser") then {cre_inv_synchroniser = scriptNull}; terminate cre_inv_synchroniser;
-cre_inv_synchroniser = [] spawn compile preprocessFileLineNumbers "scripts\inventory\fn_inv_synchroniser.sqf";
+					if (_key == 15 and {inputAction "lookAround" == 0}) then {
+						_display closeDisplay 0;
+					};
+				}];
+			};
+		};
+	}];
+
+	systemChat "Added inventory keybinding (TAB)";
+};
+
+
+
 
 // Bonus stuff
 cre_warfare = [] spawn compile preprocessFileLineNumbers "scripts\AI\fn_handleWarfare.sqf";

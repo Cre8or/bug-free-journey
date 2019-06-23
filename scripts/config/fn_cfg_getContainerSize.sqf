@@ -43,20 +43,23 @@ if (_res isEqualTo []) then {
 
 	// Check if the class has a container size defined in its config
 	private _containerSize = [];
+	private _slotsOnLastY = 0;
 	switch (_category) do {
 		case MACRO_ENUM_CATEGORY_CONTAINER;
 		case MACRO_ENUM_CATEGORY_UNIFORM;
 		case MACRO_ENUM_CATEGORY_VEST: {
-			_containerSize = [configfile >> "CfgWeapons" >> _class, "cre8ive_containerSize", []] call BIS_fnc_returnConfigEntry;
+			_containerSize = [configfile >> "CfgWeapons" >> _class, MACRO_VARNAME_CFG_CONTAINERSIZE, []] call BIS_fnc_returnConfigEntry;
+			_slotsOnLastY =  [configfile >> "CfgWeapons" >> _class, MACRO_VARNAME_CFG_SLOTSONLASTY, _containerSize param [1, 0]] call BIS_fnc_returnConfigEntry;
 		};
 		default {
-			_containerSize = [configfile >> "CfgVehicles" >> _class, "cre8ive_containerSize", []] call BIS_fnc_returnConfigEntry;
+			_containerSize = [configfile >> "CfgVehicles" >> _class, MACRO_VARNAME_CFG_CONTAINERSIZE, []] call BIS_fnc_returnConfigEntry;
+			_slotsOnLastY =  [configfile >> "CfgVehicles" >> _class, MACRO_VARNAME_CFG_SLOTSONLASTY, _containerSize param [1, 0]] call BIS_fnc_returnConfigEntry;
 		};
 	};
 
 	// If a container size was found, compile the results
 	if !(_containerSize isEqualTo []) then {
-		_res = [_containerSize, 0];
+		_res = [_containerSize, _slotsOnLastY];
 
 	// If no container size is defined, calculate it from the max load
 	} else {

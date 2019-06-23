@@ -100,69 +100,73 @@
 
 	// Ground
 	#define MACRO_IDC_GROUND_CTRLGRP				1000
-	#define MACRO_IDC_GROUND_FOCUS_FRAME				1001
-	#define MACRO_IDC_GROUND_DROP_FRAME				1002
+	#define MACRO_IDC_GROUND_FRAME					1001
+	#define MACRO_IDC_GROUND_FOCUS_FRAME				1002
+	#define MACRO_IDC_GROUND_DROP_FRAME				1003
+
+	// Container
+	#define MACRO_IDC_CONTAINER_CTRLGRP				2000
+	#define MACRO_IDC_CONTAINER_FRAME				2001
+	#define MACRO_IDC_CONTAINER_FOCUS_FRAME				2002
+	#define MACRO_IDC_CONTAINER_NAME_FRAME				2003
+	#define MACRO_IDC_CONTAINER_NAME				2004
 
 	// Weapons / Medical
-	#define MACRO_IDC_WEAPONS_CTRLGRP				2000
-	#define MACRO_IDC_MEDICAL_CTRLGRP				2001
-	#define MACRO_IDC_WEAPONS_FOCUS_FRAME				2002
-	#define MACRO_IDC_MEDICAL_FOCUS_FRAME				2003
+	#define MACRO_IDC_WEAPONS_CTRLGRP				3000
+	#define MACRO_IDC_MEDICAL_CTRLGRP				3001
+	#define MACRO_IDC_WEAPONS_FOCUS_FRAME				3002
+	#define MACRO_IDC_MEDICAL_FOCUS_FRAME				3003
 
 	// PLayer info
-	#define MACRO_IDC_PLAYER_NAME					2101
+	#define MACRO_IDC_PLAYER_NAME					3101
 
 	// Weapons / Medical buttons
-	#define MACRO_IDC_WEAPONS_BUTTON_FRAME				2102
-	#define MACRO_IDC_WEAPONS_BUTTON				2103
-	#define MACRO_IDC_MEDICAL_BUTTON_FRAME				2104
-	#define MACRO_IDC_MEDICAL_BUTTON				2105
+	#define MACRO_IDC_WEAPONS_BUTTON_FRAME				3102
+	#define MACRO_IDC_WEAPONS_BUTTON				3103
+	#define MACRO_IDC_MEDICAL_BUTTON_FRAME				3104
+	#define MACRO_IDC_MEDICAL_BUTTON				3105
 
 	// Character (Weapons)
-	#define MACRO_IDC_CHARACTER_WEAPONS_ICON			2201
+	#define MACRO_IDC_CHARACTER_WEAPONS_ICON			3201
 
 	// NVGs, binoculars, headgear and goggles
-	#define MACRO_IDC_NVGS_FRAME					2202
-	#define MACRO_IDC_HEADGEAR_FRAME				2203
-	#define MACRO_IDC_BINOCULARS_FRAME				2204
-	#define MACRO_IDC_GOGGLES_FRAME					2205
+	#define MACRO_IDC_NVGS_FRAME					3202
+	#define MACRO_IDC_HEADGEAR_FRAME				3203
+	#define MACRO_IDC_BINOCULARS_FRAME				3204
+	#define MACRO_IDC_GOGGLES_FRAME					3205
 
 	// Primary Weapon
-	#define MACRO_IDC_PRIMARYWEAPON_FRAME				2211
+	#define MACRO_IDC_PRIMARYWEAPON_FRAME				3211
 
 	// Handgun Weapon
-	#define MACRO_IDC_HANDGUNWEAPON_FRAME				2212
+	#define MACRO_IDC_HANDGUNWEAPON_FRAME				3212
 
 	// Secondary Weapon
-	#define MACRO_IDC_SECONDARYWEAPON_FRAME				2213
+	#define MACRO_IDC_SECONDARYWEAPON_FRAME				3213
 
 	// Assigned slots
-	#define MACRO_IDC_MAP_FRAME					2221
-	#define MACRO_IDC_GPS_FRAME					2222
-	#define MACRO_IDC_RADIO_FRAME					2223
-	#define MACRO_IDC_COMPASS_FRAME					2224
-	#define MACRO_IDC_WATCH_FRAME					2225
+	#define MACRO_IDC_MAP_FRAME					3221
+	#define MACRO_IDC_GPS_FRAME					3222
+	#define MACRO_IDC_RADIO_FRAME					3223
+	#define MACRO_IDC_COMPASS_FRAME					3224
+	#define MACRO_IDC_WATCH_FRAME					3225
 
 	// Character (Medical)
-	#define MACRO_IDC_CHARACTER_MEDICAL_ICON			2301
+	#define MACRO_IDC_CHARACTER_MEDICAL_ICON			3301
 
 	// Storage
-	#define MACRO_IDC_STORAGE_CTRLGRP				3000
-	#define MACRO_IDC_STORAGE_FOCUS_FRAME				3001
+	#define MACRO_IDC_STORAGE_CTRLGRP				4000
+	#define MACRO_IDC_STORAGE_FOCUS_FRAME				4001
 
 	// Uniform, vest and backpack
-	#define MACRO_IDC_UNIFORM_FRAME					3101
-	#define MACRO_IDC_VEST_FRAME					3102
-	#define MACRO_IDC_BACKPACK_FRAME				3103
-	#define MACRO_IDC_SCROLLBAR_DUMMY				3104
+	#define MACRO_IDC_UNIFORM_FRAME					4101
+	#define MACRO_IDC_VEST_FRAME					4102
+	#define MACRO_IDC_BACKPACK_FRAME				4103
+	#define MACRO_IDC_SCROLLBAR_DUMMY				4104
 
 	// Empty control group (for focus)
-	#define MACRO_IDC_EMPTY_CTRLGROUP				4000
-	#define MACRO_IDC_EMPTY_FOCUS_FRAME				4001
-
-	// Temporary frame and picture
-	//#define MACRO_IDC_SCRIPTEDFRAME					4101
-	//#define MACRO_IDC_SCRIPTEDPICTURE				4102
+	#define MACRO_IDC_EMPTY_CTRLGROUP				5000
+	#define MACRO_IDC_EMPTY_FOCUS_FRAME				5001
 
 
 
@@ -194,7 +198,10 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 	#define MACRO_POS_SEPARATOR_GROUND				0.35
+	#define MACRO_POS_SEPARATOR_CONTAINER				0.35
 	#define MACRO_POS_SEPARATOR_STORAGE				0.65
+	#define MACRO_POS_SPACER_X					0.002
+	#define MACRO_POS_SPACER_Y					0.003
 
 	#define MACRO_SCALE_SLOT_SIZE_W					0.033 * 0.84
 	#define MACRO_SCALE_SLOT_SIZE_H					0.055 * 0.84
@@ -302,8 +309,12 @@
 	#define MACRO_VARNAME_UI_CTRLPARENT				"ctrlParent"
 	#define MACRO_VARNAME_UI_OFFSET					"offset"
 	#define MACRO_VARNAME_UI_ALLSLOTFRAMES				"allSlotFrames"
+
 	#define MACRO_VARNAME_UI_NEXTUPDATE_GROUND			"nextUpdate_ground"
 	#define MACRO_VARNAME_UI_FORCEREDRAW_GROUND			"forceRedraw_ground"
+	#define MACRO_VARNAME_UI_ACTIVECONTAINER			"activeContainer"
+	#define MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE		"activeContainer_visible"
+	#define MACRO_VARNAME_UI_GROUND_HIGHESTPOSY			"highestPosY"
 
 	#define MACRO_VARNAME_UI_GROUND_CTRLS				"groundHolderCtrls"
 	#define MACRO_VARNAME_UI_GROUND_NAMESPACE			"groundNamespace"
@@ -356,6 +367,12 @@
 	#define MACRO_VARNAME_UI_MAG					"ctrlMagazine"
 	#define MACRO_VARNAME_UI_MAGALT					"ctrlMagazineAlt"
 	#define MACRO_VARNAME_UI_DISPLAYNAME				"ctrlDisplayName"
+
+	// Config entries
+	#define MACRO_VARNAME_CFG_SLOTSIZE				"cre8ive_slotSize"
+	#define MACRO_VARNAME_CFG_CONTAINERSIZE				"cre8ive_containerSize"
+	#define MACRO_VARNAME_CFG_SLOTSONLASTY				"cre8ive_slotsOnLastY"
+	#define MACRO_VARNAME_CFG_INVDISTANCE				"cre8ive_inventoryDistance"
 
 
 

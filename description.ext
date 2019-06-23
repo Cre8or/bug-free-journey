@@ -73,10 +73,10 @@ class CfgFunctions {
 			file = "scripts\inventory\commands";
 			// Abbreviation:	inv
 
+			//class inv_canOpenContainer {};
 			//class inv_getClassCountsByCategory {};
 			//class inv_getEveryContainer {};
 			//class inv_getItemsByCategory {};
-			//class inv_isContainer {};	// Is this needed?
 		};
 
 		class config {

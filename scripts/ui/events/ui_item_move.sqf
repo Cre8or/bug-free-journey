@@ -31,15 +31,22 @@ case "ui_item_move": {
 		// Remove the temporary dragging controls
 		[_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]] call cre_fnc_ui_deleteSlotCtrl;
 
+		// Fetch the drop control
+		private _ctrlDrop = _inventory displayCtrl MACRO_IDC_GROUND_DROP_FRAME;
+
 		// Restore the original colour on the highlighted controls
 		{
-			if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull])) then {
-				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+			// If the current control is the drop control, make it invisible
+			if (_x == _ctrlDrop) then {
+				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_INVISIBLE);
 			} else {
-				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+				if (isNull (_x getVariable [MACRO_VARNAME_DATA, locationNull])) then {
+					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
+				} else {
+					_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+				};
 			};
 		} forEach (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]);
-		_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
 
 		// Delete the original control's child controls
 		{
@@ -56,8 +63,11 @@ case "ui_item_move": {
 				_x ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 			};
 		} forEach (_allowedCtrls + _forbiddenCtrls);
+
+		// Clear all control arrays
 		_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
 		_inventory setVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, []];
+		_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
 
 		// Fetch the target slot (or the target control itself if it doesn't have a container control)
 		_slotPos params ["_slotPosX", "_slotPosY"];
