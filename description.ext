@@ -4,6 +4,20 @@
 
 
 
+// --------------------------------------------------------------------------------
+// MACROS
+// --------------------------------------------------------------------------------
+
+#include "res\common\macros.hpp"
+
+
+
+
+
+// --------------------------------------------------------------------------------
+// FUNCTIONS
+// --------------------------------------------------------------------------------
+
 class CfgFunctions {
 	class ca {
 		class AI {
@@ -93,6 +107,10 @@ class CfgFunctions {
 			class cfg_getMagazineMaxAmmo {};
 			class cfg_getWeaponMagazines {};
 			class cfg_getWeaponMuzzles {};
+
+			class cfg_compileIEHs {
+				preInit = 1;
+			};
 		};
 
 		class util_quickSort {
@@ -105,11 +123,38 @@ class CfgFunctions {
 			//class util_quickSort_swap {};
 
 		};
+
+		class IEH {
+			file = "scripts\IEH";
+			// Abbreviation:	IEH
+
+			//class IEH_default_updateContainer {};
+			//class IEH_man_updateContainer {};
+		};
 	};
 };
 
 
-#include "defines.hpp"
 
-// Dialogs
+
+
+// --------------------------------------------------------------------------------
+// USER INTERFACES
+// --------------------------------------------------------------------------------
+
+// Include our basic defines
+#include "res\common\defines.hpp"
+
+// Include the inventory UI
 #include "res\config\dialogs\inventory.hpp"
+
+
+
+
+
+// --------------------------------------------------------------------------------
+// INVENTORY EVENT HANDLERS
+// --------------------------------------------------------------------------------
+
+// Include our base IEHs
+#include "res\config\IEH\IEHs_base.hpp"

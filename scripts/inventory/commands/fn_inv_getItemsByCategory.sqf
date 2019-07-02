@@ -12,7 +12,7 @@
 		0:	<ARRAY>		Array of item datas (<LOCATION>) that match the specified category/categories
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\..\res\config\dialogs\macros.hpp"
+#include "..\..\..\res\common\macros.hpp"
 
 // Fetch the params
 params [

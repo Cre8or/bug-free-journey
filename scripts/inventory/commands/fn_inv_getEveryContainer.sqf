@@ -10,7 +10,7 @@
 		0:	<ARRAY>		Array of item datas (<LOCATION>) of every sub-container that was found
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\..\res\config\dialogs\macros.hpp"
+#include "..\..\..\res\common\macros.hpp"
 
 // Fetch the params
 params [

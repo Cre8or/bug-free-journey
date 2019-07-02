@@ -3,13 +3,13 @@
 	Description:
 		Returns the slot size of a certain class in the form [x,y].
 	Arguments:
-		0:      <STRING>	Classname of the item to check
+		0:      <STRING>	Classname of the item/object to check
 		1:      <NUMBER>	Category of the class (see fn_cfg_getClassCategory)
 	Returns:
 		0:      <ARRAY>	 	Slot size of the class in format [<NUMBER> x, <NUMBER> y]
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [
@@ -28,10 +28,10 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {[1,1]}
 private _namespace = missionNamespace getVariable ["cre8ive_getClassSlotSize_namespace", locationNull];
 
 // Fetch the slot size from the namespace
-private _slotSize = _namespace getVariable [_class, []];
+private _slotSize = _namespace getVariable _class;
 
 // If the slot size doesn't exist yet, try to determine it
-if (_slotSize isEqualTo []) then {
+if (isNil "_slotSize") then {
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {

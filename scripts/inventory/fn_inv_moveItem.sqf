@@ -16,7 +16,7 @@
 		0:	<BOOL>		True if the item was moved successfully, otherwise false
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [

@@ -3,13 +3,13 @@
 	Description:
 		Returns the mass of a certain class.
 	Arguments:
-		0:      <STRING>	Classname of the item to check
+		0:      <STRING>	Classname of the item/object to check
 		1:      <NUMBER>	Category of the class (see fn_cfg_getClassCategory)
 	Returns:
 		0:      <NUMBER>	Mass of the class
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [
@@ -28,11 +28,11 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {0};
 // Get our namespace
 private _namespace = missionNamespace getVariable ["cre8ive_getClassMass_namespace", locationNull];
 
-// Fetch the icon path from the namespace
-private _mass = _namespace getVariable [_class, -1];
+// Fetch the mass from the namespace
+private _mass = _namespace getVariable _class;
 
 // If the mass doesn't exist yet, we determine it
-if (_mass == -1) then {
+if (isNil "_mass") then {
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {

@@ -3,13 +3,13 @@
 	Description:
 		Determines the UI size of an inventory container. Result is returned in format [[x,y], slotsCount].
 	Arguments:
-		0:	<STRING>	Classname of the container to check
+		0:	<STRING>	Classname of the item/object to check
 	Returns:
 		0: 	<ARRAY>		UI size in format [x, y], where x and y represent an amount of slots
 		1:	<NUMBER>	Amount of slots in the last line (at: y = yMax)
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [
@@ -27,10 +27,10 @@ if (_class == "") exitWith {};
 private _namespace = missionNamespace getVariable ["cre8ive_getContainerSize_namespace", locationNull];
 
 // Fetch the icon path from the namespace
-private _res = _namespace getVariable [_class, []];
+private _res = _namespace getVariable _class;
 
 // If the icon path doesn't exist yet, fetch it from the config
-if (_res isEqualTo []) then {
+if (isNil "_res") then {
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {

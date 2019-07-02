@@ -9,7 +9,7 @@
 		0:      <NUMBER>	Category of the class (see above)
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [
@@ -17,7 +17,7 @@ params [
 ];
 
 // If no class was provided, exit and return an invalid category
-if (_class == "") exitWith {MACRO_ENUM_CATEGORY_INVALID};
+if (_class isEqualTo "") exitWith {MACRO_ENUM_CATEGORY_INVALID};
 
 
 
@@ -27,10 +27,11 @@ if (_class == "") exitWith {MACRO_ENUM_CATEGORY_INVALID};
 private _namespace = missionNamespace getVariable ["cre8ive_getClassCategory_namespace", locationNull];
 
 // Fetch the category from the namespace
-private _category = _namespace getVariable [_class, MACRO_ENUM_CATEGORY_INVALID];
+private _category = _namespace getVariable _class;
 
 // If the class doesn't have a category yet, determine it
-if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
+if (isNil "_category") then {
+	_category = MACRO_ENUM_CATEGORY_INVALID;
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {
@@ -101,7 +102,19 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 
 				// CfgVehicles
 				case 1: {
-					_category = MACRO_ENUM_CATEGORY_BACKPACK;
+					// It's a backpack
+					if (([configFile >> "CfgVehicles" >> _class, "isbackpack", 0] call BIS_fnc_returnConfigEntry) > 0) then {
+						_category = MACRO_ENUM_CATEGORY_BACKPACK;
+
+					// Otherwise...
+					} else {
+
+						// It's either a vehicle or a man
+						_category = [
+							MACRO_ENUM_CATEGORY_VEHICLE,
+							MACRO_ENUM_CATEGORY_MAN
+						] select (([configFile >> "CfgVehicles" >> _class, "simulation", ""] call BIS_fnc_returnConfigEntry) == "soldier");
+					};
 				};
 
 				// CfgMagazines
@@ -116,10 +129,8 @@ if (_category == MACRO_ENUM_CATEGORY_INVALID) then {
 			};
 		};
 
-		// If we determined the category, save it onto the namespace
-		if (_category != MACRO_ENUM_CATEGORY_INVALID) exitWith {
-			_namespace setVariable [_class, _category];
-		};
+		// Save the category onto the namespace
+		_namespace setVariable [_class, _category];
 	} forEach ["CfgWeapons", "CfgVehicles", "CfgMagazines", "CfgGlasses"];
 };
 

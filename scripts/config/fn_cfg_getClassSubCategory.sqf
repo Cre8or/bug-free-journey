@@ -10,7 +10,7 @@
 		0:      <NUMBER>	Subcategory of the class (see above)
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [
@@ -29,10 +29,11 @@ if (_class == "" or {_catgegory == MACRO_ENUM_CATEGORY_INVALID}) exitWith {MACRO
 private _namespace = missionNamespace getVariable ["cre8ive_getClassSubCategory_namespace", locationNull];
 
 // Fetch the category from the namespace
-private _subCategory = _namespace getVariable [_class, MACRO_ENUM_SUBCATEGORY_INVALID];
+private _subCategory = _namespace getVariable _class;
 
 // If the class doesn't have a category yet, determine it
-if (_subCategory == MACRO_ENUM_SUBCATEGORY_INVALID) then {
+if (isNil "_subCategory") then {
+	_subCategory = MACRO_ENUM_SUBCATEGORY_INVALID;
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {

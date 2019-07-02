@@ -4,7 +4,7 @@ if (isNil "cre_fnc_inv_moveItem") exitWith {};
 // Run unscheduled, as script errors will freeze the arsenal loading process, requiring a game restart
 [] spawn {
 
-	#include "..\res\config\dialogs\macros.hpp"
+	#include "..\res\common\macros.hpp"
 
 
 

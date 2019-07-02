@@ -1,6 +1,6 @@
 enableSaving [false, false];
 
-#include "res\config\dialogs\macros.hpp"
+#include "res\common\macros.hpp"
 
 
 

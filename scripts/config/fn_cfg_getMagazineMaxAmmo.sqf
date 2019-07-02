@@ -24,10 +24,11 @@ if (_class == "") exitWith {1};
 private _namespace = missionNamespace getVariable ["cre8ive_getMagazineMaxAmmo_namespace", locationNull];
 
 // Fetch the max ammo count from the namespace
-private _maxAmmo = _namespace getVariable [_class, -1];
+private _maxAmmo = _namespace getVariable _class;
 
 // If the max ammo count doesn't exist yet, try to determine it
-if (_maxAmmo == -1) then {
+if (isNil "_maxAmmo") then {
+	_maxAmmo = -1;
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {

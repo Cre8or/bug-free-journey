@@ -20,7 +20,7 @@
 						Count1...CountN:	<NUMBER>
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\..\res\config\dialogs\macros.hpp"
+#include "..\..\..\res\common\macros.hpp"
 
 // Fetch the params
 params [

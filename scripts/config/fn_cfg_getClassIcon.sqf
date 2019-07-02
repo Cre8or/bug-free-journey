@@ -3,7 +3,7 @@
 	Description:
 		Returns the icon of a specific class.
 	Arguments:
-		0:      <STRING>	Classname of the item to check
+		0:      <STRING>	Classname of the item/object to check
 		1:      <NUMBER>	Category of the class (see fn_cfg_getClassCategory)
 		2:      <STRING>	Default icon to be used if nothing was found
 	Returns:
@@ -11,7 +11,7 @@
 					(e.g. "a3\weapons_f\Items\data\UI\gear_FirstAidKit_CA.paa")
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [
@@ -31,10 +31,10 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) exitWith {_defau
 private _namespace = missionNamespace getVariable ["cre8ive_getClassIcon_namespace", locationNull];
 
 // Fetch the icon path from the namespace
-private _iconPath = _namespace getVariable [_class, " "];
+private _iconPath = _namespace getVariable _class;
 
 // If the icon path doesn't exist yet, fetch it from the config
-if (_iconPath == " ") then {
+if (isNil "_iconPath") then {
 	_iconPath = "";
 
 	// If the namespace doesn't exist yet, create it

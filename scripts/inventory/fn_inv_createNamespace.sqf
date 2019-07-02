@@ -8,7 +8,7 @@
 		0:      <LOCATION>	New namespace
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 
 

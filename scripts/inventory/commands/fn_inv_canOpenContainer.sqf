@@ -9,7 +9,7 @@
 		0:	<BOOOLEAN>	Whether or not the unit can open the container
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\..\res\config\dialogs\macros.hpp"
+#include "..\..\..\res\common\macros.hpp"
 
 // Fetch the params
 params [

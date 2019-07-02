@@ -14,7 +14,7 @@
 		0:      <NUMBER>	Total mass of all objects inside the container object
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [

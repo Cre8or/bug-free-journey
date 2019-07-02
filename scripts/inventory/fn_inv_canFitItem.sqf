@@ -19,7 +19,7 @@
 					NOTE: Only used when performing full checks! (always empty on simple checks)
 -------------------------------------------------------------------------------------------------------------------- */
 
-#include "..\..\res\config\dialogs\macros.hpp"
+#include "..\..\res\common\macros.hpp"
 
 // Fetch our params
 params [

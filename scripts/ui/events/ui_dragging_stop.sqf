@@ -61,6 +61,10 @@ case "ui_dragging_stop": {
 			// Nullify the target control, as we don't handle drawing ground/dropped items here
 			_targetContainerCtrl = controlNull;
 
+			// Raise the drop event
+			private _eventArgs = [_itemData, _targetContainer, _targetContainerData, _originContainerData, player];
+			[STR(MACRO_ENUM_EVENT_DROP), _eventArgs] call cre_fnc_IEH_raiseEvent;
+
 		// Otherwise...
 		} else {
 

@@ -12,12 +12,6 @@ __EXEC(uiNamespace setVariable ["Cre8ive_Inventory_SafeZoneH", _safeZoneH])
 
 
 
-#include "macros.hpp"
-
-
-
-
-
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 // SCRIPTED CONTROLS
 class Cre8ive_Inventory_ScriptedBox : RscBox {

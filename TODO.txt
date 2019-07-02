@@ -1,4 +1,5 @@
 TODO:
+- Write a config function that returns the display name of a class and caches it (for use in generateChildControls)
 - Write a function that checks if a given object should generate container data (e.g. if it can fit inventory) and implement it into the ground update/init events
 - Prevent the ground UI from showing items that are obstructed (e.g. behind a wall)
 - Position dropped items on the first surface under the player's current position (otherwise items may float in the air if the player dropped while jumping/on a ladder)
@@ -20,6 +21,11 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Add a basic Inventory EventHandler system
+	* Config-based IEHs for classes (IEHS are inherited from parents, unless explicitely stated otherwise -> "isFinal")
+	* Config classes should accept functions and/or code snippets
+	* Events should be raised wherever is appropriate, by the inventory (and other related functions)
+	* IEHs should be cached on special namespaces to reduce overhead
 - Write a function check if an object is within distance to open its inventory (compare to Arma 3's inventory distance handling)
 - Fix the container controls group obstructing the drop control when it not shown
 - Fix the inventory's cursor position not being reset when exiting a control, making it possible to drop items by hovering over the drop control and the moving the mouse away (e.g. over empty space) and left-clicking
