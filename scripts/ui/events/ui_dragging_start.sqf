@@ -58,7 +58,7 @@ case "ui_dragging_start": {
 					_ctrlIconTemp ctrlSetText _defaultIconPath;
 					_ctrlIconTemp ctrlSetPosition _posCtrl;
 					_ctrlIconTemp ctrlCommit 0;
-					_draggedCtrl setVariable [MACRO_VARNAME_UI_ICONTEMP, _ctrlIconTemp];
+					_inventory setVariable [MACRO_VARNAME_UI_ICONTEMP, _ctrlIconTemp];
 				};
 
 				// If the item is rotated, flip the width and height

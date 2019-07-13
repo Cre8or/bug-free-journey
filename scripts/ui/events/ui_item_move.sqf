@@ -26,7 +26,7 @@ case "ui_item_move": {
 		//_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 		// Delete the temporary slot picture
-		ctrlDelete (_ctrl getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
+		ctrlDelete (_inventory getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
 
 		// Remove the temporary dragging controls
 		[_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]] call cre_fnc_ui_deleteSlotCtrl;
@@ -143,7 +143,7 @@ case "ui_item_move": {
 			_ctrl setVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
 
 			// Create new child controls on the original control (which should be an empty slot now)
-			[_ctrl] call cre_fnc_ui_generateChildControls;
+			[_ctrl, "", MACRO_ENUM_CATEGORY_EMPTY, _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""]] call cre_fnc_ui_generateChildControls;
 
 			// Colour the original control
 			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);

@@ -120,35 +120,44 @@ case "ui_init": {
 				];
 
 				// Add an event handler to the mission that handles the inventory's onEachFrame code
-				private _EH = addMissionEventHandler ["EachFrame", {
+				private _EH = missionNamespace getVariable [MACRO_VARNAME_UI_EH_EACHFRAME, -1];
+				if (_EH < 0) then {
+					_EH = addMissionEventHandler ["EachFrame", {
 
-					// Fetch the time and the inventory display
-					private _time = time;
-					private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
+						// Fetch the time and the inventory display
+						private _time = time;
+						private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
 
-					// Check if the temporary frame exists
-					private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
-					if (!isNull _ctrlFrameTemp) then {
-
-						// If it exists, but we're not dragging anything, call the abort event (which then removes it)
-						private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
-						if (isNull _draggedCtrl) then {
-							["ui_dragging_abort"] call cre_fnc_ui_inventory;
+						// If the inventory no longer exists, exit and remove this EH
+						if (isNull _inventory) exitWith {
+							removeMissionEventHandler ["EachFrame", missionNamespace getVariable [MACRO_VARNAME_UI_EH_EACHFRAME, -1]];
+						 	missionNamespace setVariable [MACRO_VARNAME_UI_EH_EACHFRAME, -1, false];
 						};
-					};
 
-					// Check if we should update the ground menu
-					if (_time > (_inventory getVariable [MACRO_VARNAME_UI_NEXTUPDATE_GROUND, 0])) then {
-						_inventory setVariable [MACRO_VARNAME_UI_NEXTUPDATE_GROUND, _time + MACRO_GROUND_UPDATE_DELAY];
+						// Check if the temporary frame exists
+						private _ctrlFrameTemp = _inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull];
+						if (!isNull _ctrlFrameTemp) then {
 
-						["ui_update_ground"] call cre_fnc_ui_inventory;
-					};
-				}];
-				missionNamespace setVariable [MACRO_VARNAME_UI_EH_EACHFRAME, _EH, false];
+							// If it exists, but we're not dragging anything, call the abort event (which then removes it)
+							private _draggedCtrl = _inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull];
+							if (isNull _draggedCtrl) then {
+								["ui_dragging_abort"] call cre_fnc_ui_inventory;
+							};
+						};
+
+						// Check if we should update the ground menu
+						if (_time > (_inventory getVariable [MACRO_VARNAME_UI_NEXTUPDATE_GROUND, 0])) then {
+							_inventory setVariable [MACRO_VARNAME_UI_NEXTUPDATE_GROUND, _time + MACRO_GROUND_UPDATE_DELAY];
+
+							["ui_update_ground"] call cre_fnc_ui_inventory;
+						};
+					}];
+					missionNamespace setVariable [MACRO_VARNAME_UI_EH_EACHFRAME, _EH, false];
+				};
 
 				// Reset the focus
 				["ui_focus_reset"] call cre_fnc_ui_inventory;
-/*
+
 				// DEBUG - Print the cursor control
 				[_inventory] spawn {
 					disableSerialization;
@@ -158,6 +167,7 @@ case "ui_init": {
 
 						private _str = str (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull]) + "<br />";
 						_str = _str + str (_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]) + "<br />";
+						_str = _str + str (_inventory getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]) + "<br />";
 						//_str = _str + "count: " + str count (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]) + "<br />";
 						//_str = _str + "posNew: " + str (_inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []]);
 
@@ -168,7 +178,7 @@ case "ui_init": {
 
 					hint "";
 				};
-*/
+
 
 				hint format ["Opened in %1s", diag_tickTime - _timeStart];
 			};

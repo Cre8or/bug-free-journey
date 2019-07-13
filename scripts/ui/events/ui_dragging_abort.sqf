@@ -71,7 +71,7 @@ case "ui_dragging_abort": {
 		_draggedCtrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 		// Delete the temporary slot picture
-		ctrlDelete (_draggedCtrl getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
+		ctrlDelete (_inventory getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
 
 		// Unhide the original control's child controls
 		{

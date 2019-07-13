@@ -28,8 +28,7 @@ params [
 } forEach (_ctrl getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
 // Delete the temporary slot icon
-
-ctrlDelete (_ctrl getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
+//ctrlDelete (_ctrl getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]);
 
 // Delete the slot icon
 ctrlDelete (_ctrl getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]);

@@ -294,7 +294,7 @@ if (!_doNothing and {_return}) then {
 						};
 
 						// Re-add the magazine with the correct ammo count to the appropriate muzzle
-						_targetContainer addWeaponItem [_class, [_magX getVariable [MACRO_VARNAME_CLASS, ""], _magX getVariable [MACRO_VARNAME_MAG_AMMO, 0], _muzzle]];
+						_targetContainer addWeaponItem [_class, [_magX getVariable [MACRO_VARNAME_CLASS, ""], _magX getVariable [MACRO_VARNAME_MAG_AMMO, 0], _muzzle], true];
 					};
 
 				} forEach [
@@ -402,34 +402,24 @@ if (!_doNothing and {_return}) then {
 				private _magData = _itemData getVariable [MACRO_VARNAME_MAG, locationNull];
 				private _magAltData = _itemData getVariable [MACRO_VARNAME_MAGALT, locationNull];
 
-				private _accMuzzle = (_itemData getVariable [MACRO_VARNAME_ACC_MUZZLE, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""];
-				private _accSide = (_itemData getVariable [MACRO_VARNAME_ACC_SIDE, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""];
-				private _accOptic = (_itemData getVariable [MACRO_VARNAME_ACC_OPTIC, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""];
-				private _accBipod = (_itemData getVariable [MACRO_VARNAME_ACC_BIPOD, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""];
-				private _mag = _magData getVariable [MACRO_VARNAME_CLASS, ""];
-				private _magAlt = _magAltData getVariable [MACRO_VARNAME_CLASS, ""];
-
-				// Workaround for a bug in v1.93.145618 (empty strings/invalid classnames prevent the command from executing)
-				if (_accMuzzle == "") then	{_accMuzzle = "optic_Aco"};
-				if (_accSide == "") then	{_accSide = "optic_Aco"};
-				if (_accOptic == "") then	{_accOptic = "acc_pointer_IR"};
-				if (_accBipod == "") then	{_accBipod = "optic_Aco"};
-				if (_mag == "") then		{_mag = "CA_Magazine"};
-				if (_magAlt == "") then		{_magAlt = "CA_Magazine"};
-
 				// Re-add the weapon with attachments (ty BI for the new command, very cool)
 				_targetContainer addWeaponWithAttachmentsCargoGlobal [
-					_class,
-					_accMuzzle,
-					_accSide,
-					_accOptic,
-					_accBipod,
 					[
-						_mag,
-						_magData getVariable [MACRO_VARNAME_MAG_AMMO, 0],
-						_magAlt,
-						_magAltData getVariable [MACRO_VARNAME_MAG_AMMO, 0]
-					]
+						_class,
+						(_itemData getVariable [MACRO_VARNAME_ACC_MUZZLE, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""],
+						(_itemData getVariable [MACRO_VARNAME_ACC_SIDE, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""],
+						(_itemData getVariable [MACRO_VARNAME_ACC_OPTIC, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""],
+						[
+							_magData getVariable [MACRO_VARNAME_CLASS, ""],
+							_magData getVariable [MACRO_VARNAME_MAG_AMMO, 0]
+						],
+						[
+							_magAltData getVariable [MACRO_VARNAME_CLASS, ""],
+							_magAltData getVariable [MACRO_VARNAME_MAG_AMMO, 0]
+						],
+						(_itemData getVariable [MACRO_VARNAME_ACC_BIPOD, locationNull]) getVariable [MACRO_VARNAME_CLASS, ""]
+					],
+					1
 				];
 			};
 

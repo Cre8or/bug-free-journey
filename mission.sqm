@@ -1029,13 +1029,14 @@ class Mission
 						angles[]={0,4.6803637,0};
 					};
 					side="Empty";
+					flags=4;
 					class Attributes
 					{
 						init="call{[this] spawn cre_fnc_addAISpawn}";
 					};
 					id=230;
 					type="Sign_Arrow_Direction_F";
-					atlOffset=1.1170845;
+					atlOffset=0.00043487549;
 				};
 				class Item35
 				{
@@ -1064,13 +1065,13 @@ class Mission
 						angles[]={0,0.51114386,0};
 					};
 					side="Empty";
+					flags=4;
 					class Attributes
 					{
 						init="call{[this] spawn cre_fnc_addAISpawn}";
 					};
 					id=232;
 					type="Sign_Arrow_Direction_F";
-					atlOffset=3.7379799;
 				};
 				class Item37
 				{
@@ -1081,13 +1082,13 @@ class Mission
 						angles[]={0,3.6195083,0};
 					};
 					side="Empty";
+					flags=4;
 					class Attributes
 					{
 						init="call{[this] spawn cre_fnc_addAISpawn}";
 					};
 					id=233;
 					type="Sign_Arrow_Direction_F";
-					atlOffset=0.39176369;
 				};
 				class Item38
 				{
@@ -1116,13 +1117,13 @@ class Mission
 						angles[]={6.2820935,5.9337339,0};
 					};
 					side="Empty";
+					flags=4;
 					class Attributes
 					{
 						init="call{[this] spawn cre_fnc_addAISpawn}";
 					};
 					id=235;
 					type="Sign_Arrow_Direction_F";
-					atlOffset=0.33256912;
 				};
 				class Item40
 				{
