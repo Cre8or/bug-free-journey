@@ -25,30 +25,30 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 //	COLOURS
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
-	//#define COLOUR_SCHEME
+//	#define COLOUR_SCHEME
 
 	#ifdef COLOUR_SCHEME
-		#define MACRO_COLOUR_BACKGROUND                         0.11, 0.09, 0.06, 0.8
-		#define MACRO_COLOUR_ELEMENT_ACTIVE                     0.8, 0.72, 0.55, 0.5
-		#define MACRO_COLOUR_ELEMENT_INACTIVE                   0.8, 0.72, 0.55, 0.15
-		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER               0.8, 0.72, 0.55, 0.7
-		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER             0.8, 0.72, 0.55, 0.3
-		#define MACRO_COLOUR_SEPARATOR                          0.08, 0.07, 0.045, 0.8
 /*
-		#define MACRO_COLOUR_BACKGROUND                         0.095, 0.11, 0.06, 0.8
-		#define MACRO_COLOUR_ELEMENT_ACTIVE                     0.72, 0.8, 0.55, 0.4
-		#define MACRO_COLOUR_ELEMENT_INACTIVE                   0.72, 0.8, 0.55, 0.15
-		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER               0.72, 0.8, 0.55, 0.6
-		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER             0.72, 0.8, 0.55, 0.3
-		#define MACRO_COLOUR_SEPARATOR                          0.07, 0.08, 0.045, 0.8
+		#define MACRO_COLOUR_BACKGROUND                         0.1, 0.085, 0.065, 0.8
+		#define MACRO_COLOUR_ELEMENT_ACTIVE                     0.85, 0.76, 0.55, 0.6
+		#define MACRO_COLOUR_ELEMENT_INACTIVE                   0.85, 0.76, 0.55, 0.15
+		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER               0.85, 0.76, 0.55, 0.8
+		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER             0.85, 0.76, 0.55, 0.3
+		#define MACRO_COLOUR_SEPARATOR                          0.08, 0.07, 0.045, 0.8
 */
+		#define MACRO_COLOUR_BACKGROUND                         0.08, 0.1, 0.06, 0.8
+		#define MACRO_COLOUR_ELEMENT_ACTIVE                     0.6, 0.8, 0.5, 0.6
+		#define MACRO_COLOUR_ELEMENT_INACTIVE                   0.6, 0.8, 0.5, 0.15
+		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER               0.6, 0.8, 0.5, 0.8
+		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER             0.6, 0.8, 0.5, 0.3
+		#define MACRO_COLOUR_SEPARATOR                          0.06, 0.08, 0.05, 0.8
+
 	#else
-		#define MACRO_COLOUR_BACKGROUND                         0.1, 0.1, 0.1, 0.8
+		#define MACRO_COLOUR_BACKGROUND                         0.08, 0.08, 0.08, 0.8
 		#define MACRO_COLOUR_ELEMENT_ACTIVE                     0.7, 0.7, 0.7, 0.6
 		#define MACRO_COLOUR_ELEMENT_INACTIVE                   0.7, 0.7, 0.7, 0.15
 		#define MACRO_COLOUR_ELEMENT_ACTIVE_HOVER               0.7, 0.7, 0.7, 0.8
 		#define MACRO_COLOUR_ELEMENT_INACTIVE_HOVER             0.7, 0.7, 0.7, 0.3
-		#define MACRO_COLOUR_ELEMENT_DRAGGING_ORIGIN            0.3, 0.3, 0.3, 0.3
 		#define MACRO_COLOUR_SEPARATOR                          0.05, 0.05, 0.05, 0.8
 	#endif
 
@@ -293,7 +293,8 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 	// Null:							[0,0]
-	// Default (starting position):					[1,1]
+	// Default (starting position for items):			[1,1]
+	// Use invalid ([-1,-1]) for testing whether or not a slotPos is defined! Null ([0,0]) means it is defined, but the slotPos is empty (i.e. it doesn't matter/isn't used for anything)
 	#define MACRO_ENUM_SLOTPOS_INVALID                              -1
 	#define MACRO_ENUM_SLOTPOS_DROP                                 -2
 
@@ -325,33 +326,44 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 
 	// Null / default:						""
 	// NOTE: Use STR() on these macros to obtain a string!
-	#define MACRO_ENUM_EVENT_UPDATECONTAINER                        UpdtContnr
+	#define MACRO_ENUM_EVENT_INIT                                   Init
 	#define MACRO_ENUM_EVENT_TAKE                                   Take
 	#define MACRO_ENUM_EVENT_DROP                                   Drop
 	#define MACRO_ENUM_EVENT_MOVE                                   Move
 	#define MACRO_ENUM_EVENT_USE                                    Use
 	#define MACRO_ENUM_EVENT_DELETED                                Deleted
 	#define MACRO_ENUM_EVENT_EACHFRAME                              EachFrm
+	#define MACRO_ENUM_EVENT_DRAWCONTAINER                          DrawContnr
 	#define MACRO_ENUM_EVENT_GENERATECHILDCONTROLS                  GenChildCtrls
 
 	// Event indexes
+	// TODO: check if this is needed anywhere, and if not, delete it
 	#define MACRO_IEH_EVENT_INDEXES [ \
-		STR(MACRO_ENUM_EVENT_UPDATECONTAINER), \
+		STR(MACRO_ENUM_EVENT_INIT), \
 		STR(MACRO_ENUM_EVENT_TAKE), \
 		STR(MACRO_ENUM_EVENT_DROP), \
 		STR(MACRO_ENUM_EVENT_MOVE), \
 		STR(MACRO_ENUM_EVENT_USE), \
 		STR(MACRO_ENUM_EVENT_DELETED), \
 		STR(MACRO_ENUM_EVENT_EACHFRAME), \
+		STR(MACRO_ENUM_EVENT_DRAWCONTAINER), \
 		STR(MACRO_ENUM_EVENT_GENERATECHILDCONTROLS) \
 	]
 
 /*
 	EVENT DOCUMENTATIONS:
+	The first parameter of EVERY event is *ALWAYS* the itemData that triggered the event
 
+	MACRO_ENUM_EVENT_INIT
+		params ["_itemData", "_UID", "_parentContainer", "_parentContainerData", "_slotPos"];
+	MACRO_ENUM_EVENT_TAKE
+		params ["_itemData", "_takenBy", "_originContainer", "_originContainerData", "_targetContainer", "_targetContainerData", "_originSlotPos", "_targetSlotPos"];
 	MACRO_ENUM_EVENT_DROP
-		params ["_itemData", "_targetContainer", "_targetContainerData", "_originContainerData", "_droppedBy"];
-
+		params ["_itemData", "_droppedBy", "_originContainer", "_originContainerData", "_targetContainer", "_targetContainerData", "_originSlotPos", "_targetSlotPos"];
+	MACRO_ENUM_EVENT_MOVE
+		params ["_itemData", "_droppedBy", "_originContainer", "_originContainerData", "_targetContainer", "_targetContainerData", "_originSlotPos", "_targetSlotPos"];
+	MACRO_ENUM_EVENT_DRAWCONTAINER
+		params ["_containerData", "_ctrlGrp", "_container"];
 
 
 */
@@ -384,6 +396,10 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_VARNAME_UI_GROUND_NAMESPACE                       "groundNamespace"
 	#define MACRO_VARNAME_UI_WEAPONS_ITEMDATAS                      "weaponsItemData"
 	#define MACRO_VARNAME_UI_STORAGE_CONTAINERS                     "storageContainers"
+	#define MACRO_VARNAME_UI_STORAGE_CURRENTINDEX_ITEM              "storage_curIndexItem"
+	#define MACRO_VARNAME_UI_STORAGE_CURRENTINDEX_CONTAINER         "storage_curIndexContainer"
+	#define MACRO_VARNAME_UI_STORAGE_MAXITERATIONS                  "storage_maxIterations"
+	#define MACRO_VARNAME_UI_STORAGE_INITIALISED                    "storage_init"
 
 	#define MACRO_VARNAME_UI_CURSORCTRL                             "cursorCtrl"
 	#define MACRO_VARNAME_UI_CURSORPOSREL                           "cursorPosRel"

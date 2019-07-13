@@ -19,8 +19,12 @@ case "ui_init": {
 		if (time > _timeOut) then {
 			systemChat "Couldn't open inventory!";
 		} else {
+			//sleep 0.1;
+
 			// Escape scheduled environment
 			isNil {
+				private _timeStart = diag_tickTime;
+
 				// Fetch the inventory
 				private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
 
@@ -75,10 +79,14 @@ case "ui_init": {
 				// ---- DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 				// TODO: Move this into mission init (or similar) so that this data is available even if the inventory hasn't been opened yet!
 				if (false or isNull (player getVariable [MACRO_VARNAME_DATA, locationNull])) then {
-					private _containerData = [player, "", false] call cre_fnc_inv_generateContainerData;
+					private _containerData = [player, "", objNull, [0,0], false] call cre_fnc_inv_generateContainerData;
 					_containerData setVariable [MACRO_VARNAME_CONTAINER, player];
 					player setVariable [MACRO_VARNAME_DATA, _containerData];
 				};
+
+				// Prepare the storage menu
+				// TODO: Make this value depend on the framerate?
+				_inventory setVariable [MACRO_VARNAME_UI_STORAGE_MAXITERATIONS, 10];	// Amount of slot controls to generate, per frame
 
 				// Update the ground menu
 				["ui_update_ground"] call cre_fnc_ui_inventory;
@@ -161,6 +169,8 @@ case "ui_init": {
 					hint "";
 				};
 */
+
+				hint format ["Opened in %1s", diag_tickTime - _timeStart];
 			};
 		};
 	};

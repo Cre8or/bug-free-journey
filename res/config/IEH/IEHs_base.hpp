@@ -1,79 +1,66 @@
 // macros.hpp is already included
 
+// Debug class to print all events
+class Cre8ive_Debug_PrintAllIEHs {
+	class MACRO_ENUM_EVENT_INIT {
+		code = "systemChat '(IEH) Initialised something!'; _this call cre_fnc_debug_printIEH";
+	};
+	class MACRO_ENUM_EVENT_TAKE {
+//		code = "systemChat '(IEH) Took something!'; _this call cre_fnc_debug_printIEH";
+		code = "systemChat format ['(IEH) Took: %1', (_this select 0) getVariable ['uid', '???']]";
+	};
+	class MACRO_ENUM_EVENT_DROP {
+//		code = "systemChat '(IEH) Dropped something!'; _this call cre_fnc_debug_printIEH";
+		code = "systemChat format ['(IEH) Dropped: %1', (_this select 0) getVariable ['uid', '???']]";
+	};
+	class MACRO_ENUM_EVENT_MOVE {
+//		code = "systemChat '(IEH) Moved something!'; _this call cre_fnc_debug_printIEH";
+		code = "systemChat format ['(IEH) Moved: %1', (_this select 0) getVariable ['uid', '???']]";
+	};
+};
+
+
+
+
+
 class MACRO_CLASSNAME_IEH {
 
 	class Cre8ive {
+
 		class CfgVehicles {
 			class All {
-				class MACRO_ENUM_EVENT_UPDATECONTAINER {
-					function = "cre_fnc_IEH_default_updateContainer";
+				class MACRO_ENUM_EVENT_DRAWCONTAINER {
+					function = "cre_fnc_IEH_default_drawContainer";
+					code = "systemChat '(IEH) Updated container!'; _this call cre_fnc_debug_printIEH";
 				};
 			};
 
 			class Man {
-				class MACRO_ENUM_EVENT_UPDATECONTAINER {
-					function = "cre_fnc_IEH_man_updateContainer";
+				class MACRO_ENUM_EVENT_DRAWCONTAINER {
+					function = "cre_fnc_IEH_man_drawContainer";
+					code = "systemChat '(IEH) Updated man!'; _this call cre_fnc_debug_printIEH";
 					isFinal = 1;		// Stop at this class (don't execute the code from "All")
 				};
 			};
+
+			class Bag_Base : Cre8ive_Debug_PrintAllIEHs {};
 		};
-/*
+
 		class CfgWeapons {
-			// Items
-			class ItemCore {
-				class MACRO_ENUM_EVENT_DROP {
-					code = "systemChat '(IEH) Dropped an item!'";
-				};
-			};
-
-			// Rifles
-			class RifleCore {
-				class MACRO_ENUM_EVENT_DROP {
-					code = "systemChat '(IEH) Dropped a rifle!'";
-					//overwrite = 1;
-				};
-			};
-
-			// Uniforms
-			class Uniform_Base {
-				class MACRO_ENUM_EVENT_DROP {
-					code = "systemChat '(IEH) Dropped a uniform!'";
-					overwrite = 1;
-				};
-			};
-
-			// Vests
-			class Vest_NoCamo_Base {
-				class MACRO_ENUM_EVENT_DROP {
-					code = "systemChat '(IEH) Dropped a vest!'";
-					overwrite = 1;
-					isFinal = 1;
-				};
-			};
-			class Vest_Camo_Base : Vest_NoCamo_Base {};
-
-			// Helmets
-			class HelmetBase {
-				class MACRO_ENUM_EVENT_DROP {
-					code = "systemChat '(IEH) Dropped a helmet!'";
-					overwrite = 1;
-				};
-			};
+			class ItemCore : Cre8ive_Debug_PrintAllIEHs {};
 		};
 		class CfgMagazines {
-			class CA_Magazine {
-				class MACRO_ENUM_EVENT_DROP {
-					code = "systemChat '(IEH) Dropped a magazine!'";
-				};
-			};
+			class CA_Magazine : Cre8ive_Debug_PrintAllIEHs {};
 		};
-*/
+		class CfgGlasses {
+			class None : Cre8ive_Debug_PrintAllIEHs {};
+		};
 	};
-
+/*
 	class Something_Else {
 		class CfgVehicles {
 			class Man {
-				class MACRO_ENUM_EVENT_UPDATECONTAINER {
+				class MACRO_ENUM_EVENT_DRAWCONTAINER {
 					code = "systemChat 'This guy is lit, yo!'";
 					overwrite = 0;
 				};
@@ -89,4 +76,5 @@ class MACRO_CLASSNAME_IEH {
 			};
 		};
 	};
+*/
 };

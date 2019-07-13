@@ -9,7 +9,9 @@
 	Arguments:
 		0:      <OBJECT>	Container object to generate data for
 		1:	<STRING>	The class of the container (used for container proxies, such as uniforms/vests)
-		2:	<BOOL>		If the container is a unit, this bool will decide whether to also generate
+		2:	<OBJECT>	The container's parent object
+		3:	<ARRAY>		The container's slot position (in format [X,Y])
+		4:	<BOOL>		If the container is a unit, this bool will decide whether to also generate
 					container data for the unit's vest, uniform and backpack (true), or just
 					the unit's data (weapons and assigned items) (false)
 	Returns:
@@ -22,6 +24,8 @@
 params [
 	["_container", objNull, [objNull]],
 	["_containerClass", "", [""]],
+	["_parentContainer", objNull, [objNull]],
+	["_containerSlotPos", [0,0], [[]]],
 	["_recursiveOnUnits", true, [true]]
 ];
 
@@ -46,8 +50,9 @@ deleteLocation _containerData;
 // If the container is a unit, the data has to be generated differently (due to predetermined slots)
 if (_container isKindOf "Man") then {
 
-	// Create a new namespace for the container
+	// Create a new namespace for the player's container data
 	_containerData = (call cre_fnc_inv_createNamespace) select 0;
+	_container setVariable [MACRO_VARNAME_DATA, _containerData, false];
 
 	// Determine the unit's assigned items
 	private _map = "";
@@ -73,12 +78,13 @@ if (_container isKindOf "Man") then {
 		MACRO_ENUM_SLOTPOS_SECONDARYWEAPON
 	];
 	private _weaponDataArray = [];
+	private _eventArgs = [];
 	{
 		// Only continue if we have a weapon
 		if (_x != "") then {
 
 			// Generate the accessories data for the weapon
-			(call cre_fnc_inv_createNamespace) params ["_itemData"];
+			(call cre_fnc_inv_createNamespace) params ["_itemData", "_itemUID"];
 			private _weaponAccArray = [_container, _forEachIndex] call cre_fnc_inv_generateWeaponAccArray;
 			[_itemData, _weaponAccArray] call cre_fnc_inv_generateWeaponAccData;
 
@@ -91,6 +97,10 @@ if (_container isKindOf "Man") then {
 			private _slotPosEnum = _slotPosEnums select _forEachIndex;
 			_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
 			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _itemData];
+
+			// Raise the "Init" event
+			_eventArgs = [_itemData, _itemUID, player, _containerData, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+			[STR(MACRO_ENUM_EVENT_INIT), _eventArgs] call cre_fnc_IEH_raiseEvent;
 		};
 	} forEach [
 		primaryWeapon _container,
@@ -115,7 +125,7 @@ if (_container isKindOf "Man") then {
 		if (_x != "") then {
 
 			// Generate the data for the item
-			(call cre_fnc_inv_createNamespace) params ["_itemData"];
+			(call cre_fnc_inv_createNamespace) params ["_itemData", "_itemUID"];
 
 			// Save some basic info onto the item data
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
@@ -126,6 +136,10 @@ if (_container isKindOf "Man") then {
 			private _slotPosEnum = _slotPosEnums select _forEachIndex;
 			_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
 			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _itemData];
+
+			// Raise the "Init" event
+			_eventArgs = [_itemData, _itemUID, player, _containerData, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+			[STR(MACRO_ENUM_EVENT_INIT), _eventArgs] call cre_fnc_IEH_raiseEvent;
 		};
 	} forEach [
 		hmd _container,
@@ -152,16 +166,10 @@ if (_container isKindOf "Man") then {
 			backpack _container
 		];
 		{
-			private _subContainerData = [_x] call cre_fnc_inv_generateContainerData;
-
-			// Save some basic info onto the sub-container data
-			_subContainerData setVariable [MACRO_VARNAME_CLASS, _containerTypes select _forEachIndex];
-			_subContainerData setVariable [MACRO_VARNAME_PARENT, _container];
-			_subContainerData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
-
-			// Save the sub-container's position
 			private _slotPosEnum = _slotPosEnums select _forEachIndex;
-			_subContainerData setVariable [MACRO_VARNAME_SLOTPOS, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+			private _subContainerData = [_x, _containerTypes select _forEachIndex, _container, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]] call cre_fnc_inv_generateContainerData;
+
+			// Link the player container data with this container data
 			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _subContainerData];
 		} forEach [
 			uniformContainer _container,
@@ -328,63 +336,75 @@ if (_container isKindOf "Man") then {
 
 		// Create a new namespace for the container
 		_containerData = (call cre_fnc_inv_createNamespace) select 0;
+		_container setVariable [MACRO_VARNAME_DATA, _containerData, false];
 
 		// Fill the container data with some basic information
 		_containerData setVariable [MACRO_VARNAME_CLASS, _containerClass];
 		_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, [1,1]];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, 1];
+		_containerData setVariable [MACRO_VARNAME_SLOTPOS, _containerSlotPos];
+
+		// Link this container data to its parent
+		private _parentContainerData = _parentContainer getVariable [MACRO_VARNAME_DATA, locationNull];
+		_containerData setVariable [MACRO_VARNAME_PARENT, _parentContainer];
+		_containerData setVariable [MACRO_VARNAME_PARENTDATA, _parentContainerData];
 
 		// If we found the item, fill out its data
 		if !(_class isEqualTo "") then {
 
 			// Determine the category and slot size
-			private _category = [_class] call cre_fnc_cfg_getClassCategory;
-			private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
-
-			// Create the data for the item
-			(call cre_fnc_inv_createNamespace) params ["_itemData"];
+			//private _category = [_class] call cre_fnc_cfg_getClassCategory;
+			//private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 			// If the item is a container, recursively run this function on it
+			private _itemData = locationNull;
 			if (_formatTypeItem == 3) then {
-				private _containerX = _args select 1;
-				_itemData = [_containerX, _class] call cre_fnc_inv_generateContainerData;
+				_itemData = [_args select 1, _class, _container, [1, 1]] call cre_fnc_inv_generateContainerData;
+
+				// Save some more info onto the item data
+				_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, [[1, 1]]];
+				_itemData setVariable [MACRO_VARNAME_ISROTATED, false];
+
+			// Otherwise, it's an item
 			} else {
 				_itemData = (call cre_fnc_inv_createNamespace) select 0;
-			};
 
-			// Save the item class onto the item data
-			_itemData setVariable [MACRO_VARNAME_CLASS, _class];
+				// Save some basic things onto the item data
+				_itemData setVariable [MACRO_VARNAME_CLASS, _class];
+				_itemData setVariable [MACRO_VARNAME_PARENT, _container];
+				_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
+				_itemData setVariable [MACRO_VARNAME_SLOTPOS, [1, 1]];
+				_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, [[1, 1]]];
+				_itemData setVariable [MACRO_VARNAME_ISROTATED, false];
+
+				// Now we may fill in the item data
+				// The provided scripting commands return results in a different format, so we have to choose accordingly
+				switch (_formatTypeItem) do {
+
+					// magazinesAmmoCargo
+					case 0: {
+						_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _args select 1];
+					};
+
+					// weaponsItemsCargo
+					case 1: {
+						[_itemData, _args] call cre_fnc_inv_generateWeaponAccData;
+					};
+
+					// itemCargo
+					//case 2: {
+
+					//};
+				};
+
+				// Raise the "Init" event
+				private _eventArgs = [_itemData, _itemData getVariable [MACRO_VARNAME_UID, ""], _container, _containerData, [1, 1]];
+				[STR(MACRO_ENUM_EVENT_INIT), _eventArgs] call cre_fnc_IEH_raiseEvent;
+			};
 
 			// Link the first slot to the item
 			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, 1, 1], _itemData];
-
-			// Now we may fill in the item data
-			// The provided scripting commands return results in a different format, so we have to choose accordingly
-			switch (_formatTypeItem) do {
-
-				// magazinesAmmoCargo
-				case 0: {
-					_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _args select 1];
-				};
-
-				// weaponsItemsCargo
-				case 1: {
-					[_itemData, _args] call cre_fnc_inv_generateWeaponAccData;
-				};
-
-				// itemCargo
-				//case 2: {
-
-				//};
-			};
-
-			// Save some more info onto the item data
-			_itemData setVariable [MACRO_VARNAME_PARENT, _container];
-			_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
-			_itemData setVariable [MACRO_VARNAME_SLOTPOS, [1, 1]];
-			_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, [[1, 1]]];
-			_itemData setVariable [MACRO_VARNAME_ISROTATED, false];
 
 			_containerItems pushBack _itemData;
 		};
@@ -493,6 +513,7 @@ if (_container isKindOf "Man") then {
 
 		// Create a new namespace for the container
 		_containerData = (call cre_fnc_inv_createNamespace) select 0;
+		_container setVariable [MACRO_VARNAME_DATA, _containerData, false];
 
 		// Iterate through the sorted list of items and fit them into the container
 		([_containerClass] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
@@ -500,10 +521,17 @@ if (_container isKindOf "Man") then {
 		_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _containerSize];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _containerSlotsOnLastY];
+		_containerData setVariable [MACRO_VARNAME_SLOTPOS, _containerSlotPos];
+
+		// Link this container data to its parent
+		private _parentContainerData = _parentContainer getVariable [MACRO_VARNAME_DATA, locationNull];
+		_containerData setVariable [MACRO_VARNAME_PARENT, _parentContainer];
+		_containerData setVariable [MACRO_VARNAME_PARENTDATA, _parentContainerData];
 
 		// Fetch the width and height of the container
 		_containerSize params ["_sizeW", "_sizeH"];
 		private _lastFreeY = 1;
+		private _eventArgs = [];
 		{
 			scopeName "loopItems";
 
@@ -571,52 +599,57 @@ if (_container isKindOf "Man") then {
 									};
 
 									// If we didn't exit yet, that means the item can fit!
-									// Now we generate a namespace for this item and save the item class onto it
-									// However, if the item is a container, we don't need to generate the item data manually,
-									// instead we recursively generate the container data on it and fetch the result
+
+									// If the item is a container, we recursively generate container data on it
 									private _itemData = locationNull;
 									if (_formatType == 3) then {
-										private _containerX = _args select 1;
-										_itemData = [_containerX, _class] call cre_fnc_inv_generateContainerData;
+										_itemData = [_args select 1, _class, _container, [_posX, _posY]] call cre_fnc_inv_generateContainerData;
+
+										// Save some more info onto the item data
+										_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
+										_itemData setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
+
+									// Otherwise, it's an item
 									} else {
 										_itemData = (call cre_fnc_inv_createNamespace) select 0;
-									};
 
-									// Save the item class onto the item data
-									_itemData setVariable [MACRO_VARNAME_CLASS, _class];
+										// Save some basic things onto the item data
+										_itemData setVariable [MACRO_VARNAME_CLASS, _class];
+										_itemData setVariable [MACRO_VARNAME_PARENT, _container];
+										_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
+										_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
+										_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
+										_itemData setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
+
+										// Now we may fill in the item data
+										// The provided scripting commands return results in a different format, so we have to choose accordingly
+										switch (_formatType) do {
+
+											// magazinesAmmoCargo
+											case 0: {
+												_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _args select 1];
+											};
+
+											// weaponsItemsCargo
+											case 1: {
+												[_itemData, _args] call cre_fnc_inv_generateWeaponAccData;
+											};
+
+											// itemCargo
+											//case 2: {
+
+											//};
+										};
+
+										// Raise the "Init" event
+										_eventArgs = [_itemData, _itemData getVariable [MACRO_VARNAME_UID, ""], _container, _containerData, [_posX, _posY]];
+										[STR(MACRO_ENUM_EVENT_INIT), _eventArgs] call cre_fnc_IEH_raiseEvent;
+									};
 
 									// Link the slots to the item
 									{
 										_containerData setVariable [_x, _itemData];
 									} forEach _requiredSlotsStrArray;
-
-									// Now we may fill in the item data
-									// The provided scripting commands return results in a different format, so we have to choose accordingly
-									switch (_formatType) do {
-
-										// magazinesAmmoCargo
-										case 0: {
-											_itemData setVariable [MACRO_VARNAME_MAG_AMMO, _args select 1];
-										};
-
-										// weaponsItemsCargo
-										case 1: {
-											[_itemData, _args] call cre_fnc_inv_generateWeaponAccData;
-										};
-
-										// itemCargo
-										//case 2: {
-
-										//};
-
-									};
-
-									// Save some more info onto the item data
-									_itemData setVariable [MACRO_VARNAME_PARENT, _container];
-									_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
-									_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];
-									_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
-									_itemData setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
 									_containerItems pushBack _itemData;
 
@@ -642,10 +675,11 @@ if (_container isKindOf "Man") then {
 
 	// Save the list of items for quick access
 	_containerData setVariable [MACRO_VARNAME_ITEMS, _containerItems];
-};
 
-// Save the container data onto the container object
-_container setVariable [MACRO_VARNAME_DATA, _containerData, false];
+	// Raise the "Init" event
+	_eventArgs = [_containerData, _containerData getVariable [MACRO_VARNAME_UID, ""], _parentContainer, _parentContainerData, _containerSlotPos];
+	[STR(MACRO_ENUM_EVENT_INIT), _eventArgs] call cre_fnc_IEH_raiseEvent;
+};
 
 // Return the data
 _containerData;

@@ -40,6 +40,7 @@ if (isNull _inventory) exitWith {systemChat "ERROR: Inventory isn't open!"};
 
 
 // If the class or the category wasn't provided, determine them from the control
+/*
 if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) then {
 
 	// If the category was intentionally left empty, don't fetch any data and use the provided default path instead
@@ -56,6 +57,7 @@ if (_class == "" or {_category == MACRO_ENUM_CATEGORY_INVALID}) then {
 		};
 	};
 };
+*/
 
 // Decide which child controls are needed based on the category
 private _requiredControls = [];

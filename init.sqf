@@ -17,6 +17,7 @@ if (is3DEN) then {createDialog "Rsc_Cre8ive_Inventory"} else {["ui_init"] call c
 
 // Add a keybinding to open the inventory (Tab)
 [] spawn {
+	waitUntil {time > 0};
 	waitUntil {!isNull findDisplay 46};
 
 	(findDisplay 46) displayAddEventHandler ["KeyDown", {

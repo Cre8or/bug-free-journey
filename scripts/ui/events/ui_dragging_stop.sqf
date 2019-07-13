@@ -38,7 +38,8 @@ case "ui_dragging_stop": {
 			_canMoveItem = true;
 
 			// Create the ground weapon holder for the dropped item
-			_targetContainer = (MACRO_CLASSES_GROUNDHOLDERS select 0) createVehicle (getPosATL player);
+			private _targetContainerClass = MACRO_CLASSES_GROUNDHOLDERS select 0;
+			_targetContainer = _targetContainerClass createVehicle (getPosATL player);
 			_targetContainer setPosASL getPosASL player;
 			_targetContainer setDir random 360;
 			player reveal _targetContainer;
@@ -47,7 +48,8 @@ case "ui_dragging_stop": {
 			//_targetContainerData = [_targetContainer] call cre_fnc_inv_generateContainerData;
 			_targetContainerData = (call cre_fnc_inv_createNamespace) select 0;
 
-			// Set the container's size to that of the item
+			// Set up some other variables
+			_targetContainerData setVariable [MACRO_VARNAME_CLASS, _targetContainerClass];
 			_targetContainerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _slotSize];
 			_targetContainerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _slotSize param [0, 0]];
 
@@ -55,15 +57,15 @@ case "ui_dragging_stop": {
 			_targetContainerData setVariable [MACRO_VARNAME_CONTAINER, _targetContainer];
 			_targetContainer setVariable [MACRO_VARNAME_DATA, _targetContainerData, false];
 
-			// Set up some other variables
-			_targetContainerData setVariable [MACRO_VARNAME_CLASS, MACRO_CLASSES_GROUNDHOLDERS select 0];
-
 			// Nullify the target control, as we don't handle drawing ground/dropped items here
 			_targetContainerCtrl = controlNull;
 
-			// Raise the drop event
-			private _eventArgs = [_itemData, _targetContainer, _targetContainerData, _originContainerData, player];
-			[STR(MACRO_ENUM_EVENT_DROP), _eventArgs] call cre_fnc_IEH_raiseEvent;
+			// If the item wasn't already dropped...
+			if !(typeOf _originContainer in MACRO_CLASSES_GROUNDHOLDERS) then {
+				// Raise the "Drop" event
+				private _eventArgs = [_itemData, player, _originContainer, _originContainerData, _targetContainer, _targetContainerData, _itemData getVariable [MACRO_VARNAME_SLOTPOS, [0,0]], _slotPos];
+				[STR(MACRO_ENUM_EVENT_DROP), _eventArgs] call cre_fnc_IEH_raiseEvent;
+			};
 
 		// Otherwise...
 		} else {
@@ -90,6 +92,25 @@ case "ui_dragging_stop": {
 
 			// Fetch the old slot position
 			_slotPosOld params ["_slotPosOldX", "_slotPosOldY"];
+
+			// Fetch the parent container of this item (in case of nested containers, fetch the "top" one)
+			private _parentContainerData = _originContainerData;
+			while {!isNull (_parentContainerData getVariable [MACRO_VARNAME_PARENTDATA, locationNull])} do {
+				_parentContainerData = _parentContainerData getVariable [MACRO_VARNAME_PARENTDATA, locationNull];
+			};
+
+			// If the item was picked up from the ground (or from the active container), raise the "Take" event
+			if ((_inventory getVariable [MACRO_VARNAME_UI_ACTIVECONTAINER, objNull]) == (_parentContainerData getVariable [MACRO_VARNAME_CONTAINER, objNull]) or {(_parentContainerData getVariable [MACRO_VARNAME_CLASS, ""]) in MACRO_CLASSES_GROUNDHOLDERS}) then {
+				// ...unless it is being dropped - in that case, don't raise the "Take" event (because we didn't really grab anything)
+				if !(typeOf _targetContainer in MACRO_CLASSES_GROUNDHOLDERS) then {
+					private _eventArgs = [_itemData, player, _originContainer, _originContainerData, _targetContainer, _targetContainerData, _slotPosOld, _slotPos];
+					[STR(MACRO_ENUM_EVENT_TAKE), _eventArgs] call cre_fnc_IEH_raiseEvent;
+				};
+			};
+
+			// Raise the "Move" event
+			private _eventArgs = [_itemData, player, _originContainer, _originContainerData, _targetContainer, _targetContainerData, _slotPosOld, _slotPos];
+			[STR(MACRO_ENUM_EVENT_MOVE), _eventArgs] call cre_fnc_IEH_raiseEvent;
 
 			// First, clear the old slot position
 			_originContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosOldX, _slotPosOldY], locationNull];

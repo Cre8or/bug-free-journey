@@ -5,9 +5,9 @@ MAGAZINE PRIORITY
 A system that allows the player to define the order in which his weapon's magazines will get loaded when pressing
 the reload key, aswell as complimentary magazine status display when reloading.
 
-By default, the game should pick the magazine with the remaining bullets from the uniform/vest (not backpack - because
-of this, a custom system is required where magazines are spawned in on-demand, as there is no way to override the
-default reload action).
+By default, the game should pick the magazine with the most remaining bullets from the uniform/vest (not backpack).
+Because of this, a custom system is required where magazines are spawned in on-demand, as there is no way to override
+the default reload action.
 There should be an action in the inventory screen (on every weapon, and for every muzzle) which, when pressed,
 highlights all matching magazines in the uniform/vest. By clicking on them, the player can set the order in which
 he wants the magazines to be reloaded.

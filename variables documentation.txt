@@ -71,6 +71,11 @@ INVENTORY:
 	MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN			// Storesthe ID of the inventory's MouseButtonDown event handler (used to detect dragging)
 	MACRO_VARNAME_UI_EH_KEYDOWN				// Storesthe ID of the inventory's KeyDown event handler (used to rotate items while dragging)
 
+	MACRO_VARNAME_UI_STORAGE_CURRENTINDEX_ITEM		// Generating hundreds of slot controls takes time. To reduce lag, the storage UI generates the controls in small batches (each frame). This macro stores the index of the current container's items array, and is used to resume at the right item on the next frame
+	MACRO_VARNAME_UI_STORAGE_CURRENTINDEX_CONTAINER		// Saves the index of the container that we are currently generating slot controls for. Used in conjunction with MACRO_VARNAME_UI_STORAGE_CURRENTINDEX_ITEM
+	MACRO_VARNAME_UI_STORAGE_MAXITERATIONS			// Determines how many slot controls we may generate (per frame) in the storage UI (see above for more info)
+	MACRO_VARNAME_UI_STORAGE_INITIALISED			// Whether or not the storage UI has finished initialising (i.e. whether all slot controls are now fully generated). Used to prevent interference from outside scripts, and from the inventory synchroniser
+
 -------------------------------------------------------
 MISSION NAMESPACE:
 

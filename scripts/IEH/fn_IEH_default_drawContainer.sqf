@@ -6,8 +6,9 @@
 		updates).
 		This is the default handler for all container classes (boxes/vehicles) except Men.
 	Arguments:
-		0:      <CONTROL>	The container UI controls group
-		1:	<OBJECT>	The container object on which the event is called
+		0:      <LOCATION>	The active container's item data
+		1:      <CONTROL>	The controls group in which we should draw
+		2:      <OBJECT>	The container object
 	Returns:
 		(nothing)
 -------------------------------------------------------------------------------------------------------------------- */
@@ -16,26 +17,17 @@
 
 // Fetch our params
 params [
-//	["_inventory", controlNull, [controlNull]],
+	["_containerData", locationNull, [locationNull]],
 	["_containerCtrlGrp", controlNull, [controlNull]],
 	["_container", objNull, [objNull]]
 ];
 
+// If the provided container data or the controls group is null, exit
+if (isNull _containerData or {isNull _containerCtrlGrp}) exitWith {};
 
 
 
-
-// Fetch the container's item data
-private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
-
-// If either the container or its data data doesn't exist, clean up the UI
-if (isNull _container or {isNull _containerData}) then {
 
 
 
 // Otherwise, carry on
-} else {
-
-
-
-};

@@ -13,7 +13,7 @@
 #include "..\..\res\common\macros.hpp"
 
 // Optional debug macro - uncomment to turn on / comment to turn off
-#define MACRO_CFG_COMPILEIEHS_DEBUG
+//#define MACRO_CFG_COMPILEIEHS_DEBUG
 
 // Debug macros to add words/lines to the debug hint message (without having to check if the debug macro exists everytime)
 #ifdef MACRO_CFG_COMPILEIEHS_DEBUG
@@ -107,7 +107,7 @@ private _namespace_isFinal = locationNull;
 				private _overwrite = getNumber (_x >>		"overwrite"		);
 				private _isFinal = [_x,				"isFinal",		-1] call BIS_fnc_returnConfigEntry;
 
-				// If this event should overwrite all other entries for thisclass, clear the array
+				// If this event should overwrite all other entries for this class, clear the array
 				if (_overwrite > 0) then {
 					_eventEntries = [];
 				};
@@ -182,6 +182,4 @@ private _namespace_isFinal = locationNull;
 // Show the debug hint
 #ifdef MACRO_CFG_COMPILEIEHS_DEBUG
 	hint parseText _str;
-#else
-	hint "";
 #endif

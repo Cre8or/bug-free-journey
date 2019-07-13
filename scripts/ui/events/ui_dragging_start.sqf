@@ -203,7 +203,7 @@ case "ui_dragging_start": {
 					if (!isNull _containerCtrl and {_draggedCtrl != _containerCtrl}) then {
 
 						// Fetch the slot position
-						(_draggedCtrl getVariable [MACRO_VARNAME_SLOTPOS, [0,0]]) params ["_posSlotX", "_posSlotY"];
+						//(_draggedCtrl getVariable [MACRO_VARNAME_SLOTPOS, [0,0]]) params ["_posSlotX", "_posSlotY"];
 
 						// Unhide all occupied slot controls
 						{

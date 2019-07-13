@@ -21,6 +21,9 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Add an "Init" IEH that is triggered whenever an itemData is created (and filled out with basic data)
+- Add a class parameter to the raiseEvent function (because we often know the class when we call that function) instead of polling it from the itemData every time
+- Refactor generateContainerData to include a parameter for the parent object
 - Add a basic Inventory EventHandler system
 	* Config-based IEHs for classes (IEHS are inherited from parents, unless explicitely stated otherwise -> "isFinal")
 	* Config classes should accept functions and/or code snippets

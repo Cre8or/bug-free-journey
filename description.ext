@@ -107,10 +107,11 @@ class CfgFunctions {
 			class cfg_getMagazineMaxAmmo {};
 			class cfg_getWeaponMagazines {};
 			class cfg_getWeaponMuzzles {};
-
+/*
 			class cfg_compileIEHs {
 				preInit = 1;
 			};
+*/
 		};
 
 		class util_quickSort {
@@ -128,8 +129,8 @@ class CfgFunctions {
 			file = "scripts\IEH";
 			// Abbreviation:	IEH
 
-			//class IEH_default_updateContainer {};
-			//class IEH_man_updateContainer {};
+			//class IEH_default_drawContainer {};
+			//class IEH_man_drawContainer {};
 		};
 	};
 };

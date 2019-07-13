@@ -16,14 +16,14 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=375;
+		nextID=423;
 	};
 	class Camera
 	{
-		pos[]={15182.751,18.935865,27213.623};
-		dir[]={-0.03796944,-0.62371171,-0.78088641};
-		up[]={-0.030293962,0.78158522,-0.62301326};
-		aside[]={-0.99896449,-4.2897591e-007,0.048568927};
+		pos[]={15179.37,32.920986,27230.736};
+		dir[]={0.24971333,-0.42557317,-0.86979437};
+		up[]={0.1174361,0.90492111,-0.40905097};
+		aside[]={-0.96117771,-3.9616134e-007,-0.27594882};
 	};
 };
 binarizationWanted=0;
@@ -1623,13 +1623,12 @@ class Mission
 								angles[]={6.2698536,3.9044385,6.2471976};
 							};
 							side="Empty";
-							flags=4;
 							class Attributes
 							{
 							};
 							id=445;
 							type="Land_Ammobox_rounds_F";
-							atlOffset=0.01817131;
+							atlOffset=0.12369823;
 						};
 						class Item1
 						{
@@ -1765,7 +1764,7 @@ class Mission
 							};
 							id=473;
 							type="Land_FirstAidKit_01_closed_F";
-							atlOffset=-9.059906e-005;
+							atlOffset=0.17905903;
 						};
 						class Item9
 						{

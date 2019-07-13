@@ -18,9 +18,6 @@ case "ui_update_storage": {
 	private _offsetY = 0;
 	private _shouldMoveCtrls = false;
 
-	// Fetch the inventory's storage controls group
-	private _storageCtrlGrp = _inventory displayCtrl MACRO_IDC_STORAGE_CTRLGRP;
-
 	// Fetch the player's container data
 	private _playerContainerData = player getVariable [MACRO_VARNAME_DATA, locationNull];
 
@@ -61,15 +58,9 @@ case "ui_update_storage": {
 // ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 		if (isNull _containerData and {!isNull _container}) then {
 			//systemChat format ["Building container data for: %1", _class];
-			_containerData = [_container, _class] call cre_fnc_inv_generateContainerData;
+			_containerData = [_container, _class, player, [_containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]] call cre_fnc_inv_generateContainerData;
 
-			// Fill the container data with some info
-			_containerData setVariable [MACRO_VARNAME_CLASS, _class];
-			_containerData setVariable [MACRO_VARNAME_PARENT, player];
-			_containerData setVariable [MACRO_VARNAME_PARENTDATA, _playerContainerData];
-			_containerData setVariable [MACRO_VARNAME_SLOTPOS, [_containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
-
-			// Link the player container data to this container data
+			// Link the player container data with this container data
 			_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _containerData];
 		};
 
@@ -209,6 +200,7 @@ case "ui_update_storage": {
 						_slotFrame ctrlShow true;
 
 						// Save the item data onto the control
+						_slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
 						_slotFrame setVariable [MACRO_VARNAME_DATA, _x];
 						_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _itemSize];
 						_slotFrame setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
@@ -218,9 +210,6 @@ case "ui_update_storage": {
 
 						// Change the colour of the frame
 						_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
-
-						// Save some more info onto the slot control
-						_slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
 					};
 				} forEach _items;
 

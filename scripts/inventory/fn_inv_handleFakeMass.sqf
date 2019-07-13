@@ -33,7 +33,6 @@ if (isNull _container or {isNull _containerData}) exitWith {
 
 
 
-
 // Clear the container's magazines and weapons pool
 clearMagazineCargoGlobal _container;
 clearWeaponCargoGlobal _container;

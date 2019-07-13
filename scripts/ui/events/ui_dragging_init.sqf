@@ -39,38 +39,46 @@ case "ui_dragging_init": {
 				{
 					private _val = _namespaceToDebug getVariable [_x, ""];
 
-					if (_val isEqualType locationNull) then {
-						private _countVars = count allVariables _val;
-						if (_countVars > 0) then {
-							_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%a3d87d'>%3</t><br />    [</t>", _forEachIndex + 1, _x, _val getVariable [MACRO_VARNAME_UID, ""]];
-							{
-								if (_forEachIndex + 1 <= _maxDepth) then {
-									_str = _str + format ["<t align='left'><t color='#44dddd'>%1</t>", _x];
-									if (_forEachIndex + 1 == _maxDepth) then {
-										if (_countVars > _maxDepth) then {
-											_str = _str + format [", ... <t color='#888888'>(%1 more)</t>", _countVars - _maxDepth];
-										};
-									} else {
-										if (_forEachIndex + 1 < _countVars) then {
-											_str = _str + ",   ";
-										};
-									};
-								};
-							} forEach allVariables _val;
-							_str = _str + "]<br />";
-						} else {
-							_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2</t></t><br />", _forEachIndex + 1, _x];
+					// Filter slot variables
+					if ((_x select [0, 5]) == "slot_") then {
+						if (!isNull _val) then {
+							_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%a3d87d'>%3</t><br /></t>", _forEachIndex + 1, _x, _val getVariable [MACRO_VARNAME_UID, ""]];
 						};
 					} else {
-						private _colourVal = "fffffff";
-						switch (typeName _val) do {
-							case typeName objNull;
-							case typeName locationNull;
-							case typeName true;
-							case typeName 0: {_colourVal = "eda765"};
-							case typeName "": {_colourVal = "a3d87d"};
+
+						if (_val isEqualType locationNull) then {
+							private _countVars = count allVariables _val;
+							if (_countVars > 0) then {
+								_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%a3d87d'>%3</t><br />    [</t>", _forEachIndex + 1, _x, _val getVariable [MACRO_VARNAME_UID, ""]];
+								{
+									if (_forEachIndex + 1 <= _maxDepth) then {
+										_str = _str + format ["<t align='left'><t color='#44dddd'>%1</t>", _x];
+										if (_forEachIndex + 1 == _maxDepth) then {
+											if (_countVars > _maxDepth) then {
+												_str = _str + format [", ... <t color='#888888'>(%1 more)</t>", _countVars - _maxDepth];
+											};
+										} else {
+											if (_forEachIndex + 1 < _countVars) then {
+												_str = _str + ",   ";
+											};
+										};
+									};
+								} forEach allVariables _val;
+								_str = _str + "]<br />";
+							} else {
+								_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2</t></t><br />", _forEachIndex + 1, _x];
+							};
+						} else {
+							private _colourVal = "ffffff";
+							switch (typeName _val) do {
+								case typeName objNull;
+								case typeName locationNull;
+								case typeName true;
+								case typeName 0: {_colourVal = "eda765"};
+								case typeName "": {_colourVal = "a3d87d"};
+							};
+							_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%3'>%4</t></t><br />", _forEachIndex + 1, _x, _colourVal, _val];
 						};
-						_str = _str + format ["<t align='left'><t color='#888888'>%1:</t> <t color='#e06c75'>%2:</t> <t color='#%3'>%4</t></t><br />", _forEachIndex + 1, _x, _colourVal, _val];
 					};
 				} forEach allVariables _namespaceToDebug;
 				hint parseText _str;
