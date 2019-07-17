@@ -197,7 +197,7 @@ case "ui_update_ground": {
 						_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
 						// Set the frame's pixel precision mode to off, disables rounding
-						_slotFrame ctrlSetPixelPrecision 2;
+						_slotFrame ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
 						// Resize the slot controls
 						_slotFrame ctrlSetPosition  [
@@ -314,8 +314,7 @@ case "ui_update_ground": {
 							private _posCtrlY = _startDrawY + (_posY - 1) * _slotSizeH;
 
 							// Move the control to this position
-							_x ctrlSetPosition [_posCtrlX, _posCtrlY];
-							_x ctrlCommit 0;
+							MACRO_FNC_UI_CTRL_SETPOSITION_XY(_x, _posCtrlX, _posCtrlY, 0);
 
 							// Move the child controls along
 							{
@@ -327,8 +326,7 @@ case "ui_update_ground": {
 								_pos set [0, _posCtrlX + (_posOffset select 0)];
 								_pos set [1, _posCtrlY + (_posOffset select 1)];
 
-								_x ctrlSetPosition _pos;
-								_x ctrlCommit 0;
+								MACRO_FNC_UI_CTRL_SETPOSITION(_x, _pos, 0);
 							} forEach (_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
 							// Save the Y position of the highest slot that was filled

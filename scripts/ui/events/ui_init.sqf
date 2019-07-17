@@ -99,7 +99,7 @@ case "ui_init": {
 
 				// Set the pixel precision mode of all slot frames to "OFF"
 				{
-					_x ctrlSetPixelPrecision 2;
+					_x ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 				} forEach [
 					_inventory displayCtrl MACRO_IDC_GROUND_DROP_FRAME,
 					_inventory displayCtrl MACRO_IDC_NVGS_FRAME,
@@ -157,7 +157,7 @@ case "ui_init": {
 
 				// Reset the focus
 				["ui_focus_reset"] call cre_fnc_ui_inventory;
-
+/*
 				// DEBUG - Print the cursor control
 				[_inventory] spawn {
 					disableSerialization;
@@ -178,8 +178,7 @@ case "ui_init": {
 
 					hint "";
 				};
-
-
+*/
 				hint format ["Opened in %1s", diag_tickTime - _timeStart];
 			};
 		};

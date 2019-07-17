@@ -1,6 +1,13 @@
+// Include our macros
+#include "..\res\common\macros.hpp"
+
+
+
+
+
 //player setUnitLoadout [["arifle_Mk20_GL_plain_F","","acc_pointer_IR","optic_Aco",["30Rnd_556x45_Stanag",30],[],""],[],["hgun_P07_F","","","",["16Rnd_9x21_Mag",16],[],""],["U_B_CombatUniform_mcam",[["FirstAidKit",1],["Chemlight_green",1,1]]],["V_PlateCarrier1_rgr",[["16Rnd_9x21_Mag",2,16],["SmokeShell",1,1],["SmokeShellGreen",1,1],["Chemlight_green",1,1],["HandGrenade",2,1]]],[],"H_HelmetB","G_Aviator",[],["ItemMap","","ItemRadio","ItemCompass","ItemWatch","NVGoggles"]];
 
-
+/*
 isNil {
 	// QUICKSORT TEST
 	private _arrayK = [3,7,8,5,2,1,9,4];
@@ -45,7 +52,7 @@ isNil {
 
 	systemChat format ["%1 cycles: %2s", _cycles, _timeEnd - _timeStart];
 };
-
+*/
 
 
 

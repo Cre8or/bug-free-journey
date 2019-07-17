@@ -85,11 +85,14 @@ switch (_category) do {
 
 	case MACRO_ENUM_CATEGORY_MAGAZINE: {
 		_requiredControls = [
-			MACRO_ENUM_CTRL_PICTURE_ICON,
-			MACRO_ENUM_CTRL_OUTLINE,
-			MACRO_ENUM_CTRL_TEXT_DISPLAYNAME,
-			MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR
+//			MACRO_ENUM_CTRL_PICTURE_ICON,
+//			MACRO_ENUM_CTRL_OUTLINE,
+//			MACRO_ENUM_CTRL_TEXT_DISPLAYNAME,
+//			MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR
 		];
+
+		// WIP: Let the new "Draw" IEH handle child control generation
+		[_ctrl getVariable [MACRO_VARNAME_DATA, locationNull], _ctrl, _inventory] call cre_fnc_IEH_draw_magazine;
 	};
 
 	case MACRO_ENUM_CATEGORY_CONTAINER: {
@@ -107,6 +110,13 @@ switch (_category) do {
 			MACRO_ENUM_CTRL_OUTLINE
 		];
 	};
+};
+
+// DEBUG - Forbid continuing executing this function for these category types (they're being deprecated by "Draw" event calls)
+if (_category in [
+	MACRO_ENUM_CATEGORY_MAGAZINE
+]) exitWith {
+	_ctrl getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []];
 };
 
 
@@ -236,29 +246,29 @@ private _childControls = [];
 			_ctrlNew ctrlCommit 0;
 
 			// Set the box's pixel precision mode to off, disables rounding
-			_ctrlNew ctrlSetPixelPrecision 2;
+			_ctrlNew ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
 			// Paint the outline based on the item category
 			switch (_category) do {
 				case MACRO_ENUM_CATEGORY_WEAPON: {
-					_ctrlNew ctrlSetTextColor [0,0,1,0.6];
+					_ctrlNew ctrlSetTextColor SQUARE(MACRO_COLOUR_OUTLINE_WEAPON);
 				};
 				case MACRO_ENUM_CATEGORY_MAGAZINE: {
-					_ctrlNew ctrlSetTextColor [1,1,1,0.3];
+					_ctrlNew ctrlSetTextColor SQUARE(MACRO_COLOUR_OUTLINE_MAGAZINE);
 				};
 				case MACRO_ENUM_CATEGORY_UNIFORM;
 				case MACRO_ENUM_CATEGORY_VEST;
 				case MACRO_ENUM_CATEGORY_BACKPACK: {
-					_ctrlNew ctrlSetTextColor [0,1,0,0.8];
+					_ctrlNew ctrlSetTextColor SQUARE(MACRO_COLOUR_OUTLINE_UNIFORM);
 				};
 				default {
-					_ctrlNew ctrlSetTextColor [1,0,0,0.8];
+					_ctrlNew ctrlSetTextColor SQUARE(MACRO_COLOUR_OUTLINE_DEFAULT);
 				};
 			};
 
 			// Save the new control onto the parent control
 			_childControls pushBack _ctrlNew;
-			_ctrl setVariable [MACRO_VARNAME_UI_CTRLOUTLINE, _ctrlNew];
+			//_ctrl setVariable [MACRO_VARNAME_UI_CTRLOUTLINE, _ctrlNew];
 		};
 
 		// Display name
@@ -341,7 +351,7 @@ private _childControls = [];
 
 				{
 					// Set the box's pixel precision mode to off, disables rounding
-					_x ctrlSetPixelPrecision 2;
+					_x ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
 					_childControls pushBack _x;
 				} forEach [
@@ -539,15 +549,8 @@ private _childControls = [];
 } forEach _requiredControls;
 
 // Determine the offset of the child controls in relation to the temporary frame
-(ctrlPosition _ctrl) params ["_posCtrlX", "_posCtrlY"];
-{
-	private _posX = ctrlPosition _x;
-	private _posOffset = [
-		(_posX select 0) - _posCtrlX,
-		(_posX select 1) - _posCtrlY
-	];
-	_x setVariable [MACRO_VARNAME_UI_OFFSET, _posOffset];
-} forEach _childControls;
+(ctrlPosition _ctrl) params ["_posX", "_posY"];
+MACRO_FNC_UI_CTRL_CALCULATEOFFSET_XY_ARRAY_PRIVATE(_childControls, _posTemp, _posX, _posY);
 
 // Save the child controls onto the parent control
 _ctrl setVariable [MACRO_VARNAME_UI_CHILDCONTROLS, _childControls];

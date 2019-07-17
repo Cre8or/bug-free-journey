@@ -113,8 +113,7 @@ case "ui_dragging_abort": {
 				// Rescale the control
 				_posCtrl set [2, _slotWidth * _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
 				_posCtrl set [3, _slotHeight * _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
-				_draggedCtrl ctrlSetPosition _posCtrl;
-				_draggedCtrl ctrlCommit 0;
+				MACRO_FNC_UI_CTRL_SETPOSITION(_draggedCtrl, _posCtrl, 0);
 			};
 		};
 	};

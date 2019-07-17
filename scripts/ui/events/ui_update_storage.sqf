@@ -68,10 +68,8 @@ case "ui_update_storage": {
 		private _containerSize = _containerData getVariable [MACRO_VARNAME_CONTAINERSIZE, [0,0]];
 
 		// Move the frame
-		private _posFrame = ctrlPosition _containerFrame;
-		private _deltaY = (_startY + _offsetY) - (_posFrame select 1);
-		_posFrame set [1, _startY + _offsetY];
-		_containerFrame ctrlSetPosition _posFrame;
+		private _deltaY = (_startY + _offsetY) - (ctrlPosition _containerFrame select 1);
+		_containerFrame ctrlSetPositionY _startY + _offsetY;
 		_containerFrame ctrlCommit 0;
 
 		// If the container has changed, or was removed, delete the old controls
@@ -128,7 +126,7 @@ case "ui_update_storage": {
 						_slotIcon ctrlSetText MACRO_PICTURE_SLOT_BACKGROUND;
 
 						// Set the frame's pixel precision mode to off, disables rounding
-						_slotFrame ctrlSetPixelPrecision 2;
+						_slotFrame ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
 						// Move the slot controls
 						private _slotPos = [
@@ -138,8 +136,7 @@ case "ui_update_storage": {
 							_slotSizeH
 						];
 						{
-							_x ctrlSetPosition _slotPos;
-							_x ctrlCommit 0;
+							MACRO_FNC_UI_CTRL_SETPOSITION(_x, _slotPos, 0);
 						} forEach [_slotFrame, _slotIcon];
 
 						// Add some event handlers to the slot controls
@@ -192,12 +189,9 @@ case "ui_update_storage": {
 
 						// Scale the slot controls
 						private _slotFrame = _containerFrame getVariable [format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY], controlNull];
-						private _slotPos = ctrlPosition _slotFrame;
-						_slotPos set [2, _slotSizeW * _sizeW];
-						_slotPos set [3, _slotSizeH * _sizeH];
-						_slotFrame ctrlSetPosition _slotPos;
+						_slotFrame ctrlSetPositionW _slotSizeW * _sizeW;
+						_slotFrame ctrlSetPositionH _slotSizeH * _sizeH;
 						_slotFrame ctrlCommit 0;
-						_slotFrame ctrlShow true;
 
 						// Save the item data onto the control
 						_slotFrame setVariable [MACRO_VARNAME_CLASS, _itemClass];
@@ -248,29 +242,21 @@ case "ui_update_storage": {
 				// Reposition the container frame's child controls
 				private _containerFrameCtrls = (_containerFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_containerFrame getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]];
 				{
-					// Reposition the slot frames
-					private _posX = ctrlPosition _x;
-					_posX set [1, (_posX select 1) + _deltaY];
-					_x ctrlSetPosition _posX;
+					_x ctrlSetPositionY (ctrlPosition _x select 1) + _deltaY;
 					_x ctrlCommit 0;
 				} forEach _containerFrameCtrls;
 
 				// Reposition all slots that belong to this container
 				{
 					// Reposition the slot frames
-					private _posX = ctrlPosition _x;
-					_posX set [1, (_posX select 1) + _deltaY];
-					_x ctrlSetPosition _posX;
+					_x ctrlSetPositionY (ctrlPosition _x select 1) + _deltaY;
 					_x ctrlCommit 0;
 
 					// Reposition all child controls of the slot frames
-					private _slotFrameCtrls = (_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_x getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]];
 					{
-						private _posXX = ctrlPosition _x;
-						_posXX set [1, (_posXX select 1) + _deltaY];
-						_x ctrlSetPosition _posXX;
+						_x ctrlSetPositionY (ctrlPosition _x select 1) + _deltaY;
 						_x ctrlCommit 0;
-					} forEach _slotFrameCtrls;
+					} forEach ((_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_x getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]]);
 				} forEach (_containerFrame getVariable [MACRO_VARNAME_UI_ALLSLOTFRAMES, []]);
 			};
 		};
@@ -302,9 +288,7 @@ case "ui_update_storage": {
 	];
 
 	// Move the scrollbar dummy
-	private _pos = ctrlPosition _ctrlScrollbarDummy;
-	_pos set [1, _offsetY];
-	_ctrlScrollbarDummy ctrlSetPosition _pos;
+	_ctrlScrollbarDummy ctrlSetPositionY _offsetY;
 	_ctrlScrollbarDummy ctrlCommit 0;
 
 	// Save the new list of storage containers

@@ -56,8 +56,7 @@ case "ui_dragging_start": {
 				if (_defaultIconPath != "") then {
 					private _ctrlIconTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", -1, ctrlParentControlsGroup _draggedCtrl];	// MACRO_IDC_SCRIPTEDPICTURE
 					_ctrlIconTemp ctrlSetText _defaultIconPath;
-					_ctrlIconTemp ctrlSetPosition _posCtrl;
-					_ctrlIconTemp ctrlCommit 0;
+					MACRO_FNC_UI_CTRL_SETPOSITION(_ctrlIconTemp, _posCtrl, 0);
 					_inventory setVariable [MACRO_VARNAME_UI_ICONTEMP, _ctrlIconTemp];
 				};
 
@@ -77,12 +76,11 @@ case "ui_dragging_start": {
 				private _ctrlFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", -1];
 				_ctrlFrameTemp ctrlSetPosition _posCtrl;
 				_ctrlFrameTemp ctrlCommit 0;
-				_ctrlFrameTemp ctrlShow true;
 				_ctrlFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 				_inventory setVariable [MACRO_VARNAME_UI_FRAMETEMP, _ctrlFrameTemp];
 
 				// Set the frame's pixel precision mode to off, disables rounding
-				_ctrlFrameTemp ctrlSetPixelPrecision 2;
+				_ctrlFrameTemp ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
 				// Copy the original control's item data onto the dummy frame
 				private _data = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
@@ -182,16 +180,25 @@ case "ui_dragging_start": {
 					_ctrlX ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_DRAGGING_RED);
 					_forbiddenCtrls pushBack _ctrlX;
 				} forEach _forbiddenCtrlsIDCs;
-				_inventory setVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, _forbiddenCtrls];
 
 				// Paint the allowed slot in the inactive (hover) colour
 				private _allowedCtrls = [];
+				private _ctrlIndex = -1;
 				{
 					private _ctrlX = _inventory displayCtrl _x;
 					_ctrlX ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);
 					_allowedCtrls pushBack _ctrlX;
+
+					// Remove this control from the forbidden controls list
+					private _ctrlIndex = _forbiddenCtrls find _ctrlX;
+					if (_ctrlIndex >= 0) then {
+						_forbiddenCtrls deleteAt _ctrlIndex;
+					};
 				} forEach _allowedCtrlsIDCs;
+
+				// Save the two lists
 				_inventory setVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, _allowedCtrls];
+				_inventory setVariable [MACRO_VARNAME_UI_FORBIDDENCONTROLS, _forbiddenCtrls];
 
 				// If the dragged control is a dropped item, hide its frame control
 				if (typeOf (_itemData getVariable [MACRO_VARNAME_PARENT, objNull]) in MACRO_CLASSES_GROUNDHOLDERS) then {

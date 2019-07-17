@@ -16,7 +16,7 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=423;
+		nextID=447;
 	};
 	class Camera
 	{
@@ -1029,14 +1029,13 @@ class Mission
 						angles[]={0,4.6803637,0};
 					};
 					side="Empty";
-					flags=4;
 					class Attributes
 					{
 						init="call{[this] spawn cre_fnc_addAISpawn}";
 					};
 					id=230;
 					type="Sign_Arrow_Direction_F";
-					atlOffset=0.00043487549;
+					atlOffset=1.1170845;
 				};
 				class Item35
 				{
@@ -1065,13 +1064,13 @@ class Mission
 						angles[]={0,0.51114386,0};
 					};
 					side="Empty";
-					flags=4;
 					class Attributes
 					{
 						init="call{[this] spawn cre_fnc_addAISpawn}";
 					};
 					id=232;
 					type="Sign_Arrow_Direction_F";
+					atlOffset=3.7379799;
 				};
 				class Item37
 				{
@@ -1082,13 +1081,13 @@ class Mission
 						angles[]={0,3.6195083,0};
 					};
 					side="Empty";
-					flags=4;
 					class Attributes
 					{
 						init="call{[this] spawn cre_fnc_addAISpawn}";
 					};
 					id=233;
 					type="Sign_Arrow_Direction_F";
+					atlOffset=0.39176369;
 				};
 				class Item38
 				{
@@ -1117,13 +1116,13 @@ class Mission
 						angles[]={6.2820935,5.9337339,0};
 					};
 					side="Empty";
-					flags=4;
 					class Attributes
 					{
 						init="call{[this] spawn cre_fnc_addAISpawn}";
 					};
 					id=235;
 					type="Sign_Arrow_Direction_F";
+					atlOffset=0.33256912;
 				};
 				class Item40
 				{
@@ -1624,12 +1623,13 @@ class Mission
 								angles[]={6.2698536,3.9044385,6.2471976};
 							};
 							side="Empty";
+							flags=4;
 							class Attributes
 							{
 							};
 							id=445;
 							type="Land_Ammobox_rounds_F";
-							atlOffset=0.12369823;
+							atlOffset=0.01817131;
 						};
 						class Item1
 						{
@@ -1765,7 +1765,7 @@ class Mission
 							};
 							id=473;
 							type="Land_FirstAidKit_01_closed_F";
-							atlOffset=0.17905903;
+							atlOffset=-9.059906e-005;
 						};
 						class Item9
 						{

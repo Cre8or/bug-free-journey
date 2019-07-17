@@ -48,7 +48,7 @@ SLOT CONTROLS:
 
 	Only reserved slots:
 		MACRO_VARNAME_SLOT_X_Y				// Used to turn a slot position (X, Y) into a string that can be used as a variable name (for use in setVariable/getVariable)
-		MACRO_VARNAME_UI_DEFAULTICONPATH
+		MACRO_VARNAME_UI_DEFAULTICONPATH		// Holds the path to the default icon of this reserved slot. Used to display what kind of item can go into the slot when it is empty (e.g. uniform/vest/backpack, a linked item, etc)
 
 	Only container slots:
 		MACRO_VARNAME_UI_ALLSLOTFRAMES			// Returns a list of all slot controls under this container slot control (e.g. all item slot controls inside a backpack)
@@ -56,10 +56,13 @@ SLOT CONTROLS:
 -------------------------------------------------------
 INVENTORY:
 
-	MACRO_VARNAME_UI_DRAGGEDCTRL
-	MACRO_VARNAME_UI_HIGHLITCONTROLS
-	MACRO_VARNAME_UI_ALLOWEDCONTROLS
-	MACRO_VARNAME_UI_FORBIDDENCONTROLS
+	MACRO_VARNAME_UI_FRAMETEMP				// Holds the temporary frame control that follows the cursor while something is being dragged. Gets removed when dragging is completed or aborted
+	MACRO_VARNAME_UI_ICONTEMP				// Holds the temporary icon control that is created when dragging an item out of a reserved slot. Used to display the default icon path on reserved slots while dragging. Gets removed when dragging is completed or aborted
+
+	MACRO_VARNAME_UI_DRAGGEDCTRL				// Holds the frame control that is being dragged. Unlike MACRO_VARNAME_UI_FRAMETEMP, this does not point towards the control that is actually following the cursor, but to the one that was clicked on when the dragging event was initiated
+	MACRO_VARNAME_UI_HIGHLITCONTROLS			// Holds an array of all controls that are currently highlit. Used when dragging items to visualise which slots they may or may not go into. This array holds both forbidden and allowed slot controls (e.g. displayed as red and green respectively)
+	MACRO_VARNAME_UI_ALLOWEDCONTROLS			// Holds an array of all reserved controls that the currently dragged item may go into
+	MACRO_VARNAME_UI_FORBIDDENCONTROLS			// Holds an array of all reserved controls that the currently dragged item may NOT go into
 
 	MACRO_VARNAME_UI_NEXTUPDATE_GROUND			// Saves the time when the next ground UI update is scheduled (polling nearby items). Time is based on the `time` command and is evaluated each frame
 	MACRO_VARNAME_UI_FORCEREDRAW_GROUND			// Used to forcefully update the ground UI when, as an example, an item's size was changed (so all items need to be sorted again)
@@ -79,8 +82,7 @@ INVENTORY:
 -------------------------------------------------------
 MISSION NAMESPACE:
 
-	MACRO_VARNAME_UI_EH_EACHFRAME				// Stores the ID of the stackable eachFrame event handler
-
+	MACRO_VARNAME_UI_EH_EACHFRAME				// Stores the ID of the stackable eachFrame event handler that is responsible for updating the inventory UI
 
 -------------------------------------------------------
 CONFIG ENTRIES:							// NOTE: The following macros are to be used inside the config class of items/weapons/vehicles and are used to manipulate the way they interact with the inventory. They are not used in-game!

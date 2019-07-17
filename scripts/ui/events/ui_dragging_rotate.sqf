@@ -39,14 +39,12 @@ case "ui_dragging_rotate": {
 
 		// Create a temporary frame that follows the mouse
 		_ctrlFrameTemp = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedBox", -1];
-		_ctrlFrameTemp ctrlSetPosition _posCtrl;
-		_ctrlFrameTemp ctrlCommit 0;
-		_ctrlFrameTemp ctrlShow true;
+		MACRO_FNC_UI_CTRL_SETPOSITION(_ctrlFrameTemp, _posCtrl, 0);
 		_ctrlFrameTemp ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 		_inventory setVariable [MACRO_VARNAME_UI_FRAMETEMP, _ctrlFrameTemp];
 
 		// Set the frame's pixel precision mode to off, disables rounding
-		_ctrlFrameTemp ctrlSetPixelPrecision 2;
+		_ctrlFrameTemp ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
 		// Copy the original control's item data onto the dummy frame
 		private _data = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];

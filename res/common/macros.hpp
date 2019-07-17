@@ -55,8 +55,14 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_COLOUR_INVISIBLE                                  0, 0, 0, 0
 	#define MACRO_COLOUR_ELEMENT_DRAGGING_GREEN                     0.2, 1, 0.2, 0.5
 	#define MACRO_COLOUR_ELEMENT_DRAGGING_RED                       1, 0.2, 0.2, 0.5
+	#define MACRO_COLOUR_AMMOBAR_BACKGROUND                         0, 0, 0, 0.8
 
-
+	#define MACRO_COLOUR_OUTLINE_WEAPON                             0, 0, 1, 0.8
+	#define MACRO_COLOUR_OUTLINE_MAGAZINE                           1, 1, 1, 0.6
+	#define MACRO_COLOUR_OUTLINE_UNIFORM                            0, 1, 0, 0.6
+//	#define MACRO_COLOUR_OUTLINE_VEST                               0, 1, 0, 0.8
+//	#define MACRO_COLOUR_OUTLINE_BACKPACK                           0, 1, 0, 0.8
+	#define MACRO_COLOUR_OUTLINE_DEFAULT                            1, 0, 0, 0.8
 
 
 
@@ -233,6 +239,7 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 
 	#define MACRO_EMPTY_SLOTS_UNDER_GROUND_ITEMS                    3
 
+	#define MACRO_GLOBAL_PIXELPRECISIONMODE                         2
 
 
 
@@ -269,7 +276,6 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 //	ITEM SUB-CATEGORIES
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
-        // REMOVE ME                                                    |
 	#define MACRO_ENUM_SUBCATEGORY_INVALID                          -1
 
 	// Weapon sub-categories
@@ -330,14 +336,16 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_ENUM_EVENT_TAKE                                   Take
 	#define MACRO_ENUM_EVENT_DROP                                   Drop
 	#define MACRO_ENUM_EVENT_MOVE                                   Move
-	#define MACRO_ENUM_EVENT_USE                                    Use
-	#define MACRO_ENUM_EVENT_DELETED                                Deleted
-	#define MACRO_ENUM_EVENT_EACHFRAME                              EachFrm
-	#define MACRO_ENUM_EVENT_DRAWCONTAINER                          DrawContnr
-	#define MACRO_ENUM_EVENT_GENERATECHILDCONTROLS                  GenChildCtrls
+	#define MACRO_ENUM_EVENT_DRAW                                   Draw
+//	#define MACRO_ENUM_EVENT_USE                                    Use
+//	#define MACRO_ENUM_EVENT_DELETED                                Deleted
+//	#define MACRO_ENUM_EVENT_EACHFRAME                              EachFrm
+//	#define MACRO_ENUM_EVENT_DRAWCONTAINER                          DrawContnr
+//	#define MACRO_ENUM_EVENT_GENERATECHILDCONTROLS                  GenChildCtrls
 
 	// Event indexes
 	// TODO: check if this is needed anywhere, and if not, delete it
+/*
 	#define MACRO_IEH_EVENT_INDEXES [ \
 		STR(MACRO_ENUM_EVENT_INIT), \
 		STR(MACRO_ENUM_EVENT_TAKE), \
@@ -349,6 +357,7 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 		STR(MACRO_ENUM_EVENT_DRAWCONTAINER), \
 		STR(MACRO_ENUM_EVENT_GENERATECHILDCONTROLS) \
 	]
+*/
 
 /*
 	EVENT DOCUMENTATIONS:
@@ -362,6 +371,10 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 		params ["_itemData", "_droppedBy", "_originContainer", "_originContainerData", "_targetContainer", "_targetContainerData", "_originSlotPos", "_targetSlotPos"];
 	MACRO_ENUM_EVENT_MOVE
 		params ["_itemData", "_droppedBy", "_originContainer", "_originContainerData", "_targetContainer", "_targetContainerData", "_originSlotPos", "_targetSlotPos"];
+	MACRO_ENUM_EVENT_DRAW
+		params ["_itemData", "_ctrl", "_display"];
+
+
 	MACRO_ENUM_EVENT_DRAWCONTAINER
 		params ["_containerData", "_ctrlGrp", "_container"];
 
@@ -378,13 +391,17 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_VARNAME_UI_DEFAULTICONPATH                        "defaultIconPath"
 	#define MACRO_VARNAME_UI_FRAMETEMP                              "ctrlFrameTemp"
 	#define MACRO_VARNAME_UI_ICONTEMP                               "ctrlIconTemp"
-	#define MACRO_VARNAME_UI_CHILDCONTROLS                          "childControls"
-	#define MACRO_VARNAME_UI_CTRLICON                               "ctrlIcon"
-	#define MACRO_VARNAME_UI_CTRLSLOTICON                           "ctrlSlotIcon"
-	#define MACRO_VARNAME_UI_CTRLOUTLINE                            "ctrlOutline"
 	#define MACRO_VARNAME_UI_CTRLPARENT                             "ctrlParent"
 	#define MACRO_VARNAME_UI_OFFSET                                 "offset"
 	#define MACRO_VARNAME_UI_ALLSLOTFRAMES                          "allSlotFrames"
+	#define MACRO_VARNAME_UI_CTRLSLOTICON                           "ctrlSlotIcon"		// NOT part of a slot's child controls - this is handled by whichever script that's responsible for generating a container's item slots
+
+		// Child controls
+		#define MACRO_VARNAME_UI_CHILDCONTROLS                          "childControls"
+		#define MACRO_VARNAME_UI_CTRLICON                               "ctrlIcon"
+//		#define MACRO_VARNAME_UI_CTRLOUTLINE                            "ctrlOutline"
+		#define MACRO_VARNAME_UI_CTRLAMMOBARFRONT                       "ctrlAmmoBarFront"
+		#define MACRO_VARNAME_UI_CTRLAMMOBARBACK                        "ctrlAmmoBarBack"
 
 	#define MACRO_VARNAME_UI_NEXTUPDATE_GROUND                      "nextUpdate_ground"
 	#define MACRO_VARNAME_UI_FORCEREDRAW_GROUND                     "forceRedraw_ground"
@@ -510,3 +527,16 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 		#define MACRO_CONFIG_FILE configFile
 	#endif
 */
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//	SQF MACRO FUNCTIONS
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+	#include "sqf\macro_UI_createPictureIcon.hpp"
+	#include "sqf\macro_UI_createOutline.hpp"
+	#include "sqf\macro_UI_ctrl_setPosition.hpp"
+	#include "sqf\macro_UI_ctrl_calculateOffset.hpp"

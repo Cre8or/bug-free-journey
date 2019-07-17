@@ -103,12 +103,10 @@ case "ui_item_move": {
 				// Fetch some additional data
 				private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 				private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
-				private _posCtrl = ctrlPosition _targetCtrl;
 
 				// Rescale the control
-				_posCtrl set [2, _itemW * _safeZoneW * MACRO_SCALE_SLOT_SIZE_W];
-				_posCtrl set [3, _itemH * _safeZoneH * MACRO_SCALE_SLOT_SIZE_H];
-				_targetCtrl ctrlSetPosition _posCtrl;
+				_targetCtrl ctrlSetPositionW _itemW * _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
+				_targetCtrl ctrlSetPositionH _itemH * _safeZoneH * MACRO_SCALE_SLOT_SIZE_H;
 				_targetCtrl ctrlCommit 0;
 			};
 

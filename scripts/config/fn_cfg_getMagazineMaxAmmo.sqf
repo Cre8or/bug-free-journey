@@ -13,7 +13,7 @@ params [
 	["_class", "", [""]]
 ];
 
-// If no class or no category was provided, exit and return 1 bullet
+// If no class or no category was provided, exit and return 1 bullet (to avoid division by zero errors)
 if (_class == "") exitWith {1};
 
 
@@ -28,7 +28,6 @@ private _maxAmmo = _namespace getVariable _class;
 
 // If the max ammo count doesn't exist yet, try to determine it
 if (isNil "_maxAmmo") then {
-	_maxAmmo = -1;
 
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {
@@ -36,7 +35,7 @@ if (isNil "_maxAmmo") then {
 		missionNamespace setVariable ["cre8ive_getMagazineMaxAmmo_namespace", _namespace, false];
 	};
 
-	_maxAmmo = [configfile >> "CfgMagazines" >> _class, "count", 1] call BIS_fnc_returnConfigEntry;
+	_maxAmmo = ([configfile >> "CfgMagazines" >> _class, "count", 1] call BIS_fnc_returnConfigEntry) max 1;
 
 	// Save the max ammo count on the namespace
 	_namespace setVariable [_class, _maxAmmo];
