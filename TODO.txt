@@ -1,4 +1,8 @@
 TODO:
+- Figure out a new system for getClassCategory to avoid classname collisions (e.g. in both CfgWeapons and CfgVehicles)
+	* Save the category as information onto the itemData?
+	* Save the config path/category onto the itemData for quick access? (e.g. CfgWeapons/CfgVehicles or with an enum)
+- Move the "Draw" event raises to wherever generateChildControls used to be called
 - Add a "Draw" IEH (to update controls whenever needed)
 - Replace generateChildControls with category-specific draw functions
 	* Get rid of the child control enumerations when done (MACRO_ENUM_CTRL_*)
@@ -24,6 +28,7 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Move the child controls offset calculation to the dragging event to reduce overhead (since it's only needed there)
 - Make use of the new SQF function macros (go through all files and replace all occurences with them, whenever possible)
 - Add a "Take", "Drop" and "Move" IEH and implement them
 - Add an "Init" IEH that is triggered whenever an itemData is created (and filled out with basic data)

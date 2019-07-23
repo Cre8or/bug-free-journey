@@ -33,6 +33,10 @@ class MACRO_CLASSNAME_IEH {
 					function = "cre_fnc_IEH_default_drawContainer";
 					code = "systemChat '(IEH) Updated container!'; _this call cre_fnc_debug_printIEH";
 				};
+
+				class MACRO_ENUM_EVENT_INIT {
+					code = "systemChat '(IEH) Initialised object!'; _this call cre_fnc_debug_printIEH";
+				};
 			};
 
 			class Man {
@@ -45,7 +49,7 @@ class MACRO_CLASSNAME_IEH {
 
 			class Bag_Base : Cre8ive_Debug_PrintAllIEHs {};
 		};
-
+/*
 		class CfgWeapons {
 			class ItemCore : Cre8ive_Debug_PrintAllIEHs {};
 		};
@@ -55,6 +59,7 @@ class MACRO_CLASSNAME_IEH {
 		class CfgGlasses {
 			class None : Cre8ive_Debug_PrintAllIEHs {};
 		};
+*/
 	};
 /*
 	class Something_Else {
@@ -77,4 +82,25 @@ class MACRO_CLASSNAME_IEH {
 		};
 	};
 */
+};
+
+
+class MACRO_CLASSNAME_IEH_CATEGORY {
+
+	class Cre8ive {
+
+		class MACRO_CLASSNAME_IEH_CATEGORY_MAGAZINE {
+			class MACRO_ENUM_EVENT_DRAW {
+				function = "cre_fnc_IEH_draw_magazine";
+				//code = "";
+				//overwrite = 1;
+			};
+		};
+
+		class MACRO_CLASSNAME_IEH_CATEGORY_WEAPON {
+			class MACRO_ENUM_EVENT_DRAW {
+				function = "cre_fnc_IEH_draw_weapon";
+			};
+		};
+	};
 };

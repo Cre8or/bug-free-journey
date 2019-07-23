@@ -33,7 +33,7 @@ MY_CTRLICON = MY_DISPLAY ctrlCreate ["Cre8ive_Inventory_ScriptedPicture", MY_IDC
 MY_CTRLICON ctrlSetText MY_ICONPATH;                                                                                                     \
 MY_CTRLICON ctrlSetPosition MY_CTRLPOS;                                                                                                  \
 MY_CTRLICON ctrlCommit 0;                                                                                                                \
-MY_CTRL setVariable [MACRO_VARNAME_UI_CTRLICON, MY_CTRLICON];
+MY_CTRLFRAME setVariable [MACRO_VARNAME_UI_CTRLICON, MY_CTRLICON];
 
 // Second variant - icon control variable does NOT exist yet - item IS rotated
 #define MACRO_FNC_UI_CREATEPICTUREICON_ROTATED(MY_CTRLFRAME,MY_CTRLICON,MY_DISPLAY,MY_IDC,MY_CTRLPARENT,MY_CTRLPOS,MY_ICONPATH)		 \

@@ -99,7 +99,7 @@ if (_container isKindOf "Man") then {
 			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _itemData];
 
 			// Raise the "Init" event
-			_eventArgs = [_itemData, _itemUID, player, _containerData, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+			_eventArgs = [_itemData, _itemUID, _container, _containerData, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
 			[STR(MACRO_ENUM_EVENT_INIT), _eventArgs] call cre_fnc_IEH_raiseEvent;
 		};
 	} forEach [
@@ -138,7 +138,7 @@ if (_container isKindOf "Man") then {
 			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _itemData];
 
 			// Raise the "Init" event
-			_eventArgs = [_itemData, _itemUID, player, _containerData, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
+			_eventArgs = [_itemData, _itemUID, _container, _containerData, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]];
 			[STR(MACRO_ENUM_EVENT_INIT), _eventArgs] call cre_fnc_IEH_raiseEvent;
 		};
 	} forEach [
@@ -188,7 +188,9 @@ if (_container isKindOf "Man") then {
 	// Define some variables
 	private _index = 0;
 	private _items = [];
+	private _eventArgs = [];
 	private _containerItems = [];
+	private _parentContainerData = locationNull;
 	private _filteredClasses = [	// This is only faster than looking up a class if there are less than ~70-80 entries
 		"Cre8ive_DummyWeight_1",
 		"Cre8ive_DummyWeight_2",
@@ -346,7 +348,7 @@ if (_container isKindOf "Man") then {
 		_containerData setVariable [MACRO_VARNAME_SLOTPOS, _containerSlotPos];
 
 		// Link this container data to its parent
-		private _parentContainerData = _parentContainer getVariable [MACRO_VARNAME_DATA, locationNull];
+		_parentContainerData = _parentContainer getVariable [MACRO_VARNAME_DATA, locationNull];
 		_containerData setVariable [MACRO_VARNAME_PARENT, _parentContainer];
 		_containerData setVariable [MACRO_VARNAME_PARENTDATA, _parentContainerData];
 
@@ -399,7 +401,7 @@ if (_container isKindOf "Man") then {
 				};
 
 				// Raise the "Init" event
-				private _eventArgs = [_itemData, _itemData getVariable [MACRO_VARNAME_UID, ""], _container, _containerData, [1, 1]];
+				_eventArgs = [_itemData, _itemData getVariable [MACRO_VARNAME_UID, ""], _container, _containerData, [1, 1]];
 				[STR(MACRO_ENUM_EVENT_INIT), _eventArgs] call cre_fnc_IEH_raiseEvent;
 			};
 
@@ -524,31 +526,37 @@ if (_container isKindOf "Man") then {
 		_containerData setVariable [MACRO_VARNAME_SLOTPOS, _containerSlotPos];
 
 		// Link this container data to its parent
-		private _parentContainerData = _parentContainer getVariable [MACRO_VARNAME_DATA, locationNull];
+		_parentContainerData = _parentContainer getVariable [MACRO_VARNAME_DATA, locationNull];
 		_containerData setVariable [MACRO_VARNAME_PARENT, _parentContainer];
 		_containerData setVariable [MACRO_VARNAME_PARENTDATA, _parentContainerData];
 
-		// Fetch the width and height of the container
+		// Set up some variables
 		_containerSize params ["_sizeW", "_sizeH"];
 		private _lastFreeY = 1;
-		private _eventArgs = [];
+		private _slotStr = "";
+		private _itemData = locationNull;
+		private ["_class", "_category", "_itemSize", "_isRotated", "_yLineIsFull", "_newW", "_slotStr", "_slotData", "_posEndX", "_posEndY", "_requiredSlots", "_requiredSlotStr", "_requiredSlotsStrArray", "_itemData"];
+
+
+		diag_log format ["(%1) [generateContainerData] Now adding items to %2...", diag_tickTime, _containerClass];
+
+		// Iterate through the item to add
 		{
 			scopeName "loopItems";
 
 			// Fetch the data associated to this UID
-			private _data = _itemsListNamespace getVariable [_x, []];
-			_data params ["_formatType", "_args"];
+			(_itemsListNamespace getVariable [_x, []]) params ["_formatType", "_args"];
 
 			// Fetch some information from the item
-			private _class = _args select 0;
-			private _category = [_class] call cre_fnc_cfg_getClassCategory;
-			private _itemSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
+			_class = _args select 0;
+			_category = [_class] call cre_fnc_cfg_getClassCategory;
+			_itemSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 			_itemSize params ["_itemWidth", "_itemHeight"];
 
 			// Iterate twice (once normally, and once with the item rotated)
 			for "_rotateMode" from 0 to 1 do {
 
-				private _isRotated = (_rotateMode > 0);
+				_isRotated = (_rotateMode > 0);
 				if (_isRotated) then {
 					private _widthTemp = _itemWidth;
 					_itemWidth = _itemHeight;
@@ -557,37 +565,36 @@ if (_container isKindOf "Man") then {
 
 				// Iterate through the container to see where we can fit the item
 				for "_posY" from _lastFreeY to _sizeH do {
-					private _yHasFreeSlot = false;
-					private _newW = [_sizeW, _containerSlotsOnLastY] select (_posY == _sizeH);
+					_yLineIsFull = true;
+					_newW = [_sizeW, _containerSlotsOnLastY] select (_posY == _sizeH);
 
 					for "_posX" from 1 to _newW do {
 						scopeName "loopSlots";
 
-						private _slotStr = format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY];
-						private _slotData = _containerData getVariable [_slotStr, locationNull];
+						_slotStr = format [MACRO_VARNAME_SLOT_X_Y, _posX, _posY];
+						_slotData = _containerData getVariable [_slotStr, locationNull];
 
 						// If this slot is empty, check if the item can fit in it
 						if (isNull _slotData) then {
-							_yhasFreeSlot = true;
+							_yLineIsFull = true;
 
 							// First of all, test if the item even fits in this position
-							private _posEndX = _posX + _itemWidth - 1;
-							private _posEndY = _posY + _itemHeight - 1;
+							_posEndX = _posX + _itemWidth - 1;
+							_posEndY = _posY + _itemHeight - 1;
 							if (_posEndX <= _newW and {_posEndY <= _sizeH}) then {
 
 								// Exception handling for the last line in the inventory (which might have less slots)
 								if !(_posEndY == _sizeH and {_posEndX > _containerSlotsOnLastY}) then {
 
 									// The dimensions fit, now we check if the required slots are all free
-									private _requiredSlots = [];
-									private _requiredSlotsStrArray = [];
+									_requiredSlots = [];
+									_requiredSlotsStrArray = [];
 									for "_posItemY" from _posY to _posEndY do {
 										for "_posItemX" from _posX to _posEndX do {
-											private _requiredSlotStr = format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
-											private _requiredSlot = _containerData getVariable [_requiredSlotStr, locationNull];
+											_requiredSlotStr = format [MACRO_VARNAME_SLOT_X_Y, _posItemX, _posItemY];
 
 											// If the slot is empty, add it to the list
-											if (isNull _requiredSlot) then {
+											if (isNull (_containerData getVariable [_requiredSlotStr, locationNull])) then {
 												_requiredSlotsStrArray pushBack _requiredSlotStr;
 												_requiredSlots pushBack [_posItemX, _posItemY];
 
@@ -601,7 +608,6 @@ if (_container isKindOf "Man") then {
 									// If we didn't exit yet, that means the item can fit!
 
 									// If the item is a container, we recursively generate container data on it
-									private _itemData = locationNull;
 									if (_formatType == 3) then {
 										_itemData = [_args select 1, _class, _container, [_posX, _posY]] call cre_fnc_inv_generateContainerData;
 
@@ -653,17 +659,19 @@ if (_container isKindOf "Man") then {
 
 									_containerItems pushBack _itemData;
 
+									diag_log format ["(%1) [generateContainerData] Added item: %2   ->   %3", diag_tickTime, [_posX, _posY], _class];
+
 									// Move on to the next item
 									breakTo "loopItems";
 								};
 							};
 						};
 					};
-				};
 
-				// If there were no free slots left on this Y-line, ignore it in future searches
-				if (!_yHasFreeSlot) then {
-					_lastFreeY = _posY + 1;
+					// If there were no free slots left on this Y-line, ignore it in future searches
+					if (_yLineIsFull) then {
+						_lastFreeY = _posY + 1;
+					};
 				};
 			};
 
@@ -672,6 +680,10 @@ if (_container isKindOf "Man") then {
 		// Delete the temporary items list location
 		deleteLocation _itemsListNamespace;
 	};
+
+
+	diag_log format ["(%1) [generateContainerData] Finished adding items to %2!", diag_tickTime, _containerClass];
+	diag_log "";
 
 	// Save the list of items for quick access
 	_containerData setVariable [MACRO_VARNAME_ITEMS, _containerItems];

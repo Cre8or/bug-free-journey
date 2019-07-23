@@ -31,17 +31,16 @@ private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
 private _maxAmmo = [_class] call cre_fnc_cfg_getMagazineMaxAmmo;
 
 // Fetch the child controls
-private _childControls = _ctrl getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []];
 private _ctrlAmmoFront = _ctrl getVariable [MACRO_VARNAME_UI_CTRLAMMOBARFRONT, controlNull];
 private _ctrlAmmoBack = _ctrl getVariable [MACRO_VARNAME_UI_CTRLAMMOBARBACK, controlNull];
 
 // If this is the initial draw call, generate the child controls
-if (_childControls isEqualTo []) then {
+if (isNull (_ctrl getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull])) then {
 
 	// Fetch some info about the item
 	private _category = [_class] call cre_fnc_cfg_getClassCategory;
 	private _iconPath = [_class, _category, _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""]] call cre_fnc_cfg_getClassIcon;
-	private _isRotated = _itemData getVariable [MACRO_VARNAME_ISROTATED, false];
+	private _isRotated = _ctrl getVariable [MACRO_VARNAME_ISROTATED, false];
 
 	// Fetch some info about the control
 	private _pos = ctrlPosition _ctrl;
@@ -86,10 +85,12 @@ if (_childControls isEqualTo []) then {
 		_pos params ["_posX", "_posY"];
 		MACRO_FNC_UI_CTRL_CALCULATEOFFSET_XY_PRIVATE(_ctrlAmmoFront, _posTemp, _posX, _posY)
 		MACRO_FNC_UI_CTRL_CALCULATEOFFSET_XY(_ctrlAmmoBack, _posTemp, _posX, _posY)
-	};
 
-	// Save the new child controls array
-	_ctrl setVariable [MACRO_VARNAME_UI_CHILDCONTROLS, [_ctrlIcon, _ctrlOutline, _ctrlAmmoFront, _ctrlAmmoBack]];
+		// Save the new child controls array
+		_ctrl setVariable [MACRO_VARNAME_UI_CHILDCONTROLS, [_ctrlIcon, _ctrlOutline, _ctrlAmmoFront, _ctrlAmmoBack]];
+	} else {
+		_ctrl setVariable [MACRO_VARNAME_UI_CHILDCONTROLS, [_ctrlIcon, _ctrlOutline]];
+	};
 };
 
 

@@ -65,7 +65,7 @@ class CfgFunctions {
 			};
 
 			class inv_createNamespace {};
-			class inv_canFitItem {};
+			//class inv_canFitItem {};
 			//class inv_moveItem {};
 			//class inv_handleFakeMass {};
 			//class inv_getInvMass {};

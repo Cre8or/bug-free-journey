@@ -13,7 +13,7 @@
 #include "..\..\res\common\macros.hpp"
 
 // Optional debug macro - uncomment to turn on / comment to turn off
-//#define MACRO_CFG_COMPILEIEHS_DEBUG
+#define MACRO_CFG_COMPILEIEHS_DEBUG
 
 // Debug macros to add words/lines to the debug hint message (without having to check if the debug macro exists everytime)
 #ifdef MACRO_CFG_COMPILEIEHS_DEBUG
@@ -54,7 +54,7 @@ private _namespace_isFinal = locationNull;
 
 
 
-// Iterate through all entries inside the IEH root classes
+// Iterate through all entries inside the IEH root class
 {
 	private _modTagPath = _x;
 	#ifdef MACRO_CFG_COMPILEIEHS_DEBUG
@@ -173,6 +173,114 @@ private _namespace_isFinal = locationNull;
 } forEach (
  	(configProperties [configFile >> STR(MACRO_CLASSNAME_IEH), "isClass _x", true]) +
  	(configProperties [missionConfigFile >> STR(MACRO_CLASSNAME_IEH), "isClass _x", true])
+);
+
+
+
+
+
+// Create the preInit namespace for the category-based events
+_namespace_preInit = createLocation ["NameVillage", [0,0,0], 0, 0];
+missionNamespace setVariable ["cre8ive_IEH_preInit_category", _namespace_preInit, false];
+cre_IEHNamespaces pushBack _namespace_preInit;	// DEBUG
+
+// Iterate through all entries inside the IEH categories class
+{
+	private _modTagPath = _x;
+	#ifdef MACRO_CFG_COMPILEIEHS_DEBUG
+		private _arrayConfigName = ["MISSION", "CONFIG"];
+		MACRO_CFG_COMPILEIEH_DEBUG_ADD_WORD("<t align='center'><t color='#ffffff'>" + (_arrayConfigName select isClass (configFile >> STR(MACRO_CLASSNAME_IEH) >> configName _modTagPath)) + "<\t>");
+		MACRO_CFG_COMPILEIEH_DEBUG_ADD_WORD("<t color='#aaaaaa'> - <\t>");
+		MACRO_CFG_COMPILEIEH_DEBUG_ADD_LINE("<t color='#00aaff'>" + configName _modTagPath + "<\t><\t>");
+	#endif
+
+	// Iterate through all category entries inside the mod tag path (e.g. Category_Weapon, Category_item, etc.)
+	{
+		private _categoryPath = _x;
+		private _category = MACRO_ENUM_CATEGORY_INVALID;
+		switch (configName _categoryPath) do {
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_ITEM):			{_category = MACRO_ENUM_CATEGORY_ITEM};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_WEAPON):			{_category = MACRO_ENUM_CATEGORY_WEAPON};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_MAGAZINE):		{_category = MACRO_ENUM_CATEGORY_MAGAZINE};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_UNIFORM):			{_category = MACRO_ENUM_CATEGORY_UNIFORM};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_VEST):			{_category = MACRO_ENUM_CATEGORY_VEST};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_BACKPACK):		{_category = MACRO_ENUM_CATEGORY_BACKPACK};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_NVGS):			{_category = MACRO_ENUM_CATEGORY_NVGS};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_HEADGEAR):		{_category = MACRO_ENUM_CATEGORY_HEADGEAR};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_BINOCULARS):		{_category = MACRO_ENUM_CATEGORY_BINOCULARS};
+			case STR(MACRO_CLASSNAME_IEH_CATEGORY_GOGGLES):			{_category = MACRO_ENUM_CATEGORY_GOGGLES};
+		};
+		MACRO_CFG_COMPILEIEH_DEBUG_ADD_LINE("<t align='left' color='#eda765'>  " + str _category + "</t>");
+
+		// Only continue if the category is valid
+		if (_category != MACRO_ENUM_CATEGORY_INVALID) then {
+
+			// Iterate through the category entry's events
+			{
+
+				// Fetch the entries for this event
+				private _event = configName _x;
+				private _eventEntries = _namespace_preInit getVariable [_event, []];
+				private _categoryEntries = _eventEntries param [_category, []];
+
+				private _function = getText (_x >>		"function"		);
+				private _code = getText (_x >>			"code"			);
+				private _overwrite = getNumber (_x >>		"overwrite"		);
+
+				// If this event should overwrite all other entries for this class, clear the array
+				if (_overwrite > 0) then {
+					_categoryEntries = [];
+				};
+
+				// DEBUG
+				MACRO_CFG_COMPILEIEH_DEBUG_ADD_WORD("<t align='left' color='#44dddd'>    " + _event + "</t>");
+				#ifdef MACRO_CFG_COMPILEIEHS_DEBUG
+
+					if (_overwrite > 0) then {
+						MACRO_CFG_COMPILEIEH_DEBUG_ADD_LINE("<t color='#ffff88'> ( ! )</t>");
+					} else {
+						MACRO_CFG_COMPILEIEH_DEBUG_ADD_NEWLINE;
+					};
+				#endif
+
+				// If a function was provided, add it to the entries
+				if !(_function isEqualTo "") then {
+					_categoryEntries pushBack call compile _function;		// Fetch the function
+					MACRO_CFG_COMPILEIEH_DEBUG_ADD_LINE("<t align='left' color='#aaaaaa'>      " + _function + "</t>");
+				};
+
+				// If a piece of code was provided, add it to the entries
+				if !(_code isEqualTo "") then {
+					_categoryEntries pushBack compile _code;
+
+					#ifdef MACRO_CFG_COMPILEIEHS_DEBUG
+						private _limit = 30;
+						if ((count _code) > _limit) then {
+							private _codeSub = _code select [0, _limit - 5];
+							MACRO_CFG_COMPILEIEH_DEBUG_ADD_WORD("<t align='left' color='#aaaaaa'>      {</t>");
+							MACRO_CFG_COMPILEIEH_DEBUG_ADD_WORD("<t color='#a3d87d'>" + _codeSub + "</t>");
+							MACRO_CFG_COMPILEIEH_DEBUG_ADD_LINE("<t color='#aaaaaa'>...}</t>");
+						} else {
+							MACRO_CFG_COMPILEIEH_DEBUG_ADD_WORD("<t align='left' color='#aaaaaa'>      {</t>");
+							MACRO_CFG_COMPILEIEH_DEBUG_ADD_WORD("<t color='#a3d87d'>" + _code + "</t>");
+							MACRO_CFG_COMPILEIEH_DEBUG_ADD_LINE("<t color='#aaaaaa'>}</t>");
+						};
+					#endif
+				};
+
+				// Save the entries array back onto the namespace
+				_eventEntries set [_category, _categoryEntries];
+				_namespace_preInit setVariable [_event, _eventEntries];
+			} forEach configProperties [_categoryPath, "isClass _x", true];
+		};
+
+	} forEach configProperties [_modTagPath, "isClass _x", true];
+
+	MACRO_CFG_COMPILEIEH_DEBUG_ADD_NEWLINE;
+
+} forEach (
+ 	(configProperties [configFile >> STR(MACRO_CLASSNAME_IEH_CATEGORY), "isClass _x", true]) +
+ 	(configProperties [missionConfigFile >> STR(MACRO_CLASSNAME_IEH_CATEGORY), "isClass _x", true])
 );
 
 

@@ -2,9 +2,11 @@
 	Author:		 Cre8or
 	Description:
 		Returns all code expressions attached to a classname and to the provided event.
+		Also returns IEHs attached to the class' category
 	Arguments:
 		0:      <STRING>	Classname of the item/object to check
-		1:      <STRING>	The event in question (refer to macros.hpp for a list of events)
+		1:	<NUMBER>	The category of the item/object
+		2:      <STRING>	The event in question (refer to macros.hpp for a list of events)
 	Returns:
 		0:      <ARRAY>		Array of all code expressions that are attached to this class and event
 -------------------------------------------------------------------------------------------------------------------- */
@@ -79,7 +81,7 @@ if (isNil "_codes") then {
 	private _configPath = inheritsFrom (configFile >> _configPathName >> _class);
 	while {isClass _configPath} do {
 		_classParent = configName _configPath;
-		_codes = _codes + (_namespace_preInit getVariable [_classParent, []]);
+		_codes append (_namespace_preInit getVariable [_classParent, []]);
 
 		// Check whether this class is final
 		if (_namespace_isFinal getVariable [_classParent, false]) then {
@@ -88,6 +90,11 @@ if (isNil "_codes") then {
 			_configPath =  inheritsFrom _configPath;
 		};
 	};
+
+	// Fetch the category-specific codes and functions
+	_namespace_preInit = missionNamespace getVariable ["cre8ive_IEH_preInit_category", locationNull];
+	private _eventEntries = _namespace_preInit getVariable [_event, []];
+	_codes append (_eventEntries param [_category, []]);
 
 	// If the cached namespace doesn't exist yet, create it
 	if (isNull _namespace) then {
@@ -99,7 +106,6 @@ if (isNil "_codes") then {
 	// Save the codes array onto the namespace
 	_namespace setVariable [_class, _codes];
 };
-
 
 
 

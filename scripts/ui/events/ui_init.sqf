@@ -31,9 +31,8 @@ case "ui_init": {
 				// Validate the active container object and write it onto the inventory display
 				if !(typeOf _activeContainer in MACRO_CLASSES_GROUNDHOLDERS) then {
 
-					private _activeContainerData = _activeContainer getVariable [MACRO_VARNAME_DATA, locationNull];
-					if (isNull _activeContainerData) then {
-						cre_location = [_activeContainer] call cre_fnc_inv_generateContainerData;
+					if (isNull (_activeContainer getVariable [MACRO_VARNAME_DATA, locationNull])) then {
+						[_activeContainer] call cre_fnc_inv_generateContainerData;
 					};
 
 					_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER, _activeContainer];
@@ -166,7 +165,7 @@ case "ui_init": {
 					while {!isNull _inventory} do {
 
 						private _str = str (_inventory getVariable [MACRO_VARNAME_UI_DRAGGEDCTRL, controlNull]) + "<br />";
-						_str = _str + str (_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]) + "<br />";
+						_str = _str + str (_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]) + " - " + str ((_inventory getVariable [MACRO_VARNAME_UI_FRAMETEMP, controlNull]) getVariable [MACRO_VARNAME_ISROTATED, "???"]) + "<br />";
 						_str = _str + str (_inventory getVariable [MACRO_VARNAME_UI_ICONTEMP, controlNull]) + "<br />";
 						//_str = _str + "count: " + str count (_inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []]) + "<br />";
 						//_str = _str + "posNew: " + str (_inventory getVariable [MACRO_VARNAME_UI_CURSORPOSNEW, []]);
@@ -179,7 +178,7 @@ case "ui_init": {
 					hint "";
 				};
 */
-				hint format ["Opened in %1s", diag_tickTime - _timeStart];
+				//hint format ["Opened in %1s", diag_tickTime - _timeStart];
 			};
 		};
 	};

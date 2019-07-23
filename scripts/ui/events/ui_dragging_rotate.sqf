@@ -56,6 +56,15 @@ case "ui_dragging_rotate": {
 		// Generate additional temporary child controls
 		private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 
+		// Recalculate the position offsets for the child controls (so they get dragged properly)
+		{
+			private _posChildCtrl = ctrlPosition _x;
+			_x setVariable [MACRO_VARNAME_UI_OFFSET, [
+				(_posChildCtrl select 0) - _posCtrlX,
+				(_posChildCtrl select 1) - _posCtrlY
+			]];
+		} forEach _tempChildControls;
+
 		// Move the temporary controls in place initially
 		getMousePosition params ["_posX", "_posY"];
 		["ui_dragging", [_draggedCtrl, _posX, _posY]] call cre_fnc_ui_inventory;

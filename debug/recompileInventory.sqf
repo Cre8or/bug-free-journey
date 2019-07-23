@@ -23,6 +23,7 @@ cre_fnc_IEH_man_drawContainer = compile preprocessFileLineNumbers "scripts\IEH\f
 
 	// Draw
 	cre_fnc_IEH_draw_magazine = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_magazine.sqf";
+	cre_fnc_IEH_draw_weapon = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_weapon.sqf";
 
 // Inventory
 cre_fnc_inv_generateContainerData = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateContainerData.sqf";

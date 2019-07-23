@@ -58,7 +58,7 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_COLOUR_AMMOBAR_BACKGROUND                         0, 0, 0, 0.8
 
 	#define MACRO_COLOUR_OUTLINE_WEAPON                             0, 0, 1, 0.8
-	#define MACRO_COLOUR_OUTLINE_MAGAZINE                           1, 1, 1, 0.6
+	#define MACRO_COLOUR_OUTLINE_MAGAZINE                           1, 1, 1, 0.4
 	#define MACRO_COLOUR_OUTLINE_UNIFORM                            0, 1, 0, 0.6
 //	#define MACRO_COLOUR_OUTLINE_VEST                               0, 1, 0, 0.8
 //	#define MACRO_COLOUR_OUTLINE_BACKPACK                           0, 1, 0, 0.8
@@ -251,6 +251,7 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_ENUM_CATEGORY_EMPTY                               -2
 	#define MACRO_ENUM_CATEGORY_INVALID                             -1
 
+	// NOTE: Category enums should also be useable as array indexes! Consequently, they must start at 0 (excluding empty/invalid) and must not have any gaps!
 	#define MACRO_ENUM_CATEGORY_ITEM                                0
 	#define MACRO_ENUM_CATEGORY_WEAPON                              1
 	#define MACRO_ENUM_CATEGORY_MAGAZINE                            2
@@ -340,7 +341,7 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 //	#define MACRO_ENUM_EVENT_USE                                    Use
 //	#define MACRO_ENUM_EVENT_DELETED                                Deleted
 //	#define MACRO_ENUM_EVENT_EACHFRAME                              EachFrm
-//	#define MACRO_ENUM_EVENT_DRAWCONTAINER                          DrawContnr
+	#define MACRO_ENUM_EVENT_DRAWCONTAINER                          DrawContnr
 //	#define MACRO_ENUM_EVENT_GENERATECHILDCONTROLS                  GenChildCtrls
 
 	// Event indexes
@@ -516,6 +517,22 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 
 	// Name of the Inventory Event Handlers classname
 	#define MACRO_CLASSNAME_IEH                                     Cre8ive_Inventory_EventHandlers
+	#define MACRO_CLASSNAME_IEH_CATEGORY                            Cre8ive_Inventory_EventHandlers_Category
+
+	// IEH Category classnames
+	#define MACRO_CLASSNAME_IEH_CATEGORY_ITEM                       Category_Item
+	#define MACRO_CLASSNAME_IEH_CATEGORY_WEAPON                     Category_Weapon
+	#define MACRO_CLASSNAME_IEH_CATEGORY_MAGAZINE                   Category_Magazine
+
+	#define MACRO_CLASSNAME_IEH_CATEGORY_UNIFORM                    Category_Uniform
+	#define MACRO_CLASSNAME_IEH_CATEGORY_VEST                       Category_Vest
+	#define MACRO_CLASSNAME_IEH_CATEGORY_BACKPACK                   Category_Backpack
+//	#define MACRO_CLASSNAME_IEH_CATEGORY_CONTAINER                  Category_Container
+
+	#define MACRO_CLASSNAME_IEH_CATEGORY_NVGS                       Category_NVGs
+	#define MACRO_CLASSNAME_IEH_CATEGORY_HEADGEAR                   Category_Headgear
+	#define MACRO_CLASSNAME_IEH_CATEGORY_BINOCULARS                 Category_Binoculars
+	#define MACRO_CLASSNAME_IEH_CATEGORY_GOGGLES                    Category_Goggles
 
 /*
 	// Determine which config file the UI is defined in (mission or addon format)

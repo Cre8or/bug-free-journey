@@ -90,6 +90,15 @@ case "ui_dragging_start": {
 				// Generate additional temporary child controls
 				private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 
+				// Calculate the position offsets for the child controls (so they get dragged properly)
+				{
+					private _posChildCtrl = ctrlPosition _x;
+					_x setVariable [MACRO_VARNAME_UI_OFFSET, [
+						(_posChildCtrl select 0) - _posCtrlX,
+						(_posChildCtrl select 1) - _posCtrlY
+					]];
+				} forEach _tempChildControls;
+
 				// Mark the control as being dragged
 				_draggedCtrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, true];
 
@@ -208,9 +217,6 @@ case "ui_dragging_start": {
 				} else {
 					private _containerCtrl = _draggedCtrl getVariable [MACRO_VARNAME_UI_CTRLPARENT, controlNull];
 					if (!isNull _containerCtrl and {_draggedCtrl != _containerCtrl}) then {
-
-						// Fetch the slot position
-						//(_draggedCtrl getVariable [MACRO_VARNAME_SLOTPOS, [0,0]]) params ["_posSlotX", "_posSlotY"];
 
 						// Unhide all occupied slot controls
 						{

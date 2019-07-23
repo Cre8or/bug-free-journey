@@ -97,6 +97,6 @@ MY_CTRLPOS = [];                                                                
 	]];                                                                                                              \
 } forEach MY_CTRLSARRAY;
 
-// Eigth variant - control position variable does NOT exist yet - calculate offset for multiple controls - parent position in format X,Y
+// Eighth variant - control position variable does NOT exist yet - calculate offset for multiple controls - parent position in format X,Y
 #define MACRO_FNC_UI_CTRL_CALCULATEOFFSET_XY_ARRAY_PRIVATE(MY_CTRLSARRAY,MY_CTRLPOS,MY_POSX,MY_POSY)			 \
 private MACRO_FNC_UI_CTRL_CALCULATEOFFSET_XY_ARRAY(MY_CTRLSARRAY,MY_CTRLPOS,MY_POSX,MY_POSY)
