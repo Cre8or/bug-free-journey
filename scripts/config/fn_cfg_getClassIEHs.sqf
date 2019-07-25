@@ -62,8 +62,8 @@ switch (_category) do {
 };
 
 // Get our corresponding cached IEH namespace
-_namespaceVarName = format ["cre8ive_IEH_cached_%1_%2", _configPathName, _event];
-_namespace = missionNamespace getVariable [_namespaceVarName, locationNull];
+private _namespaceVarName = format ["cre8ive_IEH_cached_%1_%2", _configPathName, _event];
+private _namespace = missionNamespace getVariable [_namespaceVarName, locationNull];
 
 // Fetch the array of codes and functions from the namespace
 private _codes = _namespace getVariable _class;

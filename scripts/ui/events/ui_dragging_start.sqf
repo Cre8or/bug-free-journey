@@ -88,7 +88,11 @@ case "ui_dragging_start": {
 				_ctrlFrameTemp setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
 				// Generate additional temporary child controls
-				private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
+				//private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
+
+				// Raise the "Draw" event for the temporary frame control
+				private _eventArgs = [_itemData, _ctrlFrameTemp, _inventory];
+				[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
 
 				// Calculate the position offsets for the child controls (so they get dragged properly)
 				{
@@ -97,7 +101,8 @@ case "ui_dragging_start": {
 						(_posChildCtrl select 0) - _posCtrlX,
 						(_posChildCtrl select 1) - _posCtrlY
 					]];
-				} forEach _tempChildControls;
+//				} forEach _tempChildControls;
+				} forEach (_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
 				// Mark the control as being dragged
 				_draggedCtrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, true];

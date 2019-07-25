@@ -162,10 +162,9 @@ case "ui_dragging_stop": {
 			_itemData setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
 			// Also update the items lists
-			private _itemsOrigin = _originContainerData getVariable [MACRO_VARNAME_ITEMS, []];
-			private _itemsTarget = _targetContainerData getVariable [MACRO_VARNAME_ITEMS, []];
-			_itemsOrigin deleteAt (_itemsOrigin findIf {_x == _itemData});
-			_itemsTarget pushBack _itemData;
+			_originContainerData setVariable [MACRO_VARNAME_ITEMS, (_originContainerData getVariable [MACRO_VARNAME_ITEMS, []]) - [_itemData]];
+			_targetContainerData setVariable [MACRO_VARNAME_ITEMS, (_targetContainerData getVariable [MACRO_VARNAME_ITEMS, []]) + [_itemData]];
+
 			// TODO: Add items lists to the player container data, requires changing storage & weapons
 
 			// Tell the control that it is no longer being dragged

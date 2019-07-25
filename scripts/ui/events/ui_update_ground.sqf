@@ -24,7 +24,6 @@ case "ui_update_ground": {
 	};
 
 	// Determine some UI variables
-	//private _safeZoneY = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneY", 0];
 	private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 	private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
 	private _slotSizeW = _safeZoneW * MACRO_SCALE_SLOT_SIZE_W;
@@ -121,7 +120,7 @@ case "ui_update_ground": {
 	// If a request was made to force updating the ground UI, clear all existing controls (useful for custom item functions that need to update the child controls)
 	if (_inventory getVariable [MACRO_VARNAME_UI_FORCEREDRAW_GROUND, false]) then {
 		_inventory setVariable [MACRO_VARNAME_UI_FORCEREDRAW_GROUND, false];
-		systemChat "Forced a ground UI redraw";
+		systemChat "Forced a ground UI redraw!";
 
 		{
 			// Blank out the UID on the namespace
@@ -137,6 +136,7 @@ case "ui_update_ground": {
 		// Clear the array
 		_groundHolderCtrls = [];
 	};
+
 
 	// Filter out old ground holders that are too far
 	for "_i" from (count _groundHolderCtrls) - 1 to 0 step -1 do {
@@ -220,9 +220,14 @@ case "ui_update_ground": {
 						_slotFrame setVariable [MACRO_VARNAME_CONTAINER, _container];
 						_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
 
-						// Generate the child controls
-						// TODO: Generate them once they are in their final position?
-						[_slotFrame, _class, _category] call cre_fnc_ui_generateChildControls;
+						// Raise the "Draw" event
+						private _eventArgs = [_itemData, _slotFrame, _inventory];
+						[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
+
+						// Calculate the position offsets for the child controls (so they get moved properly)
+						{
+							_x setVariable [MACRO_VARNAME_UI_OFFSET, ctrlPosition _x];
+						} forEach (_slotFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
 						// Save the slot control onto the namespace
 						_namespace setVariable [_UID, _slotFrame];

@@ -14,6 +14,7 @@ case "ui_item_move": {
 	if (!isNull _ctrl) then {
 
 		// Fetch the control's item class and its associated size
+		private _itemData = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
 		private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
 		private _category = [_class] call cre_fnc_cfg_getClassCategory;
 		private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
@@ -121,8 +122,9 @@ case "ui_item_move": {
 				ctrlDelete _x;
 			} forEach (_targetCtrl getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
-			// Create new child controls on the target control
-			[_targetCtrl, _class, _category, _targetCtrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""]] call cre_fnc_ui_generateChildControls;
+			// Raise the "Draw" event for the temporary frame control
+			private _eventArgs = [_itemData, _targetCtrl, _inventory];
+			[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
 
 			// Colour the target control
 			_targetCtrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
@@ -135,13 +137,15 @@ case "ui_item_move": {
 		if (_ctrl != _targetCtrl) then {
 
 			// Reset the old slot data
-			private _itemData = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
 			_ctrl setVariable [MACRO_VARNAME_CLASS, ""];
 			_ctrl setVariable [MACRO_VARNAME_DATA, locationNull];
 			_ctrl setVariable [MACRO_VARNAME_SLOTSIZE, [1,1]];
 
-			// Create new child controls on the original control (which should be an empty slot now)
-			[_ctrl, "", MACRO_ENUM_CATEGORY_EMPTY, _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""]] call cre_fnc_ui_generateChildControls;
+			// If the control has a non-null default icon path, draw its child controls
+			private _defaultIconPath = _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
+			if (_defaultIconPath != "") then {
+				[_ctrl, _defaultIconPath, _inventory] call cre_fnc_ui_drawEmptySlot;
+			};
 
 			// Colour the original control
 			_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);

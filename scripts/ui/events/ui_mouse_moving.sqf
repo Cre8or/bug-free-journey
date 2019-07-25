@@ -16,7 +16,7 @@ case "ui_mouse_moving": {
 	(ctrlPosition _ctrl) params ["_posCtrlX", "_posCtrlY", "_widthCtrl", "_heightCtrl"];
 
 	// Check if an empty control, or an invalid relative position was provided
-	if (_posRelX == -99999 or {_posRelY == -99999}) then {
+	if (_posRelX == -99999 or {_posRelY == -99999}) then {	// (Must match the default parameter defined at the top)
 		private _cursorPosRel = _inventory getVariable [MACRO_VARNAME_UI_CURSORPOSREL, [0,0]];
 		_posRelX = _cursorPosRel select 0;
 		_posRelY = _cursorPosRel select 1;

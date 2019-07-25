@@ -43,8 +43,7 @@ private _ctrlAccOptic = _ctrl getVariable [MACRO_VARNAME_UI_ACC_OPTIC, controlNu
 if (isNull (_ctrl getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull])) then {
 
 	// Fetch some info about the item
-	private _category = [_class] call cre_fnc_cfg_getClassCategory;
-	private _iconPath = [_class, _category, _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""]] call cre_fnc_cfg_getClassIcon;
+	private _iconPath = [_class, MACRO_ENUM_CATEGORY_WEAPON, _ctrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""]] call cre_fnc_cfg_getClassIcon;
 	private _isRotated = _ctrl getVariable [MACRO_VARNAME_ISROTATED, false];
 
 	// Fetch some info about the control

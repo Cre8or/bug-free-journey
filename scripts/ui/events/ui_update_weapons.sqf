@@ -26,7 +26,10 @@ case "ui_update_weapons": {
 			private _slotSize = [1,1];
 			private _isForbiddenControl = false;
 
-			// Only continue if we have this item
+			// Delete all of the frame's child controls (but not the control itself)
+			[_ctrlFrame, false] call cre_fnc_ui_deleteSlotCtrl;
+
+			// If the slot still contains an item, update the control
 			if (!isNull _itemData) then {
 
 				// Save the item data to the list
@@ -42,10 +45,17 @@ case "ui_update_weapons": {
 				_ctrlFrame setVariable [MACRO_VARNAME_DATA, _itemData];
 				_ctrlFrame setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
 
-			// If the slot is empty, mark the slot as inactive
+				// Raise the "Draw" event
+				private _eventArgs = [_itemData, _ctrlFrame, _inventory];
+				[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
+
+			// Otherwise, mark the slot as inactive
 			} else {
 				_ctrlFrame setVariable [MACRO_VARNAME_CLASS, ""];
 				_ctrlFrame setVariable [MACRO_VARNAME_DATA, locationNull];
+
+				// Generate child controls for the empty slot (default icon)
+				[_ctrlFrame, _defaultIconPath, _inventory] call cre_fnc_ui_drawEmptySlot;
 			};
 
 			// Next, if the slot is currently being dragged, cancel the dragging
@@ -66,12 +76,6 @@ case "ui_update_weapons": {
 					_ctrlFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 				};
 			};
-
-			// Delete all of the frame's child controls (but not the control itself)
-			[_ctrlFrame, false] call cre_fnc_ui_deleteSlotCtrl;
-
-			// Generate new child controls
-			[_ctrlFrame, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 		};
 
 		// Add some event handlers for mouse entering/exiting the controls, and moving across it

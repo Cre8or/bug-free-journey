@@ -70,7 +70,6 @@ switch (_category) do {
 	};
 
 	case MACRO_ENUM_CATEGORY_WEAPON: {
-/*
 		_requiredControls = [
 			MACRO_ENUM_CTRL_PICTURE_ICON,
 			MACRO_ENUM_CTRL_OUTLINE,
@@ -82,26 +81,15 @@ switch (_category) do {
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_MAGAZINE,
 			MACRO_ENUM_CTRL_PICTURE_WEAPON_ALTMAGAZINE
 		];
-*/
-		// WIP: Let the new "Draw" IEH handle child control generation
-		private _eventArgs = [_ctrl getVariable [MACRO_VARNAME_DATA, locationNull], _ctrl, _inventory];
-		[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
-
 	};
 
 	case MACRO_ENUM_CATEGORY_MAGAZINE: {
-/*
 		_requiredControls = [
 			MACRO_ENUM_CTRL_PICTURE_ICON,
 			MACRO_ENUM_CTRL_OUTLINE,
 			MACRO_ENUM_CTRL_TEXT_DISPLAYNAME,
 			MACRO_ENUM_CTRL_BOX_AMMO_FILLBAR
 		];
-*/
-		// WIP: Let the new "Draw" IEH handle child control generation
-		private _eventArgs = [_ctrl getVariable [MACRO_VARNAME_DATA, locationNull], _ctrl, _inventory];
-		[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
-
 	};
 
 	case MACRO_ENUM_CATEGORY_CONTAINER: {
@@ -112,21 +100,37 @@ switch (_category) do {
 		];
 	};
 
-
 	default {
 		_requiredControls = [
 			MACRO_ENUM_CTRL_PICTURE_ICON,
 			MACRO_ENUM_CTRL_OUTLINE
+
+
 		];
 	};
 };
 
 // DEBUG - Forbid continuing executing this function for these category types (they're being deprecated by "Draw" event calls)
 
+/*
 if (_category in [
+	MACRO_ENUM_CATEGORY_ITEM,
 	MACRO_ENUM_CATEGORY_MAGAZINE,
-	MACRO_ENUM_CATEGORY_WEAPON
+	MACRO_ENUM_CATEGORY_WEAPON,
+
+	MACRO_ENUM_CATEGORY_CONTAINER,
+
+	MACRO_ENUM_CATEGORY_NVGS,
+	MACRO_ENUM_CATEGORY_HEADGEAR,
+	MACRO_ENUM_CATEGORY_BINOCULARS,
+	MACRO_ENUM_CATEGORY_GOGGLES
 ]) exitWith {
+*/
+if (true) exitWith {
+	// WIP: Let the new "Draw" IEH handle child control generation
+	private _eventArgs = [_ctrl getVariable [MACRO_VARNAME_DATA, locationNull], _ctrl, _inventory];
+	[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
+
 	_ctrl getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []];
 };
 
@@ -273,7 +277,7 @@ private _childControls = [];
 					_ctrlNew ctrlSetTextColor SQUARE(MACRO_COLOUR_OUTLINE_UNIFORM);
 				};
 				default {
-					_ctrlNew ctrlSetTextColor SQUARE(MACRO_COLOUR_OUTLINE_DEFAULT);
+					_ctrlNew ctrlSetTextColor SQUARE(MACRO_COLOUR_OUTLINE_ITEM);
 				};
 			};
 

@@ -89,11 +89,9 @@ class MACRO_CLASSNAME_IEH_CATEGORY {
 
 	class Cre8ive {
 
-		class MACRO_CLASSNAME_IEH_CATEGORY_MAGAZINE {
+		class MACRO_CLASSNAME_IEH_CATEGORY_ITEM {
 			class MACRO_ENUM_EVENT_DRAW {
-				function = "cre_fnc_IEH_draw_magazine";
-				//code = "";
-				//overwrite = 1;
+				function = "cre_fnc_IEH_draw_item";
 			};
 		};
 
@@ -102,5 +100,26 @@ class MACRO_CLASSNAME_IEH_CATEGORY {
 				function = "cre_fnc_IEH_draw_weapon";
 			};
 		};
+
+		class MACRO_CLASSNAME_IEH_CATEGORY_MAGAZINE {
+			class MACRO_ENUM_EVENT_DRAW {
+				function = "cre_fnc_IEH_draw_magazine";
+				//code = "";
+				//overwrite = 1;
+			};
+		};
+
+		class MACRO_CLASSNAME_IEH_CATEGORY_UNIFORM {
+			class MACRO_ENUM_EVENT_DRAW {
+				function = "cre_fnc_IEH_draw_uniform";
+			};
+		};
+		class MACRO_CLASSNAME_IEH_CATEGORY_VEST : MACRO_CLASSNAME_IEH_CATEGORY_UNIFORM {};
+		class MACRO_CLASSNAME_IEH_CATEGORY_BACKPACK : MACRO_CLASSNAME_IEH_CATEGORY_UNIFORM {};
+
+		class MACRO_CLASSNAME_IEH_CATEGORY_NVGS : MACRO_CLASSNAME_IEH_CATEGORY_ITEM {};
+		class MACRO_CLASSNAME_IEH_CATEGORY_HEADGEAR : MACRO_CLASSNAME_IEH_CATEGORY_ITEM {};
+		class MACRO_CLASSNAME_IEH_CATEGORY_BINOCULARS : MACRO_CLASSNAME_IEH_CATEGORY_ITEM {};
+		class MACRO_CLASSNAME_IEH_CATEGORY_GOGGLES : MACRO_CLASSNAME_IEH_CATEGORY_ITEM {};
 	};
 };

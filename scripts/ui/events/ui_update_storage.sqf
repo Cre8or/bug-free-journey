@@ -39,6 +39,9 @@ case "ui_update_storage": {
 	private _storageContainers = _inventory getVariable [MACRO_VARNAME_UI_STORAGE_CONTAINERS, []];
 	private _storageContainersNew = [];
 
+	// Check if this is the first execution
+	private _isFirstExecution = (_storageContainers isEqualTo []);
+
 	// Iterate through the containers
 	{
 		_x params ["_containerSlotPosEnum", "_containerFrame", "_defaultIconPath"];
@@ -83,14 +86,14 @@ case "ui_update_storage": {
 			_containerData setVariable [MACRO_VARNAME_PARENTDATA, _playerContainerData];
 			_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _containerData];
 
-			// Delete all controls of the previous container
+			// Delete all itme slot controls of the previous container
 			{
 				// Delete all child controls of the slot controls
 				[_x] call cre_fnc_ui_deleteSlotCtrl;
 			} forEach _allSlotFrames;
 			_allSlotFrames = [];
 
-			// If the container exists, create and fill out its slot controls
+			// If the container exists, create and fill out its new slot controls
 			if (!isNull _container) then {
 
 				// Fetch some information about the container
@@ -199,18 +202,29 @@ case "ui_update_storage": {
 						_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _itemSize];
 						_slotFrame setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
-						// Generate the child controls for this slot
-						[_slotFrame, _itemClass, _itemCategory, MACRO_PICTURE_SLOT_BACKGROUND] call cre_fnc_ui_generateChildControls;
-
 						// Change the colour of the frame
 						_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+
+						// Raise the "Draw" event
+						private _eventArgs = [_x, _slotFrame, _inventory];
+						[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
 					};
 				} forEach _items;
+
+				// Raise the "Draw" event for the container
+				private _eventArgs = [_containerData, _containerFrame, _inventory];
+				[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
 
 			// Otherwise, if the container is null...
 			} else {
 				_containerFrame setVariable [MACRO_VARNAME_CLASS, ""];
 				_containerFrame setVariable [MACRO_VARNAME_DATA, locationNull];
+
+				// Delete the frame's existing child controls (but not the control itself)
+				[_containerFrame, false] call cre_fnc_ui_deleteSlotCtrl;
+
+				// Generate new child controls for the empty slot (default icon)
+				[_containerFrame, _defaultIconPath, _inventory] call cre_fnc_ui_drawEmptySlot;
 			};
 
 			// Next, if the container is currently being dragged, cancel the dragging
@@ -232,43 +246,48 @@ case "ui_update_storage": {
 				};
 			};
 
-			// Delete all of the frame's child controls (but not the control itself)
-			[_containerFrame, false] call cre_fnc_ui_deleteSlotCtrl;
-
 		// If the container hasn't changed, check if we need to reposition its controls
 		} else {
 
-			if (_shouldMoveCtrls) then {
-				// Reposition the container frame's child controls
-				private _containerFrameCtrls = (_containerFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_containerFrame getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]];
-				{
-					_x ctrlSetPositionY (ctrlPosition _x select 1) + _deltaY;
-					_x ctrlCommit 0;
-				} forEach _containerFrameCtrls;
+			// If this is the first execution, and there is no container in this slot, draw an empty slot
+			if (_isFirstExecution) then {
+				[_containerFrame, _defaultIconPath, _inventory] call cre_fnc_ui_drawEmptySlot;
 
-				// Reposition all slots that belong to this container
-				{
-					// Reposition the slot frames
-					_x ctrlSetPositionY (ctrlPosition _x select 1) + _deltaY;
-					_x ctrlCommit 0;
+			// Otherwise, check if we need to move anything
+			} else {
 
-					// Reposition all child controls of the slot frames
+				if (_shouldMoveCtrls) then {
+					// Reposition the container frame's child controls
+					private _containerFrameCtrls = (_containerFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_containerFrame getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]];
 					{
 						_x ctrlSetPositionY (ctrlPosition _x select 1) + _deltaY;
 						_x ctrlCommit 0;
-					} forEach ((_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_x getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]]);
-				} forEach (_containerFrame getVariable [MACRO_VARNAME_UI_ALLSLOTFRAMES, []]);
+					} forEach _containerFrameCtrls;
+
+					// Reposition all slots that belong to this container
+					{
+						// Reposition the slot frames
+						_x ctrlSetPositionY (ctrlPosition _x select 1) + _deltaY;
+						_x ctrlCommit 0;
+
+						// Reposition all child controls of the slot frames
+						{
+							_x ctrlSetPositionY (ctrlPosition _x select 1) + _deltaY;
+							_x ctrlCommit 0;
+						} forEach ((_x getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]) + [_x getVariable [MACRO_VARNAME_UI_CTRLSLOTICON, controlNull]]);
+					} forEach (_containerFrame getVariable [MACRO_VARNAME_UI_ALLSLOTFRAMES, []]);
+				};
 			};
 		};
 
 		// Increase the Y position offset
 		_offsetY = _offsetY + _slotSizeH * (_containerSize select 1) + _safeZoneH * MACRO_POS_SPACER_Y * 2 + _sizeY;
-
+/*
 		// Create the container frame's child controls, if it doesn't have any yet
 		if (isNull (_containerFrame getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull])) then {
 			[_containerFrame, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 		};
-
+*/
 		// Add some event handlers to the container controls
 		if !(_containerFrame getVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, false]) then {
 			_containerFrame setVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, true];

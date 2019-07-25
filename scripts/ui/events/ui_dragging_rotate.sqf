@@ -47,14 +47,18 @@ case "ui_dragging_rotate": {
 		_ctrlFrameTemp ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
 		// Copy the original control's item data onto the dummy frame
-		private _data = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
-		_ctrlFrameTemp setVariable [MACRO_VARNAME_DATA, _data];
+		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
+		_ctrlFrameTemp setVariable [MACRO_VARNAME_DATA, _itemData];
 
 		// Update the rotation variable on the temporary frame control (NOT on the dragged control/item data, because we can still abort the dragging process!)
 		_ctrlFrameTemp setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
 		// Generate additional temporary child controls
-		private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
+//		private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
+
+		// Raise the "Draw" event for the temporary frame control
+		private _eventArgs = [_itemData, _ctrlFrameTemp, _inventory];
+		[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
 
 		// Recalculate the position offsets for the child controls (so they get dragged properly)
 		{
@@ -63,7 +67,8 @@ case "ui_dragging_rotate": {
 				(_posChildCtrl select 0) - _posCtrlX,
 				(_posChildCtrl select 1) - _posCtrlY
 			]];
-		} forEach _tempChildControls;
+//		} forEach _tempChildControls;
+		} forEach (_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
 		// Move the temporary controls in place initially
 		getMousePosition params ["_posX", "_posY"];

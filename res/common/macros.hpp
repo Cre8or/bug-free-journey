@@ -62,7 +62,7 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_COLOUR_OUTLINE_UNIFORM                            0, 1, 0, 0.6
 //	#define MACRO_COLOUR_OUTLINE_VEST                               0, 1, 0, 0.8
 //	#define MACRO_COLOUR_OUTLINE_BACKPACK                           0, 1, 0, 0.8
-	#define MACRO_COLOUR_OUTLINE_DEFAULT                            1, 0, 0, 0.8
+	#define MACRO_COLOUR_OUTLINE_ITEM                            1, 0, 0, 0.8
 
 
 
@@ -556,4 +556,4 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#include "sqf\macro_UI_createPictureIcon.hpp"
 	#include "sqf\macro_UI_createOutline.hpp"
 	#include "sqf\macro_UI_ctrl_setPosition.hpp"
-	#include "sqf\macro_UI_ctrl_calculateOffset.hpp"
+//	#include "sqf\macro_UI_ctrl_calculateOffset.hpp"

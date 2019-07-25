@@ -22,8 +22,10 @@ cre_fnc_IEH_default_drawContainer = compile preprocessFileLineNumbers "scripts\I
 cre_fnc_IEH_man_drawContainer = compile preprocessFileLineNumbers "scripts\IEH\fn_IEH_man_drawContainer.sqf";
 
 	// Draw
-	cre_fnc_IEH_draw_magazine = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_magazine.sqf";
+	cre_fnc_IEH_draw_item = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_item.sqf";
 	cre_fnc_IEH_draw_weapon = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_weapon.sqf";
+	cre_fnc_IEH_draw_magazine = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_magazine.sqf";
+	cre_fnc_IEH_draw_uniform = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_uniform.sqf";
 
 // Inventory
 cre_fnc_inv_generateContainerData = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateContainerData.sqf";
@@ -41,7 +43,7 @@ cre_fnc_inv_getRealMass = compile preprocessFileLineNumbers "scripts\inventory\f
 
 // UI
 cre_fnc_ui_deleteSlotCtrl = compile preprocessFileLineNumbers "scripts\ui\fn_ui_deleteSlotCtrl.sqf";
-cre_fnc_ui_generateChildControls = compile preprocessFileLineNumbers "scripts\ui\fn_ui_generateChildControls.sqf";
+cre_fnc_ui_drawEmptySlot = compile preprocessFileLineNumbers "scripts\ui\fn_ui_drawEmptySlot.sqf";
 cre_fnc_ui_inventory = compile preprocessFileLineNumbers "scripts\ui\fn_ui_inventory.sqf";
 
 // Util

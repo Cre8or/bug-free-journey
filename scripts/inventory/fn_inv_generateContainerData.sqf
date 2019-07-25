@@ -537,9 +537,6 @@ if (_container isKindOf "Man") then {
 		private _itemData = locationNull;
 		private ["_class", "_category", "_itemSize", "_isRotated", "_yLineIsFull", "_newW", "_slotStr", "_slotData", "_posEndX", "_posEndY", "_requiredSlots", "_requiredSlotStr", "_requiredSlotsStrArray", "_itemData"];
 
-
-		diag_log format ["(%1) [generateContainerData] Now adding items to %2...", diag_tickTime, _containerClass];
-
 		// Iterate through the item to add
 		{
 			scopeName "loopItems";
@@ -659,8 +656,6 @@ if (_container isKindOf "Man") then {
 
 									_containerItems pushBack _itemData;
 
-									diag_log format ["(%1) [generateContainerData] Added item: %2   ->   %3", diag_tickTime, [_posX, _posY], _class];
-
 									// Move on to the next item
 									breakTo "loopItems";
 								};
@@ -680,10 +675,6 @@ if (_container isKindOf "Man") then {
 		// Delete the temporary items list location
 		deleteLocation _itemsListNamespace;
 	};
-
-
-	diag_log format ["(%1) [generateContainerData] Finished adding items to %2!", diag_tickTime, _containerClass];
-	diag_log "";
 
 	// Save the list of items for quick access
 	_containerData setVariable [MACRO_VARNAME_ITEMS, _containerItems];

@@ -81,11 +81,6 @@ if (isNull (_ctrl getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull])) then {
 		_ctrl setVariable [MACRO_VARNAME_UI_CTRLAMMOBARFRONT, _ctrlAmmoFront];
 		_ctrl setVariable [MACRO_VARNAME_UI_CTRLAMMOBARBACK, _ctrlAmmoBack];
 
-		// Determine the offset for the ammo bar controls
-		_pos params ["_posX", "_posY"];
-		MACRO_FNC_UI_CTRL_CALCULATEOFFSET_XY_PRIVATE(_ctrlAmmoFront, _posTemp, _posX, _posY)
-		MACRO_FNC_UI_CTRL_CALCULATEOFFSET_XY(_ctrlAmmoBack, _posTemp, _posX, _posY)
-
 		// Save the new child controls array
 		_ctrl setVariable [MACRO_VARNAME_UI_CHILDCONTROLS, [_ctrlIcon, _ctrlOutline, _ctrlAmmoFront, _ctrlAmmoBack]];
 	} else {
