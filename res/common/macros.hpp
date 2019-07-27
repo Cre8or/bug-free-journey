@@ -244,6 +244,21 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 
 
 
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//	CONFIG TYPES
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+//	#define MACRO_ENUM_CONFIGTYPE_EMPTY                             -2
+	#define MACRO_ENUM_CONFIGTYPE_INVALID                           -1
+
+	#define MACRO_ENUM_CONFIGTYPE_CFGWEAPONS                        0
+	#define MACRO_ENUM_CONFIGTYPE_CFGVEHICLES                       1
+	#define MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES                      2
+	#define MACRO_ENUM_CONFIGTYPE_CFGGLASSES                        3
+
+
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 //	ITEM CATEGORIES
 // ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -266,7 +281,7 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_ENUM_CATEGORY_BINOCULARS                          9
 	#define MACRO_ENUM_CATEGORY_GOGGLES                             10
 
-	#define MACRO_ENUM_CATEGORY_VEHICLE                             11
+	#define MACRO_ENUM_CATEGORY_OBJECT                              11
 	#define MACRO_ENUM_CATEGORY_MAN                                 12
 
 
@@ -342,23 +357,6 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 //	#define MACRO_ENUM_EVENT_DELETED                                Deleted
 //	#define MACRO_ENUM_EVENT_EACHFRAME                              EachFrm
 	#define MACRO_ENUM_EVENT_DRAWCONTAINER                          DrawContnr
-//	#define MACRO_ENUM_EVENT_GENERATECHILDCONTROLS                  GenChildCtrls
-
-	// Event indexes
-	// TODO: check if this is needed anywhere, and if not, delete it
-/*
-	#define MACRO_IEH_EVENT_INDEXES [ \
-		STR(MACRO_ENUM_EVENT_INIT), \
-		STR(MACRO_ENUM_EVENT_TAKE), \
-		STR(MACRO_ENUM_EVENT_DROP), \
-		STR(MACRO_ENUM_EVENT_MOVE), \
-		STR(MACRO_ENUM_EVENT_USE), \
-		STR(MACRO_ENUM_EVENT_DELETED), \
-		STR(MACRO_ENUM_EVENT_EACHFRAME), \
-		STR(MACRO_ENUM_EVENT_DRAWCONTAINER), \
-		STR(MACRO_ENUM_EVENT_GENERATECHILDCONTROLS) \
-	]
-*/
 
 /*
 	EVENT DOCUMENTATIONS:
@@ -436,6 +434,8 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_VARNAME_UID                                       "UID"
 	#define MACRO_VARNAME_DATA                                      "data"
 	#define MACRO_VARNAME_CLASS                                     "class"
+	#define MACRO_VARNAME_CATEGORY                                  "category"
+	#define MACRO_VARNAME_CONFIGTYPE                                "configType"
 	#define MACRO_VARNAME_SLOTSIZE                                  "slotSize"
 	#define MACRO_VARNAME_SLOTPOS                                   "slotPos"
 	#define MACRO_VARNAME_SLOT_X_Y                                  "slot_%1_%2"

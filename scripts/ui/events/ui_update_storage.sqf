@@ -61,7 +61,12 @@ case "ui_update_storage": {
 // ------------ DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 		if (isNull _containerData and {!isNull _container}) then {
 			//systemChat format ["Building container data for: %1", _class];
-			_containerData = [_container, _class, player, [_containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]] call cre_fnc_inv_generateContainerData;
+			private _configType = [
+				MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+				MACRO_ENUM_CONFIGTYPE_CFGVEHICLES
+			] select (_forEachIndex == 2);		// Index 2 is the backpack (CfgVehicles)
+
+			_containerData = [_container, _class, _configType, player, [_containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]] call cre_fnc_inv_generateContainerData;
 
 			// Link the player container data with this container data
 			_playerContainerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _containerSlotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _containerData];
@@ -97,7 +102,7 @@ case "ui_update_storage": {
 			if (!isNull _container) then {
 
 				// Fetch some information about the container
-				_category = [_class] call cre_fnc_cfg_getClassCategory;
+				_category = _containerData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 				_slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 				// Change the frame's colour
@@ -163,13 +168,12 @@ case "ui_update_storage": {
 				_containerFrame setVariable [MACRO_VARNAME_UI_ALLSLOTFRAMES, _allSlotFrames];
 
 				// Iterate through the items
-				private _items = _containerData getVariable [MACRO_VARNAME_ITEMS, []];
 				{
 					// Only continue if the item is valid
 					if (!isNull _x) then {
 						private _itemClass = _x getVariable [MACRO_VARNAME_CLASS, ""];
+						private _itemCategory = _x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 						private _itemSlot = _x getVariable [MACRO_VARNAME_SLOTPOS, []];
-						private _itemCategory = [_itemClass] call cre_fnc_cfg_getClassCategory;
 						private _itemSize = [_itemClass, _itemCategory] call cre_fnc_cfg_getClassSlotSize;
 						_itemSlot params ["_posX", "_posY"];
 						_itemSize params ["_sizeW", "_sizeH"];
@@ -209,7 +213,7 @@ case "ui_update_storage": {
 						private _eventArgs = [_x, _slotFrame, _inventory];
 						[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
 					};
-				} forEach _items;
+				} forEach (_containerData getVariable [MACRO_VARNAME_ITEMS, []]);
 
 				// Raise the "Draw" event for the container
 				private _eventArgs = [_containerData, _containerFrame, _inventory];
@@ -282,12 +286,7 @@ case "ui_update_storage": {
 
 		// Increase the Y position offset
 		_offsetY = _offsetY + _slotSizeH * (_containerSize select 1) + _safeZoneH * MACRO_POS_SPACER_Y * 2 + _sizeY;
-/*
-		// Create the container frame's child controls, if it doesn't have any yet
-		if (isNull (_containerFrame getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull])) then {
-			[_containerFrame, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
-		};
-*/
+
 		// Add some event handlers to the container controls
 		if !(_containerFrame getVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, false]) then {
 			_containerFrame setVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, true];

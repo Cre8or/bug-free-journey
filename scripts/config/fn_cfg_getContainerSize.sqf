@@ -5,7 +5,7 @@
 	Arguments:
 		0:	<STRING>	Classname of the item/object to check
 	Returns:
-		0: 	<ARRAY>		UI size in format [x, y], where x and y represent an amount of slots
+		0: 	<ARRAY>		Slot size in format [x, y], where x and y represent an amount of slots
 		1:	<NUMBER>	Amount of slots in the last line (at: y = yMax)
 -------------------------------------------------------------------------------------------------------------------- */
 
@@ -13,18 +13,21 @@
 
 // Fetch our params
 params [
-	["_class", "", [""]]
+	["_class", "", [""]],
+	["_configType", MACRO_ENUM_CONFIGTYPE_INVALID, [MACRO_ENUM_CONFIGTYPE_INVALID]]
 ];
 
-// If no class was provided, exit
-if (_class == "") exitWith {};
+// If no class or config tpye was provided, exit and return an empty container size
+if (_class == "" or {_configType == MACRO_ENUM_CONFIGTYPE_INVALID}) exitWith {
+	[[0,0], 0]
+};
 
 
 
 
 
 // Get our namespace
-private _namespace = missionNamespace getVariable ["cre8ive_getContainerSize_namespace", locationNull];
+private _namespace = missionNamespace getVariable [format ["cre8ive_getContainerSize_%1_namespace", _configType], locationNull];
 
 // Fetch the icon path from the namespace
 private _res = _namespace getVariable _class;
@@ -35,26 +38,18 @@ if (isNil "_res") then {
 	// If the namespace doesn't exist yet, create it
 	if (isNull _namespace) then {
 		_namespace = createLocation ["NameVillage", [0,0,0], 0, 0];
-		missionNamespace setVariable ["cre8ive_getContainerSize_namespace", _namespace, false];
+		missionNamespace setVariable [format ["cre8ive_getContainerSize_%1_namespace", _configType], _namespace, false];
 	};
-
-	// Fetch the class category
-	private _category = [_class] call cre_fnc_cfg_getClassCategory;
 
 	// Check if the class has a container size defined in its config
 	private _containerSize = [];
 	private _slotsOnLastY = 0;
-	switch (_category) do {
-		case MACRO_ENUM_CATEGORY_CONTAINER;
-		case MACRO_ENUM_CATEGORY_UNIFORM;
-		case MACRO_ENUM_CATEGORY_VEST: {
-			_containerSize = [configfile >> "CfgWeapons" >> _class, MACRO_VARNAME_CFG_CONTAINERSIZE, []] call BIS_fnc_returnConfigEntry;
-			_slotsOnLastY =  [configfile >> "CfgWeapons" >> _class, MACRO_VARNAME_CFG_SLOTSONLASTY, _containerSize param [1, 0]] call BIS_fnc_returnConfigEntry;
-		};
-		default {
-			_containerSize = [configfile >> "CfgVehicles" >> _class, MACRO_VARNAME_CFG_CONTAINERSIZE, []] call BIS_fnc_returnConfigEntry;
-			_slotsOnLastY =  [configfile >> "CfgVehicles" >> _class, MACRO_VARNAME_CFG_SLOTSONLASTY, _containerSize param [1, 0]] call BIS_fnc_returnConfigEntry;
-		};
+	if (_configType == MACRO_ENUM_CONFIGTYPE_CFGWEAPONS) then {
+		_containerSize = [configfile >> "CfgWeapons" >> _class, MACRO_VARNAME_CFG_CONTAINERSIZE, []] call BIS_fnc_returnConfigEntry;
+		_slotsOnLastY =  [configfile >> "CfgWeapons" >> _class, MACRO_VARNAME_CFG_SLOTSONLASTY, _containerSize param [1, 0]] call BIS_fnc_returnConfigEntry;
+	} else {
+		_containerSize = [configfile >> "CfgVehicles" >> _class, MACRO_VARNAME_CFG_CONTAINERSIZE, []] call BIS_fnc_returnConfigEntry;
+		_slotsOnLastY =  [configfile >> "CfgVehicles" >> _class, MACRO_VARNAME_CFG_SLOTSONLASTY, _containerSize param [1, 0]] call BIS_fnc_returnConfigEntry;
 	};
 
 	// If a container size was found, compile the results
@@ -69,16 +64,11 @@ if (isNil "_res") then {
 		if (_maxLoad < 0) then {
 
 			// If the scripting command failed, we need to manually fetch the load from the config
-			switch (_category) do {
-				case MACRO_ENUM_CATEGORY_CONTAINER;
-				case MACRO_ENUM_CATEGORY_UNIFORM;
-				case MACRO_ENUM_CATEGORY_VEST: {
-					private _containerClass = [configfile >> "CfgWeapons" >> _class >> "ItemInfo", "containerClass", ""] call BIS_fnc_returnConfigEntry;
-					_maxLoad = [configfile >> "CfgVehicles" >> _containerClass, "maximumLoad", 0] call BIS_fnc_returnConfigEntry;
-				};
-				default {
-					_maxLoad = [configfile >> "CfgVehicles" >> _class, "maximumLoad", 0] call BIS_fnc_returnConfigEntry;
-				};
+			if (_configType == MACRO_ENUM_CONFIGTYPE_CFGWEAPONS) then {
+				private _containerClass = [configfile >> "CfgWeapons" >> _class >> "ItemInfo", "containerClass", ""] call BIS_fnc_returnConfigEntry;
+				_maxLoad = [configfile >> "CfgVehicles" >> _containerClass, "maximumLoad", 0] call BIS_fnc_returnConfigEntry;
+			} else {
+				_maxLoad = [configfile >> "CfgVehicles" >> _class, "maximumLoad", 0] call BIS_fnc_returnConfigEntry;
 			};
 		};
 		_maxLoad = floor (MACRO_STORAGE_CAPACITY_MULTIPLIER * _maxLoad);

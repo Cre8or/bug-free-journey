@@ -78,8 +78,8 @@ class CfgFunctions {
 */
 			//class inv_generateContainerData {};
 
-			class inv_generateWeaponAccArray {};
-			class inv_generateWeaponAccData {};
+			//class inv_generateWeaponAccArray {};
+			//class inv_generateWeaponAccData {};
 		};
 
 		class inventory_commands {
@@ -96,16 +96,16 @@ class CfgFunctions {
 			file = "scripts\config";
 			// Abbreviation:	cfg
 
-			class cfg_getClassCategory {};
-			class cfg_getClassSubCategory {};
-			class cfg_getClassIcon {};
-			class cfg_getClassMass {};
-			class cfg_getClassSlotSize {};
-			class cfg_getContainerSize {};
+//			class cfg_getClassCategory {};
+//			class cfg_getClassSubCategory {};
+//			class cfg_getClassIcon {};
+//			class cfg_getClassMass {};
+//			class cfg_getClassSlotSize {};
+//			class cfg_getContainerSize {};
 
-			class cfg_getMagazineMaxAmmo {};
-			class cfg_getWeaponMagazines {};
-			class cfg_getWeaponMuzzles {};
+//			class cfg_getMagazineMaxAmmo {};
+//			class cfg_getWeaponMagazines {};
+//			class cfg_getWeaponMuzzles {};
 /*
 			class cfg_compileIEHs {
 				preInit = 1;

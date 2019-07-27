@@ -174,7 +174,7 @@ case "ui_update_ground": {
 				// If the object doesn't have any container data (yet), create it
 				private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
 				if (isNull _containerData) then {
-					_containerData = [_container] call cre_fnc_inv_generateContainerData;
+					_containerData = [_container, "", MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] call cre_fnc_inv_generateContainerData;
 				};
 
 				// Fetch the UID
@@ -189,7 +189,7 @@ case "ui_update_ground": {
 					// If the item data is not null, we passed all tests, so we create the new control
 					if (!isNull _itemData) then {
 						private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
-						private _category = [_class] call cre_fnc_cfg_getClassCategory;
+						private _category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 						private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 						// Create controls for the item

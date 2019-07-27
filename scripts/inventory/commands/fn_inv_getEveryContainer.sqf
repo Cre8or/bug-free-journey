@@ -31,12 +31,8 @@ if (isNull (_containerData getVariable [MACRO_VARNAME_CONTAINER, objNull])) exit
 // Iterate through all items
 private _res = [];
 {
-	// Fetch the item category
-	private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-	private _category = [_class] call cre_fnc_cfg_getClassCategory;
-
-	// If the category is valid, add it to our results
-	if (_category in _validCategories) then {
+	// If the item's category is valid, add it to our results
+	if ((_x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID]) in _validCategories) then {
 		_res pushBack _x;
 	};
 } forEach (_containerData getVariable [MACRO_VARNAME_ITEMS, []]);

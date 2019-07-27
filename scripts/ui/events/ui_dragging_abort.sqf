@@ -59,9 +59,9 @@ case "ui_dragging_abort": {
 	if (!isNull _draggedCtrl) then {
 
 		// Fetch the control's item class and its associated size
-		private _class = _draggedCtrl getVariable [MACRO_VARNAME_CLASS, ""];
-		private _category = [_class] call cre_fnc_cfg_getClassCategory;
 		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
+		private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
+		private _category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 
 		// Mark the control as no longer being dragged
 		_draggedCtrl setVariable [MACRO_VARNAME_UI_ISBEINGDRAGGED, false];

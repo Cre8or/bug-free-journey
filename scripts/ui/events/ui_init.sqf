@@ -24,15 +24,16 @@ case "ui_init": {
 			// Escape scheduled environment
 			isNil {
 				private _timeStart = diag_tickTime;
+				private _activeContainerType = typeOf _activeContainer;
 
 				// Fetch the inventory
 				private _inventory = uiNamespace getVariable ["cre8ive_dialog_inventory", displayNull];
 
 				// Validate the active container object and write it onto the inventory display
-				if !(typeOf _activeContainer in MACRO_CLASSES_GROUNDHOLDERS) then {
+				if !(_activeContainerType in MACRO_CLASSES_GROUNDHOLDERS) then {
 
 					if (isNull (_activeContainer getVariable [MACRO_VARNAME_DATA, locationNull])) then {
-						[_activeContainer] call cre_fnc_inv_generateContainerData;
+						[_activeContainer, _activeContainerType, MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] call cre_fnc_inv_generateContainerData;
 					};
 
 					_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER, _activeContainer];
@@ -78,7 +79,7 @@ case "ui_init": {
 				// ---- DEBUG: Remove "true"! v --------------------------------------------------------------------------------
 				// TODO: Move this into mission init (or similar) so that this data is available even if the inventory hasn't been opened yet!
 				if (false or isNull (player getVariable [MACRO_VARNAME_DATA, locationNull])) then {
-					private _containerData = [player, "", objNull, [0,0], false] call cre_fnc_inv_generateContainerData;
+					private _containerData = [player, "", MACRO_ENUM_CONFIGTYPE_CFGVEHICLES, objNull, [0,0], false] call cre_fnc_inv_generateContainerData;
 					_containerData setVariable [MACRO_VARNAME_CONTAINER, player];
 					player setVariable [MACRO_VARNAME_DATA, _containerData];
 				};

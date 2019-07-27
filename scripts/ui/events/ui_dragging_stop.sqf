@@ -45,11 +45,13 @@ case "ui_dragging_stop": {
 			player reveal _targetContainer;
 
 			// Generate the container data *manually*
-			//_targetContainerData = [_targetContainer] call cre_fnc_inv_generateContainerData;
 			_targetContainerData = (call cre_fnc_inv_createNamespace) select 0;
 
 			// Set up some other variables
 			_targetContainerData setVariable [MACRO_VARNAME_CLASS, _targetContainerClass];
+			_targetContainerData setVariable [MACRO_VARNAME_CONFIGTYPE, MACRO_ENUM_CONFIGTYPE_CFGVEHICLES];
+			_targetContainerData setVariable [MACRO_VARNAME_CATEGORY, [_targetContainerClass, MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] call cre_fnc_cfg_getClassCategory];
+
 			_targetContainerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _slotSize];
 			_targetContainerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _slotSize param [0, 0]];
 

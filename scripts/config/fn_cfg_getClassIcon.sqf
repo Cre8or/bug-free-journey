@@ -4,7 +4,7 @@
 		Returns the icon of a specific class.
 	Arguments:
 		0:      <STRING>	Classname of the item/object to check
-		1:      <NUMBER>	Category of the class (see fn_cfg_getClassCategory)
+		1:      <NUMBER>	Category of the class (see macros.hpp)
 		2:      <STRING>	Default icon to be used if nothing was found
 	Returns:
 		0:      <STRING>	Icon path of the class

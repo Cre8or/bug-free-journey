@@ -7,9 +7,9 @@
 		NOTE: Does not include the container's own mass.
 	Arguments:
 		0:      <OBJECT>	Container object
-		1:	<BOOL>		Whether or not exceptional items (magazines and weapon items) should
+		1:	<BOOL>		Whether or not exceptional items (magazines and weapon attachments) should
 					be considered (default: true)
-		2:	<BOOL>		Whether or not non-exceptional items should be considered
+		2:	<BOOL>		Whether or not non-exceptional items (everything else) should be considered
 					(default: true)
 	Returns:
 		0:      <NUMBER>	Total mass of all objects inside the container object
@@ -33,7 +33,7 @@ if (!alive _container) exitWith {0};
 
 // Set up some variables
 private _totalMass = 0;
-private _contents = [[],[]];
+private _contents = [ [[],[]], [[],[]] ];
 
 // If we should include non-exceptions, add them to the list
 if (_includeNonExceptions) then {
@@ -45,46 +45,43 @@ if (_includeNonExceptions) then {
 if (_includeExceptions) then {
 
 	// Include magazines
-	_contents pushBack (getMagazineCargo _container);
+	_contents pushBack getMagazineCargo _container;
 
 	// Iterate through the weapons inside the container
 	{
 		_x params [
 			"",
-			["_accMuzzle", ""],
-			["_accSide", ""],
-			["_accOptic", ""],
-			["_magazine", []],
-			["_magazineAlt", []],
-			["_accBipod", ""]
+			"_accMuzzle",
+			"_accSide",
+			"_accOptic",
+			"_magazine",
+			"_magazineAlt",
+			"_accBipod"
 		];
-
-		// Fetch the magazine classes
-		_magazine = _magazine param [0, ""];
-		if (_magazineAlt isEqualType []) then {
-			_magazineAlt = _magazineAlt param [0, ""];
-		} else {
-			_accBipod = _magazineAlt;
-			_magazineAlt = "";
-		};
 
 		// Iterate through the weapon's items
 		{
-			private _category = [_x] call cre_fnc_cfg_getClassCategory;
-			private _mass = [_x, _category] call cre_fnc_cfg_getClassMass;
+			if (_x != "") then {
+				private _configType = [MACRO_ENUM_CONFIGTYPE_CFGWEAPONS, MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES] select (_forEachIndex >= 4);
+				private _category = [_x, _configType] call cre_fnc_cfg_getClassCategory;
+				private _mass = [_x, _category] call cre_fnc_cfg_getClassMass;
+				//diag_log format ["    Added attachment: %1 (%2)", _x, _mass];
 
-			// Add the mass to the total
-			_totalMass = _totalMass + _mass;
+				// Add the mass to the total
+				_totalMass = _totalMass + _mass;
+			};
 		} forEach [
 			_accMuzzle,
 			_accBipod,
 			_accSide,
 			_accOptic,
-			_magazine,
-			_magazineAlt
+			_magazine param [0, ""],
+			_magazineAlt param [0, ""]
 		];
-	} forEach (weaponsItemsCargo _container);
+	} forEach weaponsItemsCargo _container;
 };
+
+//diag_log format ["Total mass (1): %1", _totalMass];
 
 // If we should include non-exceptions, include the weapons
 if (_includeNonExceptions) then {
@@ -95,26 +92,51 @@ if (_includeNonExceptions) then {
 	// Iterate through the weapon classes
 	{
 		// Look up the mass of one item and multiply it by the count
-		private _mass = [_x, MACRO_ENUM_CATEGORY_WEAPON] call cre_fnc_cfg_getClassMass;
+		private _category = [_x, MACRO_ENUM_CONFIGTYPE_CFGWEAPONS] call cre_fnc_cfg_getClassCategory;
+		private _mass = [_x, _category] call cre_fnc_cfg_getClassMass;
+		//diag_log format ["    Added weapon: %1 (%2)", _x, _mass];
+
 		_totalMass = _totalMass + _mass * (_counts select _forEachIndex);
 	} forEach _classes;
 };
 
+//diag_log format ["Total mass (2): %1", _totalMass];
+//diag_log format ["Checking contents: %1", _contents];
+
 // Iterate through the remaining contents of the container
 {
-	_x params [
-		["_classes", []],
- 		["_counts", []]
-	];
+	_x params ["_classes", "_counts"];
+	private _formatType = _forEachIndex;
 
 	// Iterate through the classes
 	{
-		private _category = [_x] call cre_fnc_cfg_getClassCategory;
+		// Determine the config type
+		private _configType = switch (_formatType) do {
+			case 0: {						// getItemCargo
+				[
+					MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+					MACRO_ENUM_CONFIGTYPE_CFGGLASSES
+				] select isClass (configFile >> "CfgGlasses" >> _x)		// NOTE: Possible classname conflict - if there are 2 identical entries in CfgWeapons and CfgGlasses, we always assume it's CfgGlasses. Need a new scripting command to differentiate
+			};
+			case 1: {						// getBackpackCargo
+				MACRO_ENUM_CONFIGTYPE_CFGVEHICLES
+			};
+			case 2: {						// getMagazineCargo
+				MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES
+			};
+			default {MACRO_ENUM_CONFIGTYPE_INVALID};		// fallback value
+		};
+
+		private _category = [_x, _configType] call cre_fnc_cfg_getClassCategory;
 		private _mass = [_x, _category] call cre_fnc_cfg_getClassMass;
 		private _count = _counts param [_forEachIndex, 1];
+		//diag_log format ["    Added item: %1 (%2) (configType: %3 - category: %4)", _x, _mass, _configType, _category];
+
 		_totalMass = _totalMass + _mass * _count;
 	} forEach _classes;
 } forEach _contents;
+
+//diag_log format ["(%1) Final REAL mass: %2", diag_frameNo, _totalMass];
 
 // Return the total mass
 _totalMass;

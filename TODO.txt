@@ -1,8 +1,7 @@
 TODO:
+- See if we can get rid of the "_EMPTY" enums (category, configType, subCategory, etc.)
 - Figure out a new system for getClassCategory to avoid classname collisions (e.g. in both CfgWeapons and CfgVehicles)
-	* Save the category as information onto the itemData?
-	* Save the config path/category onto the itemData for quick access? (e.g. CfgWeapons/CfgVehicles or with an enum)
-- Write a config function that returns the display name of a class and caches it (for use in generateChildControls)
+	* Save the config type onto the itemData for quick access (e.g. CfgWeapons/CfgVehicles, but as an enum)
 - Write a function that checks if a given object should generate container data (e.g. if it can fit inventory) and implement it into the ground update/init events
 - Prevent the ground UI from showing items that are obstructed (e.g. behind a wall)
 - Position dropped items on the first surface under the player's current position (otherwise items may float in the air if the player dropped while jumping/on a ladder)
@@ -14,7 +13,6 @@ TODO:
 - Add slotPos enums for weapon attachments/magazines?
 - Update weapon's magazine ammo counts when firing (using an EH)
 - Look for an alternative to isNil {} in ui_init, as it may permanently freeze the game when encountering a script error
-- Add a global scale multiplier (macro) for slot pictures?
 - Add a garbage collector to get rid of unused/removed locations that are building up over time (potential memory leak!)
 - Ensure dragging items to/from objects with simulation disabled is handled properly (ideally, forbid dragging to/from them!)
 - Search for "TODO" and "DEBUG" comments and address them
@@ -24,6 +22,8 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Fix the inventory recompiler not killing the synchroniser eachFrame event handler, causing them to stack
+- When dragging, dynamically set the focus on the control group that the mouse cursor is over (so that scrollbars work)
 - Move the "Draw" event raises to wherever generateChildControls used to be called
 - Add a "Draw" IEH (to update controls whenever needed)
 - Replace generateChildControls with category-specific draw functions
@@ -154,5 +154,6 @@ DONE:	(top: most recent)
 
 
 
-FAILED:
-- When dragging, dynamically set the focus on the control group that the mouse cursor is over (so that scrollbars work)
+CANCELLED:
+- Write a config function that returns the display name of a class and caches it (for use in generateChildControls)?
+- Add a global scale multiplier (macro) for slot pictures?

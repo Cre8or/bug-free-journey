@@ -15,8 +15,8 @@ case "ui_item_move": {
 
 		// Fetch the control's item class and its associated size
 		private _itemData = _ctrl getVariable [MACRO_VARNAME_DATA, locationNull];
-		private _class = _ctrl getVariable [MACRO_VARNAME_CLASS, ""];
-		private _category = [_class] call cre_fnc_cfg_getClassCategory;
+		private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
+		private _category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 		private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 		// If the control is rotated, flip the width and height

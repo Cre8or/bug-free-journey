@@ -44,7 +44,7 @@ switch (_category) do {
 		_configPathName = "CfgWeapons";
 	};
 	case MACRO_ENUM_CATEGORY_BACKPACK;
-	case MACRO_ENUM_CATEGORY_VEHICLE;
+	case MACRO_ENUM_CATEGORY_OBJECT;
 	case MACRO_ENUM_CATEGORY_MAN: {
 		_configPathName = "CfgVehicles";
 	};

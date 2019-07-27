@@ -39,7 +39,7 @@ private _return = true;
 
 // Fetch the item's category
 private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
-private _category = [_class] call cre_fnc_cfg_getClassCategory;
+private _category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 
 // If the origin container exists
 if (!isNull _originContainer) then {
@@ -171,7 +171,12 @@ if (!isNull _originContainer) then {
 
 						// Fetch the items that are not containers
 						{
-							private _category = [_x] call cre_fnc_cfg_getClassCategory;
+							private _configType = [
+								MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+								MACRO_ENUM_CONFIGTYPE_CFGGLASSES
+							] select isClass (configFile >> "CfgGlasses" >> _x);		// NOTE: Possible classname conflict - if there are 2 identical entries in CfgWeapons and CfgGlasses, we always assume it's CfgGlasses. Need a new scripting command to differentiate
+
+							private _category = [_x, _configType] call cre_fnc_cfg_getClassCategory;
 
 							if !(_category in _forbiddenCategories) then {
 								if (_x == _itemData getVariable [MACRO_VARNAME_CLASS, ""]) then {	// Substract 1 from the count of this class

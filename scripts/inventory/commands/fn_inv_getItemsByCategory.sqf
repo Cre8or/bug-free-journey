@@ -33,40 +33,34 @@ if (isNull (_containerData getVariable [MACRO_VARNAME_CONTAINER, objNull])) exit
 
 // Define some variables
 private _res = [];
-private _checkCategory = {};
+
+
+
+
 
 // If the categories array should be a blacklist, exclude items that match
 if (_isBlacklist) then {
-	_checkCategory = {
-		if !(_category in _validCategories) then {
+
+	{
+		if !((_x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID]) in _validCategories) then {
 			_res pushBack _x;
 		};
-	};
+
+	} forEach (_containerData getVariable [MACRO_VARNAME_ITEMS, []]);
 
 // Otherwise, include them
 } else {
-	_checkCategory = {
-		if (_category in _validCategories) then {
+	{
+		if ((_x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID]) in _validCategories) then {
 			_res pushBack _x;
 		};
-	};
-};
 
-
-
-
-
-// Iterate through all items
-if !(_validCategories isEqualTo []) then {
-	{
-		// Fetch the item category
-		private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-		private _category = [_class] call cre_fnc_cfg_getClassCategory;
-
-		// If the category is valid, add it to our results
-		call _checkCategory;
 	} forEach (_containerData getVariable [MACRO_VARNAME_ITEMS, []]);
 };
+
+
+
+
 
 // Return the results
 _res;

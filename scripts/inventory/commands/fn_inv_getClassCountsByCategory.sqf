@@ -96,7 +96,7 @@ if (_outputFormat == 0) then {
 	{
 		// Fetch the item category
 		private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-		private _category = [_class] call cre_fnc_cfg_getClassCategory;
+		private _category = _x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 
 		// If the category is valid, add it to our results
 		call _checkCategory;
@@ -124,7 +124,7 @@ if (_outputFormat == 0) then {
 	{
 		// Fetch the item category
 		private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-		private _category = [_class] call cre_fnc_cfg_getClassCategory;
+		private _category = _x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 
 		// If the category is valid, add it to our results
 		[_category] call _checkCategory;

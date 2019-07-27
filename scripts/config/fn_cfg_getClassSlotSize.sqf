@@ -4,7 +4,7 @@
 		Returns the slot size of a certain class in the form [x,y].
 	Arguments:
 		0:      <STRING>	Classname of the item/object to check
-		1:      <NUMBER>	Category of the class (see fn_cfg_getClassCategory)
+		1:      <NUMBER>	Category of the class (see macros.hpp)
 	Returns:
 		0:      <ARRAY>	 	Slot size of the class in format [<NUMBER> x, <NUMBER> y]
 -------------------------------------------------------------------------------------------------------------------- */

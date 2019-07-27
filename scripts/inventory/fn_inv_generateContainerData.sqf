@@ -9,9 +9,10 @@
 	Arguments:
 		0:      <OBJECT>	Container object to generate data for
 		1:	<STRING>	The class of the container (used for container proxies, such as uniforms/vests)
-		2:	<OBJECT>	The container's parent object
-		3:	<ARRAY>		The container's slot position (in format [X,Y])
-		4:	<BOOL>		If the container is a unit, this bool will decide whether to also generate
+		2:	<NUMBER>	The container's config type (see macros.hpp)
+		3:	<OBJECT>	The container's parent object
+		4:	<ARRAY>		The container's slot position (in format [X,Y])
+		5:	<BOOL>		If the container is a unit, this bool will decide whether to also generate
 					container data for the unit's vest, uniform and backpack (true), or just
 					the unit's data (weapons and assigned items) (false)
 	Returns:
@@ -24,13 +25,14 @@
 params [
 	["_container", objNull, [objNull]],
 	["_containerClass", "", [""]],
+	["_containerConfigType", MACRO_ENUM_CONFIGTYPE_INVALID, [MACRO_ENUM_CONFIGTYPE_INVALID]],
 	["_parentContainer", objNull, [objNull]],
 	["_containerSlotPos", [0,0], [[]]],
 	["_recursiveOnUnits", true, [true]]
 ];
 
-// If no object was provided, exit and return a null location
-if (isNull _container) exitWith {locationNull};
+// If no object or config type was provided, exit and return a null location
+if (isNull _container or {_containerConfigType == MACRO_ENUM_CONFIGTYPE_INVALID}) exitWith {locationNull};
 
 
 
@@ -43,6 +45,11 @@ private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNul
 } forEach (_containerData getVariable ["items", []]);
 deleteLocation _containerData;
 
+// If no container class was provided, fetch it from the object (not reliable on uniforms/vests!)
+if (_containerClass == "") then {
+	_containerClass = typeOf _container;
+};
+
 
 
 
@@ -52,6 +59,13 @@ if (_container isKindOf "Man") then {
 
 	// Create a new namespace for the player's container data
 	_containerData = (call cre_fnc_inv_createNamespace) select 0;
+
+	// Set up some basic info for the player's container data
+	_containerData setVariable [MACRO_VARNAME_CLASS, _containerClass];
+	_containerData setVariable [MACRO_VARNAME_CONFIGTYPE, _containerConfigType];
+	_containerData setVariable [MACRO_VARNAME_CATEGORY, [_containerClass, _containerConfigType] call cre_fnc_cfg_getClassCategory];
+
+	// Link the container to the player
 	_container setVariable [MACRO_VARNAME_DATA, _containerData, false];
 
 	// Determine the unit's assigned items
@@ -90,6 +104,9 @@ if (_container isKindOf "Man") then {
 
 			// Save some basic info onto the item data
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
+			_itemData setVariable [MACRO_VARNAME_CONFIGTYPE, MACRO_ENUM_CONFIGTYPE_CFGWEAPONS];
+			_itemData setVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_WEAPON];
+
 			_itemData setVariable [MACRO_VARNAME_PARENT, _container];
 			_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 
@@ -129,6 +146,15 @@ if (_container isKindOf "Man") then {
 
 			// Save some basic info onto the item data
 			_itemData setVariable [MACRO_VARNAME_CLASS, _x];
+
+			if (_forEachIndex == 3) then {	// CfgGlasses
+				_itemData setVariable [MACRO_VARNAME_CONFIGTYPE, MACRO_ENUM_CONFIGTYPE_CFGGLASSES];
+				_itemData setVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_GOGGLES];
+			} else {	// CfgWeapons
+				_itemData setVariable [MACRO_VARNAME_CONFIGTYPE, MACRO_ENUM_CONFIGTYPE_CFGWEAPONS];
+				_itemData setVariable [MACRO_VARNAME_CATEGORY, [_x, MACRO_ENUM_CONFIGTYPE_CFGWEAPONS] call cre_fnc_cfg_getClassCategory];
+			};
+
 			_itemData setVariable [MACRO_VARNAME_PARENT, _container];
 			_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 
@@ -145,7 +171,7 @@ if (_container isKindOf "Man") then {
 		hmd _container,
 		headgear _container,
 		binocular _container,
-		goggles _container,
+		goggles _container,		// NOTE: Goggles need to be treated differently (due to having a different base config entry)!
 		_map,
 		_GPS,
 		_radio,
@@ -167,7 +193,13 @@ if (_container isKindOf "Man") then {
 		];
 		{
 			private _slotPosEnum = _slotPosEnums select _forEachIndex;
-			private _subContainerData = [_x, _containerTypes select _forEachIndex, _container, [_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]] call cre_fnc_inv_generateContainerData;
+			private _subContainerData = [
+				_x,
+				_containerTypes select _forEachIndex,
+				[MACRO_ENUM_CONFIGTYPE_CFGWEAPONS, MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] select (_forEachIndex == 2),
+				_container,
+				[_slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID]
+			] call cre_fnc_inv_generateContainerData;
 
 			// Link the player container data with this container data
 			_containerData setVariable [format [MACRO_VARNAME_SLOT_X_Y, _slotPosEnum, MACRO_ENUM_SLOTPOS_INVALID], _subContainerData];
@@ -231,11 +263,6 @@ if (_container isKindOf "Man") then {
 		"Cre8ive_DummyWeight_10000"
 	];
 
-	// If no container class was provided, fetch it from the object (not reliable on uniforms/vests!)
-	if (_containerClass == "") then {
-		_containerClass = typeOf _container;
-	};
-
 	// Fetch all items inside the container
 	private _contents = [
 		magazinesAmmoCargo _container,
@@ -243,6 +270,7 @@ if (_container isKindOf "Man") then {
 		itemCargo _container,
 		everyContainer _container
 	];
+	private _backpacks = (everyBackpack _container) apply {typeOf _x};		// used to differentiate between backpacks and uniforms/vests (which are defined in a different config root class)
 
 	// If the container is a ground holder...
 	if (_containerClass in MACRO_CLASSES_GROUNDHOLDERS) then {
@@ -275,7 +303,30 @@ if (_container isKindOf "Man") then {
 						_x = [_class];
 					};
 
-					// Only contineu if the class isn't blacklisted
+					// Determine the config type
+					private _configType = switch (_formatType) do {
+						case 0: {						// magazinesAmmoCargo
+							MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES
+						};
+						case 1: {						// weaponsItemsCargo
+							MACRO_ENUM_CONFIGTYPE_CFGWEAPONS
+						};
+						case 2: {						// itemCargo
+							[
+								MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+								MACRO_ENUM_CONFIGTYPE_CFGGLASSES
+							] select isClass (configFile >> "CfgGlasses" >> _class)		// NOTE: Possible classname conflict - if there are 2 identical entries in CfgWeapons and CfgGlasses, we always assume it's CfgGlasses. Need a new scripting command to differentiate
+						};
+						case 3: {						// everyContainer
+							[
+								MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+								MACRO_ENUM_CONFIGTYPE_CFGVEHICLES
+							] select (_class in _backpacks)
+						};
+						default {MACRO_ENUM_CONFIGTYPE_INVALID};		// fallback value
+					};
+
+					// Only continue if the class isn't blacklisted
 					if !(_class in _filteredClasses) then {
 
 						// Create a new ground holder
@@ -285,7 +336,7 @@ if (_container isKindOf "Man") then {
 						player reveal _containerX;
 
 						// Determine how to add the item based on its category
-						private _categoryX = [_class] call cre_fnc_cfg_getClassCategory;
+						private _categoryX = [_class, _configType] call cre_fnc_cfg_getClassCategory;
 						switch (_categoryX) do {
 							case MACRO_ENUM_CATEGORY_BINOCULARS;
 							case MACRO_ENUM_CATEGORY_WEAPON: {
@@ -316,7 +367,7 @@ if (_container isKindOf "Man") then {
 						};
 
 						// Recursively call the generateContainerData function on the new ground holder
-						[_containerX, _containerClass] call cre_fnc_inv_generateContainerData;
+						[_containerX, _containerClass, MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] call cre_fnc_inv_generateContainerData;
 					};
 				} forEach _x;
 			} forEach _contents;
@@ -342,6 +393,9 @@ if (_container isKindOf "Man") then {
 
 		// Fill the container data with some basic information
 		_containerData setVariable [MACRO_VARNAME_CLASS, _containerClass];
+		_containerData setVariable [MACRO_VARNAME_CONFIGTYPE, _containerConfigType];
+		_containerData setVariable [MACRO_VARNAME_CATEGORY, [_containerClass, _containerConfigType] call cre_fnc_cfg_getClassCategory];
+
 		_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, [1,1]];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, 1];
@@ -355,14 +409,32 @@ if (_container isKindOf "Man") then {
 		// If we found the item, fill out its data
 		if !(_class isEqualTo "") then {
 
-			// Determine the category and slot size
-			//private _category = [_class] call cre_fnc_cfg_getClassCategory;
-			//private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
+			private _configType = switch (_formatTypeItem) do {
+				case 0: {						// magazinesAmmoCargo
+					MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES
+				};
+				case 1: {						// weaponsItemsCargo
+					MACRO_ENUM_CONFIGTYPE_CFGWEAPONS
+				};
+				case 2: {						// itemCargo
+					[
+						MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+						MACRO_ENUM_CONFIGTYPE_CFGGLASSES
+					] select isClass (configFile >> "CfgGlasses" >> _class)		// NOTE: Possible classname conflict - if there are 2 identical entries in CfgWeapons and CfgGlasses, we always assume it's CfgGlasses. Need a new scripting command to differentiate
+				};
+				case 3: {						// everyContainer
+					[
+						MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+						MACRO_ENUM_CONFIGTYPE_CFGVEHICLES
+					] select (_class in _backpacks)
+				};
+				default {MACRO_ENUM_CONFIGTYPE_INVALID};		// fallback value
+			};
 
 			// If the item is a container, recursively run this function on it
 			private _itemData = locationNull;
 			if (_formatTypeItem == 3) then {
-				_itemData = [_args select 1, _class, _container, [1, 1]] call cre_fnc_inv_generateContainerData;
+				_itemData = [_args select 1, _class, _configType, _container, [1, 1]] call cre_fnc_inv_generateContainerData;
 
 				// Save some more info onto the item data
 				_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, [[1, 1]]];
@@ -374,6 +446,9 @@ if (_container isKindOf "Man") then {
 
 				// Save some basic things onto the item data
 				_itemData setVariable [MACRO_VARNAME_CLASS, _class];
+				_itemData setVariable [MACRO_VARNAME_CONFIGTYPE, _configType];
+				_itemData setVariable [MACRO_VARNAME_CATEGORY, [_class, _configType] call cre_fnc_cfg_getClassCategory];
+
 				_itemData setVariable [MACRO_VARNAME_PARENT, _container];
 				_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 				_itemData setVariable [MACRO_VARNAME_SLOTPOS, [1, 1]];
@@ -395,9 +470,7 @@ if (_container isKindOf "Man") then {
 					};
 
 					// itemCargo
-					//case 2: {
-
-					//};
+					//case 2: {};
 				};
 
 				// Raise the "Init" event
@@ -432,14 +505,37 @@ if (_container isKindOf "Man") then {
 					_x = [_class];
 				};
 
+				// Determine the config type
+				private _configType = switch (_formatType) do {
+					case 0: {						// magazinesAmmoCargo
+						MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES
+					};
+					case 1: {						// weaponsItemsCargo
+						MACRO_ENUM_CONFIGTYPE_CFGWEAPONS
+					};
+					case 2: {						// itemCargo
+						[
+							MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+							MACRO_ENUM_CONFIGTYPE_CFGGLASSES
+						] select isClass (configFile >> "CfgGlasses" >> _class)		// NOTE: Possible classname conflict - if there are 2 identical entries in CfgWeapons and CfgGlasses, we always assume it's CfgGlasses. Need a new scripting command to differentiate
+					};
+					case 3: {						// everyContainer
+						[
+							MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+							MACRO_ENUM_CONFIGTYPE_CFGVEHICLES
+						] select (_class in _backpacks)
+					};
+					default {MACRO_ENUM_CONFIGTYPE_INVALID};		// fallback value
+				};
+
 				// Fetch the item category
-				private _category = [_class] call cre_fnc_cfg_getClassCategory;
+				private _category = [_class, _configType] call cre_fnc_cfg_getClassCategory;
 
 				// If the item originates from itemCargo...
 				private _skip = false;
 				if (_formatType == 2) then {
 
-					// ...but it's actually a vest or a uniform, we skip it
+					// ...but it's actually a vest, a uniform or a container item, we skip it (otherwise it will get picked up twice, due to everyContainer)
 					if (_category in [MACRO_ENUM_CATEGORY_UNIFORM, MACRO_ENUM_CATEGORY_VEST, MACRO_ENUM_CATEGORY_CONTAINER]) then {
 						_skip = true;
 					};
@@ -464,7 +560,7 @@ if (_container isKindOf "Man") then {
 					_slotAreaNamespace setVariable [_slotAreaStr, _indexes + [_index]];
 
 					// Save the item using its UID so we can find it later, along with an index to classify its data format
-					_itemsListNamespace setVariable [_UID, [_formatType, _x]];
+					_itemsListNamespace setVariable [_UID, [_formatType, _x, _configType, _category]];
 
 					// Add the item's UID to the list of items (to be sorted later)
 					_items pushBack _UID;
@@ -475,6 +571,7 @@ if (_container isKindOf "Man") then {
 			} forEach _x;
 
 		} forEach _contents;
+
 
 
 
@@ -518,8 +615,11 @@ if (_container isKindOf "Man") then {
 		_container setVariable [MACRO_VARNAME_DATA, _containerData, false];
 
 		// Iterate through the sorted list of items and fit them into the container
-		([_containerClass] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
+		([_containerClass, _containerConfigType] call cre_fnc_cfg_getContainerSize) params ["_containerSize", "_containerSlotsOnLastY"];
 		_containerData setVariable [MACRO_VARNAME_CLASS, _containerClass];
+		_containerData setVariable [MACRO_VARNAME_CONFIGTYPE, _containerConfigType];
+		_containerData setVariable [MACRO_VARNAME_CATEGORY, [_containerClass, _containerConfigType] call cre_fnc_cfg_getClassCategory];
+
 		_containerData setVariable [MACRO_VARNAME_CONTAINER, _container];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSIZE, _containerSize];
 		_containerData setVariable [MACRO_VARNAME_CONTAINERSLOTSONLASTY, _containerSlotsOnLastY];
@@ -535,18 +635,17 @@ if (_container isKindOf "Man") then {
 		private _lastFreeY = 1;
 		private _slotStr = "";
 		private _itemData = locationNull;
-		private ["_class", "_category", "_itemSize", "_isRotated", "_yLineIsFull", "_newW", "_slotStr", "_slotData", "_posEndX", "_posEndY", "_requiredSlots", "_requiredSlotStr", "_requiredSlotsStrArray", "_itemData"];
+		private ["_class", "_itemSize", "_isRotated", "_yLineIsFull", "_newW", "_slotStr", "_slotData", "_posEndX", "_posEndY", "_requiredSlots", "_requiredSlotStr", "_requiredSlotsStrArray", "_itemData"];
 
 		// Iterate through the item to add
 		{
 			scopeName "loopItems";
 
 			// Fetch the data associated to this UID
-			(_itemsListNamespace getVariable [_x, []]) params ["_formatType", "_args"];
+			(_itemsListNamespace getVariable [_x, []]) params ["_formatType", "_args", "_configType", "_category"];
 
 			// Fetch some information from the item
 			_class = _args select 0;
-			_category = [_class] call cre_fnc_cfg_getClassCategory;
 			_itemSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 			_itemSize params ["_itemWidth", "_itemHeight"];
 
@@ -606,7 +705,7 @@ if (_container isKindOf "Man") then {
 
 									// If the item is a container, we recursively generate container data on it
 									if (_formatType == 3) then {
-										_itemData = [_args select 1, _class, _container, [_posX, _posY]] call cre_fnc_inv_generateContainerData;
+										_itemData = [_args select 1, _class, _configType, _container, [_posX, _posY]] call cre_fnc_inv_generateContainerData;
 
 										// Save some more info onto the item data
 										_itemData setVariable [MACRO_VARNAME_OCCUPIEDSLOTS, _requiredSlots];
@@ -618,6 +717,9 @@ if (_container isKindOf "Man") then {
 
 										// Save some basic things onto the item data
 										_itemData setVariable [MACRO_VARNAME_CLASS, _class];
+										_itemData setVariable [MACRO_VARNAME_CONFIGTYPE, _configType];
+										_itemData setVariable [MACRO_VARNAME_CATEGORY, _category];
+
 										_itemData setVariable [MACRO_VARNAME_PARENT, _container];
 										_itemData setVariable [MACRO_VARNAME_PARENTDATA, _containerData];
 										_itemData setVariable [MACRO_VARNAME_SLOTPOS, [_posX, _posY]];

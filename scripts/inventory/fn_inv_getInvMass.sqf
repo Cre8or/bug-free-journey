@@ -4,11 +4,12 @@
 		Returns the total mass of all items that SHOULD be inside a container.
 		Unlike cre_fnc_inv_getRealMass, this function relies merely on the container's data, and consequently
 		completely ignores its actual content.
+		NOTE: Does not include the container's own mass.
 	Arguments:
 		0:      <LOCATION>	Item data of the container object
 		1:	<BOOL>		Whether or not exceptional items (magazines and weapon attachments) should
 					be considered (default: true)
-		2:	<BOOL>		Whether or not non-exceptional items (anything else) should be considered
+		2:	<BOOL>		Whether or not non-exceptional items (everything else) should be considered
 					(default: true)
 	Returns:
 		0:      <NUMBER>	Total mass of all objects inside the container object
@@ -34,20 +35,23 @@ if (isNull _containerData) exitWith {0};
 private _totalMass = 0;
 {
 	private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-	private _category = [_class] call cre_fnc_cfg_getClassCategory;
+	private _category =_x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 
-	// If we should include exception items
+	// If we should include exceptional items
 	if (_includeExceptions) then {
 
-		// If the item is a magazine, add
 		switch (_category) do {
 			case MACRO_ENUM_CATEGORY_WEAPON: {
-				// Iterate through the weapon's items
+				// Add the mass of every weapon accessory
 				{
 					if (!isNull _x) then {
-						private _classX = _x getVariable [MACRO_VARNAME_CLASS, ""];
-						private _categoryX = [_classX] call cre_fnc_cfg_getClassCategory;
-						private _mass = [_classX, _categoryX] call cre_fnc_cfg_getClassMass;
+						private _mass = [
+							_x getVariable [MACRO_VARNAME_CLASS, ""],
+							_x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID]
+						] call cre_fnc_cfg_getClassMass;
+
+						//diag_log format ["    Added attachment: %1 (%2)", _x getVariable [MACRO_VARNAME_CLASS, ""], _mass];
+
 						_totalMass = _totalMass + _mass;
 					};
 				} forEach [
@@ -61,20 +65,24 @@ private _totalMass = 0;
 			};
 			case MACRO_ENUM_CATEGORY_MAGAZINE: {
 				private _mass = [_class, _category] call cre_fnc_cfg_getClassMass;
+				//diag_log format ["    Added magazine: %1 (%2)", _class, _mass];
+
 				_totalMass = _totalMass + _mass;
 			};
 		};
 	};
 
-	// If we should include non-exception items
-	if (_includeNonExceptions) then {
-		if !(_category in [MACRO_ENUM_CATEGORY_MAGAZINE]) then {
-			private _mass = [_class, _category] call cre_fnc_cfg_getClassMass;
-			_totalMass = _totalMass + _mass;
-		};
+	// If we should include non-exceptional items
+	if (_includeNonExceptions and {_category != MACRO_ENUM_CATEGORY_MAGAZINE}) then {
+		private _mass = [_class, _category] call cre_fnc_cfg_getClassMass;
+		//diag_log format ["    Added item: %1 (%2)", _class, _mass];
+
+		_totalMass = _totalMass + _mass;
 	};
 
 } forEach (_containerData getVariable [MACRO_VARNAME_ITEMS, []]);
+
+//diag_log format ["(%1) Final FAKE mass: %2", diag_frameNo, _totalMass];
 
 // Return the total mass
 _totalMass;

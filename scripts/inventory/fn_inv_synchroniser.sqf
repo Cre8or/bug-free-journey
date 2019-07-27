@@ -19,8 +19,18 @@
 
 
 
+// Kill the old eachFrame event handler (if it existed)
+private _EH = missionNamespace getVariable ["cre8ive_synchroniser_EH_eachFrame", -1];
+if (_EH >= 0) then {
+	removeMissionEventHandler ["EachFrame", _EH];
+};
+
+
+
+
+
 // Synchronise the inventories
-addMissionEventHandler ["EachFrame", {
+_EH = addMissionEventHandler ["EachFrame", {
 	private _time = time;
 
 	// Check if we should synchronise the inventory this frame
@@ -157,12 +167,20 @@ addMissionEventHandler ["EachFrame", {
 									// Save some basic info onto it
 									_accItemData setVariable [MACRO_VARNAME_CLASS, _xActualClass];
 
-									// Fetch the ammo
+									// If the attachment is a magazine, fetch the ammo
 									if (_isMagazine) then {
+										_accItemData setVariable [MACRO_VARNAME_CONFIGTYPE, MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES];
+										_accItemData setVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_MAGAZINE];
+
 										private _ammo = _xActual param [1, 0];
 
 										// Save the ammo onto the magazine's item data
 										_accItemData setVariable [MACRO_VARNAME_MAG_AMMO, _ammo];
+
+									// Otherwise...
+									} else {
+										_accItemData setVariable [MACRO_VARNAME_CONFIGTYPE, MACRO_ENUM_CONFIGTYPE_CFGWEAPONS];
+										_accItemData setVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_ITEM];
 									};
 								};
 
@@ -189,11 +207,19 @@ addMissionEventHandler ["EachFrame", {
 				// If the slot is not empty, we need to make a new item data
 				if (_shouldRecreateData and {_classNew != ""}) then {
 
+					private _configType = [
+						MACRO_ENUM_CONFIGTYPE_CFGWEAPONS,
+						MACRO_ENUM_CONFIGTYPE_CFGGLASSES
+					] select (_forEachIndex == 6);		// goggles
+
 					// Create the new item data
 					_itemData = (call cre_fnc_inv_createNamespace) select 0;
 
 					// Save some basic info onto it
 					_itemData setVariable [MACRO_VARNAME_CLASS, _classNew];
+					_itemData setVariable [MACRO_VARNAME_CONFIGTYPE, _configType];
+					_itemData setVariable [MACRO_VARNAME_CATEGORY, [_classNew, _configType] call cre_fnc_cfg_getClassCategory];
+
 					_itemData setVariable [MACRO_VARNAME_PARENT, player];
 					_itemData setVariable [MACRO_VARNAME_PARENTDATA, _playerContainerData];
 
@@ -208,7 +234,7 @@ addMissionEventHandler ["EachFrame", {
 				[MACRO_ENUM_SLOTPOS_NVGS,		hmd player],
 				[MACRO_ENUM_SLOTPOS_HEADGEAR,		headgear player],
 				[MACRO_ENUM_SLOTPOS_BINOCULARS,		binocular player],
-				[MACRO_ENUM_SLOTPOS_GOGGLES,		goggles player],
+				[MACRO_ENUM_SLOTPOS_GOGGLES,		goggles player],		// Treat this item differently (due to it being defined in a different root config class)
 				[MACRO_ENUM_SLOTPOS_MAP,		_map],
 				[MACRO_ENUM_SLOTPOS_GPS,		_GPS],
 				[MACRO_ENUM_SLOTPOS_RADIO,		_radio],
@@ -257,6 +283,10 @@ addMissionEventHandler ["EachFrame", {
 
 				// If the real mass doesn't match the fake mass, something's wrong...
 				if (_fakeMass != _realMass) then {
+					private _str =  format ["(%1) Mass mismatch: %2 FAKE (should be %3 REAL)", diag_frameNo, _fakeMass, _realMass];
+					systemChat _str;
+					//diag_log "";
+					//diag_log format ["(SYNC) %1", _str];
 					_foundError = true;
 
 				// Otherwise, keep looking deeper
@@ -285,6 +315,7 @@ addMissionEventHandler ["EachFrame", {
 
 							if (_countX != _namespace getVariable [_classX, -1]) then {
 								_foundError = true;
+								systemChat format ["Item count mismatch (%1): %2 (should be %3)", _classX, _countX, _namespace getVariable [_classX, -1]];
 								breakTo "matching";
 							};
 						} forEach ([_containerData, [MACRO_ENUM_CATEGORY_MAGAZINE], 1, true] call cre_fnc_inv_getClassCountsByCategory);
@@ -294,6 +325,7 @@ addMissionEventHandler ["EachFrame", {
 
 					// Otherwise, we already know that we have a mismatch somewhere
 					} else {
+						systemChat format ["Total item count mismatch: %1 (should be %2)",  count _items, count _itemsReal];
 						_foundError = true;
 					};
 				};
@@ -312,9 +344,8 @@ addMissionEventHandler ["EachFrame", {
 					// Re-add all containers and items to the container
 					{
 						private _class = _x getVariable [MACRO_VARNAME_CLASS, ""];
-						private _category = [_class] call cre_fnc_cfg_getClassCategory;
 
-						switch (_category) do {
+						switch (_x getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID]) do {
 							case MACRO_ENUM_CATEGORY_BINOCULARS: {
 								_container addWeaponCargoGlobal [_class, 1];
 							};
@@ -354,7 +385,7 @@ addMissionEventHandler ["EachFrame", {
 								_x setVariable [MACRO_VARNAME_CONTAINER, _containerX];
 								_containerX setVariable [MACRO_VARNAME_DATA, _x];
 							};
-							default {}; // For everything else, do nothing
+//							default {}; // For everything else, do nothing
 						};
 					} forEach _items;
 				};
@@ -371,3 +402,6 @@ addMissionEventHandler ["EachFrame", {
 		missionNamespace setVariable ["cre8ive_synchroniser_nextUpdate", _time + 0.25, false];
 	};
 }];
+
+// Save the inventory synchroniser eachFrame EH so we can kill it from outside
+missionNamespace setVariable ["cre8ive_synchroniser_EH_eachFrame", _EH, false];

@@ -34,12 +34,12 @@ case "ui_dragging_start": {
 				_draggedCtrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE);
 
 				// Fetch the control's item class and its associated size
-				private _class = _draggedCtrl getVariable [MACRO_VARNAME_CLASS, ""];
-				private _category = [_class] call cre_fnc_cfg_getClassCategory;
+				private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
+				private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
+				private _category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 				private _subCategory = [_class, _category] call cre_fnc_cfg_getClassSubCategory;
 				([_class, _category] call cre_fnc_cfg_getClassSlotSize) params ["_slotWidth", "_slotHeight"];
 
-				private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
 				private _defaultIconPath = _draggedCtrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
 				private _safeZoneW = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneW", 0];
 				private _safeZoneH = uiNamespace getVariable ["Cre8ive_Inventory_SafeZoneH", 0];
@@ -87,9 +87,6 @@ case "ui_dragging_start": {
 				_ctrlFrameTemp setVariable [MACRO_VARNAME_DATA, _data];
 				_ctrlFrameTemp setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
 
-				// Generate additional temporary child controls
-				//private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
-
 				// Raise the "Draw" event for the temporary frame control
 				private _eventArgs = [_itemData, _ctrlFrameTemp, _inventory];
 				[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
@@ -101,7 +98,6 @@ case "ui_dragging_start": {
 						(_posChildCtrl select 0) - _posCtrlX,
 						(_posChildCtrl select 1) - _posCtrlY
 					]];
-//				} forEach _tempChildControls;
 				} forEach (_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
 				// Mark the control as being dragged

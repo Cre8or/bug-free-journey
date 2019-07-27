@@ -37,7 +37,7 @@ case "ui_update_weapons": {
 
 				// Fetch some info from the item data
 				_class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
-				_category = [_class] call cre_fnc_cfg_getClassCategory;
+				_category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 				_slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
 				// Mark the slot as active and save some info on the control

@@ -9,8 +9,9 @@ case "ui_dragging_rotate": {
 	if (!isNull _draggedCtrl) then {
 
 		// Fetch the control's item class and its associated size
-		private _class = _draggedCtrl getVariable [MACRO_VARNAME_CLASS, ""];
-		private _category = [_class] call cre_fnc_cfg_getClassCategory;
+		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
+		private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
+		private _category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
 		private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 		_slotSize params ["_slotWidth", "_slotHeight"];
 		private _defaultIconPath = _draggedCtrl getVariable [MACRO_VARNAME_UI_DEFAULTICONPATH, ""];
@@ -47,14 +48,10 @@ case "ui_dragging_rotate": {
 		_ctrlFrameTemp ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
 		// Copy the original control's item data onto the dummy frame
-		private _itemData = _draggedCtrl getVariable [MACRO_VARNAME_DATA, locationNull];
 		_ctrlFrameTemp setVariable [MACRO_VARNAME_DATA, _itemData];
 
 		// Update the rotation variable on the temporary frame control (NOT on the dragged control/item data, because we can still abort the dragging process!)
 		_ctrlFrameTemp setVariable [MACRO_VARNAME_ISROTATED, _isRotated];
-
-		// Generate additional temporary child controls
-//		private _tempChildControls = [_ctrlFrameTemp, _class, _category, _defaultIconPath] call cre_fnc_ui_generateChildControls;
 
 		// Raise the "Draw" event for the temporary frame control
 		private _eventArgs = [_itemData, _ctrlFrameTemp, _inventory];
@@ -67,7 +64,6 @@ case "ui_dragging_rotate": {
 				(_posChildCtrl select 0) - _posCtrlX,
 				(_posChildCtrl select 1) - _posCtrlY
 			]];
-//		} forEach _tempChildControls;
 		} forEach (_ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
 		// Move the temporary controls in place initially

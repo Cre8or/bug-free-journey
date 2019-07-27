@@ -88,6 +88,9 @@ if (_magClass != "") then {
 
 		// Fill the attachment's item data
 		_accItemData setVariable [MACRO_VARNAME_CLASS, _accItemClass];
+		_accItemData setVariable [MACRO_VARNAME_CONFIGTYPE, MACRO_ENUM_CONFIGTYPE_CFGWEAPONS];
+		_accItemData setVariable [MACRO_VARNAME_CATEGORY, [_accItemClass, MACRO_ENUM_CONFIGTYPE_CFGWEAPONS] call cre_fnc_cfg_getClassCategory];
+
 		_accItemData setVariable [MACRO_VARNAME_PARENTDATA, _weaponData];
 
 		// Update the weapon's item data to know about the attachment
@@ -111,6 +114,9 @@ if (_magClass != "") then {
 
 		// Fill the magazines's item data
 		_magItemData setVariable [MACRO_VARNAME_CLASS, _magItemClass];
+		_magItemData setVariable [MACRO_VARNAME_CONFIGTYPE, MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES];
+		_magItemData setVariable [MACRO_VARNAME_CATEGORY, [_magItemClass, MACRO_ENUM_CONFIGTYPE_CFGMAGAZINES] call cre_fnc_cfg_getClassCategory];
+
 		_magItemData setVariable [MACRO_VARNAME_PARENTDATA, _weaponData];
 
 		if (_forEachIndex == 0) then {

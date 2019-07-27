@@ -1,7 +1,13 @@
 ITEM DATA:
 	Shared:
-		MACRO_VARNAME_CLASS				// The item's class
+		// THE FOLLOWING MACROS MUST ALWAYS BE AVAILABLE FROM THE VERY BEGINNING! THESE ARE THE BARE MINIMUM - INITIALISING THEM IS ABSOLUTELY MANDATORY!!!
+		// Whenever you create a new itemData, make sure these macros are ALWAYS assigned to something! Most scripts heavily depend on them being defined!
 		MACRO_VARNAME_UID				// The item's unique ID
+		MACRO_VARNAME_CLASS				// The item's class
+		MACRO_VARNAME_CONFIGTYPE			// The item's config type (enums for CfgWeapons, CfgVehicles, etc. - see macros.hpp)
+		MACRO_VARNAME_CATEGORY				// The item's category
+
+		// These macros are not *quite* as important as the ones above (they may or may not be initialised), but are still important and are used in other scripts
 		MACRO_VARNAME_SLOTPOS				// The slot position that this item is in, in format [PosX, PosY] (e.g. inside a container). NOTE: If the value of PosX is negative, the item is in a reserved slot (e.g. a player's weapon slots, or linked items)! See the slotPos enums in macros.hpp
 		MACRO_VARNAME_PARENT				// The item's parent object (e.g. the container it is inside of) - NOT its item data! NOTE: For dropped items, this points at the ground holder it's in (even for backpacks!)
 		MACRO_VARNAME_PARENTDATA			// The item data of the parent object (e.g. the item data of the container that an item is inside of)

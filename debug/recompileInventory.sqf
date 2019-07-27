@@ -14,7 +14,16 @@ cre_fnc_debug_printIEH = compile preprocessFileLineNumbers "debug\fn_debug_print
 
 // Config
 cre_fnc_cfg_compileIEHs = compile preprocessFileLineNumbers "scripts\config\fn_cfg_compileIEHs.sqf";
+cre_fnc_cfg_getClassCategory = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getClassCategory.sqf";
+cre_fnc_cfg_getClassIcon = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getClassIcon.sqf";
 cre_fnc_cfg_getClassIEHs = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getClassIEHs.sqf";
+cre_fnc_cfg_getClassMass = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getClassMass.sqf";
+cre_fnc_cfg_getClassSlotSize = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getClassSlotSize.sqf";
+cre_fnc_cfg_getClassSubCategory = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getClassSubCategory.sqf";
+cre_fnc_cfg_getContainerSize = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getContainerSize.sqf";
+cre_fnc_cfg_getMagazineMaxAmmo = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getMagazineMaxAmmo.sqf";
+cre_fnc_cfg_getWeaponMagazines = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getWeaponMagazines.sqf";
+cre_fnc_cfg_getWeapinMuzzles = compile preprocessFileLineNumbers "scripts\config\fn_cfg_getWeaponMuzzles.sqf";
 
 // IEHs
 cre_fnc_IEH_raiseEvent = compile preprocessFileLineNumbers "scripts\IEH\fn_IEH_raiseEvent.sqf";
@@ -34,6 +43,8 @@ cre_fnc_inv_moveItem = compile preprocessFileLineNumbers "scripts\inventory\fn_i
 cre_fnc_inv_handleFakeMass = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_handleFakeMass.sqf";
 cre_fnc_inv_getInvMass = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_getInvMass.sqf";
 cre_fnc_inv_getRealMass = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_getRealMass.sqf";
+cre_fnc_inv_generateWeaponAccArray = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateWeaponAccArray.sqf";
+cre_fnc_inv_generateWeaponAccData = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateWeaponAccData.sqf";
 
 	// Inventory commands
 	cre_fnc_inv_canOpenContainer = compile preprocessFileLineNumbers "scripts\inventory\commands\fn_inv_canOpenContainer.sqf";
@@ -60,9 +71,7 @@ cre_fnc_util_quickSort_swap = compile preprocessFileLineNumbers "scripts\util\qu
 call cre_fnc_cfg_compileIEHs;
 
 // Synchroniser
-if (isNil "cre_inv_synchroniser") then {cre_inv_synchroniser = scriptNull};
-terminate cre_inv_synchroniser;
-cre_inv_synchroniser = [] spawn compile preprocessFileLineNumbers "scripts\inventory\fn_inv_synchroniser.sqf";
+[] spawn compile preprocessFileLineNumbers "scripts\inventory\fn_inv_synchroniser.sqf";
 
 
 
