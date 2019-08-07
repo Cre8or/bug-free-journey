@@ -527,7 +527,8 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_CLASSNAME_IEH_CATEGORY_UNIFORM                    Category_Uniform
 	#define MACRO_CLASSNAME_IEH_CATEGORY_VEST                       Category_Vest
 	#define MACRO_CLASSNAME_IEH_CATEGORY_BACKPACK                   Category_Backpack
-//	#define MACRO_CLASSNAME_IEH_CATEGORY_CONTAINER                  Category_Container
+	#define MACRO_CLASSNAME_IEH_CATEGORY_CONTAINER                  Category_Container
+	//		^	used by the drysack, ammo box and first aid kit containers
 
 	#define MACRO_CLASSNAME_IEH_CATEGORY_NVGS                       Category_NVGs
 	#define MACRO_CLASSNAME_IEH_CATEGORY_HEADGEAR                   Category_Headgear

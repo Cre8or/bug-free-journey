@@ -37,8 +37,9 @@ cre_fnc_IEH_man_drawContainer = compile preprocessFileLineNumbers "scripts\IEH\f
 	cre_fnc_IEH_draw_uniform = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_uniform.sqf";
 
 // Inventory
-cre_fnc_inv_generateContainerData = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateContainerData.sqf";
 cre_fnc_inv_canFitItem = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_canFitItem.sqf";
+cre_fnc_inv_canHoldInventory = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_canHoldInventory.sqf";
+cre_fnc_inv_generateContainerData = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_generateContainerData.sqf";
 cre_fnc_inv_moveItem = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_moveItem.sqf";
 cre_fnc_inv_handleFakeMass = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_handleFakeMass.sqf";
 cre_fnc_inv_getInvMass = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_getInvMass.sqf";

@@ -25,8 +25,14 @@ if (is3DEN) then {createDialog "Rsc_Cre8ive_Inventory"} else {["ui_init"] call c
 
 		if (_key == 15 and {inputAction "lookAround" == 0}) then {
 
+			// Determine the active container
+			private _activeContainer = vehicle player;
+			if (_activeContainer == player) then {
+				_activeContainer = cursorTarget;
+			};
+
 			call compile preprocessFileLineNumbers "debug\recompileInventory.sqf";
-			["ui_init", [cursorTarget]] call cre_fnc_ui_inventory;
+			["ui_init", [_activeContainer]] call cre_fnc_ui_inventory;
 
 			[] spawn {
 				private _inventory = displayNull;

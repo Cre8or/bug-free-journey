@@ -1,8 +1,5 @@
 TODO:
 - See if we can get rid of the "_EMPTY" enums (category, configType, subCategory, etc.)
-- Figure out a new system for getClassCategory to avoid classname collisions (e.g. in both CfgWeapons and CfgVehicles)
-	* Save the config type onto the itemData for quick access (e.g. CfgWeapons/CfgVehicles, but as an enum)
-- Write a function that checks if a given object should generate container data (e.g. if it can fit inventory) and implement it into the ground update/init events
 - Prevent the ground UI from showing items that are obstructed (e.g. behind a wall)
 - Position dropped items on the first surface under the player's current position (otherwise items may float in the air if the player dropped while jumping/on a ladder)
 - Add a check in ui_update_ground to delete empty ground holders when they are detected (sometimes they don't auto-clean -> potential duplicating exploit)
@@ -22,6 +19,13 @@ TODO:
 
 
 DONE:	(top: most recent)
+- Fix items of category "CONTAINER" not having a default draw function
+- Prevent being able to drop items when inside a vehicle
+- When opening the inventory inside a vehicle, set the active container to the vehicle
+- Hide ground holders in the ground UI when inside a vehicle
+- Write a function that checks if a given object should generate container data (e.g. if it can fit inventory) and implement it into the ground update/init events
+- Figure out a new system for getClassCategory to avoid classname collisions (e.g. in both CfgWeapons and CfgVehicles)
+	* Save the config type onto the itemData for quick access (e.g. CfgWeapons/CfgVehicles, but as an enum)
 - Fix the inventory recompiler not killing the synchroniser eachFrame event handler, causing them to stack
 - When dragging, dynamically set the focus on the control group that the mouse cursor is over (so that scrollbars work)
 - Move the "Draw" event raises to wherever generateChildControls used to be called

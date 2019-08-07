@@ -54,16 +54,26 @@ case "ui_mouse_moving": {
 
 		// If the control is a reserved slot, do a simple check to see if the item can fit in it
 		if (_targetSlotPosX < 0) then {
+			private _ctrlFrameTempIcon = _ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull];
 
 			// If we're hovering over a drop control, highlight it (don't check if the item fits)
 			if (_targetSlotPosX == MACRO_ENUM_SLOTPOS_DROP) then {
-				_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);	// MACRO_COLOUR_ELEMENT_DRAGGING_GREEN
 
-				// Add the drop frame to the highlit controls array
-				 private _ctrls = _inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
-				 if !(_ctrl in _ctrls) then {
-					 _ctrls pushBack _ctrl;
-				 	_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, _ctrls];
+				// If the player is not in a vehicle, allow dropping
+				if (isNull objectParent player) then {
+					_ctrl ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_INACTIVE_HOVER);	// MACRO_COLOUR_ELEMENT_DRAGGING_GREEN
+					_ctrlFrameTempIcon ctrlSetTextColor [0,1,0,1];
+
+					// Add the drop frame to the highlit controls array
+					 private _ctrls = _inventory getVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, []];
+					 if !(_ctrl in _ctrls) then {
+						 _ctrls pushBack _ctrl;
+					 	_inventory setVariable [MACRO_VARNAME_UI_HIGHLITCONTROLS, _ctrls];
+					};
+
+				// Otherwise, forbid it
+				} else {
+					_ctrlFrameTempIcon ctrlSetTextColor [1,0,0,1];
 				};
 
 			// Otherwise...
@@ -71,7 +81,6 @@ case "ui_mouse_moving": {
 
 				// Fetch the allowed controls and the temporary frame's icon
 				private _allowedCtrls = _inventory getVariable [MACRO_VARNAME_UI_ALLOWEDCONTROLS, []];
-				private _ctrlFrameTempIcon = _ctrlFrameTemp getVariable [MACRO_VARNAME_UI_CTRLICON, controlNull];
 
 				// If the item is allowed to go in the target control, paint it green
 				if (_ctrl in _allowedCtrls) then {

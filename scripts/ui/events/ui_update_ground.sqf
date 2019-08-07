@@ -33,6 +33,7 @@ case "ui_update_ground": {
 	private _distMaxSqr = MACRO_GROUND_MAX_DISTANCE ^ 2;
 	private _doUpdate = false;
 	private _eyePos = eyePos player;
+	private _inVehicle = !isNull objectParent player;
 
 
 
@@ -45,6 +46,7 @@ case "ui_update_ground": {
 		// Rescale the controls group so that the container UI becomes visible
 		if !(_inventory getVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false]) then {
 			_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, true];
+			systemChat "Opening container UI";
 
 			// Rescale the ground controls group
 			private _pos = ctrlPosition _groundCtrlGrp;
@@ -76,6 +78,7 @@ case "ui_update_ground": {
 	} else {
 		if (_inventory getVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false]) then {
 			_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false];
+			systemChat "Closing container UI";
 
 			// Rescale the ground controls group
 			{
@@ -137,109 +140,134 @@ case "ui_update_ground": {
 		_groundHolderCtrls = [];
 	};
 
-
-	// Filter out old ground holders that are too far
-	for "_i" from (count _groundHolderCtrls) - 1 to 0 step -1 do {
-		private _slotFrame = _groundHolderCtrls param [_i, controlNull];
-		private _container = _slotFrame getVariable [MACRO_VARNAME_CONTAINER, objNull];
-
-		// If this container is too far away, delete it from the list
-		if (_eyePos distanceSqr getPosASL _container > _distMaxSqr) then {
-			_groundHolderCtrls deleteAt _i;
+	// If the player is in a vehicle, remove all ground holders from the UI
+	if (_inVehicle) then {
+		private ["_container", "_containerData", "_UID"];
+		{
+			_container = _x getVariable [MACRO_VARNAME_CONTAINER, objNull];
 
 			if (!isNull _container) then {
-				private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
-				private _UID = _containerData getVariable [MACRO_VARNAME_UID, ""];
-
+				_containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
+				_UID = _containerData getVariable [MACRO_VARNAME_UID, ""];
 				// Blank out the entry in the namespace
 				_namespace setVariable [_UID, controlNull];
-				//systemChat format ["Removed %1", _UID];
-			} else {
-				//systemChat format ["Removed an unknown container (at %1)", _i];
 			};
 
 			// Also delete the associated slot frame and its child controls
-			[_slotFrame] call cre_fnc_ui_deleteSlotCtrl;
+			[_x] call cre_fnc_ui_deleteSlotCtrl;
+		} forEach _groundHolderCtrls;
 
-			_doUpdate = true;
+		_doUpdate = true;
+		_groundHolderCtrls = [];
+
+	// Otherwise, only filter out the ones that are too far
+	} else {
+		private ["_slotFrame", "_container", "_containerData", "_UID"];
+
+		for "_i" from (count _groundHolderCtrls) - 1 to 0 step -1 do {
+			_slotFrame = _groundHolderCtrls param [_i, controlNull];
+			_container = _slotFrame getVariable [MACRO_VARNAME_CONTAINER, objNull];
+
+			// If this container is too far away, delete it from the list
+			if (_eyePos distanceSqr getPosASL _container > _distMaxSqr) then {
+				_groundHolderCtrls deleteAt _i;
+
+				if (!isNull _container) then {
+					_containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
+					_UID = _containerData getVariable [MACRO_VARNAME_UID, ""];
+
+					// Blank out the entry in the namespace
+					_namespace setVariable [_UID, controlNull];
+					//systemChat format ["Removed %1", _UID];
+				} else {
+					//systemChat format ["Removed an unknown container (at %1)", _i];
+				};
+
+				// Also delete the associated slot frame and its child controls
+				[_slotFrame] call cre_fnc_ui_deleteSlotCtrl;
+
+				_doUpdate = true;
+			};
 		};
 	};
 
 	// Look for new ground holders
-	{
+	if (!_inVehicle) then {
 		{
-			private _container = _x;
-			if (_eyePos distanceSqr getPosASL _container <= _distMaxSqr) then {
+			{
+				private _container = _x;
+				if (_eyePos distanceSqr getPosASL _container <= _distMaxSqr) then {
 
-				// If the object doesn't have any container data (yet), create it
-				private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
-				if (isNull _containerData) then {
-					_containerData = [_container, "", MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] call cre_fnc_inv_generateContainerData;
-				};
+					// If the object doesn't have any container data (yet), create it
+					private _containerData = _container getVariable [MACRO_VARNAME_DATA, locationNull];
+					if (isNull _containerData) then {
+						_containerData = [_container, "", MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] call cre_fnc_inv_generateContainerData;
+					};
 
-				// Fetch the UID
-				private _UID = _containerData getVariable [MACRO_VARNAME_UID, ""];
+					// Fetch the UID
+					private _UID = _containerData getVariable [MACRO_VARNAME_UID, ""];
 
-				// If this ground holder isn't in our list yet, add it
-				if (isNull (_namespace getVariable [_UID, controlNull])) then {
+					// If this ground holder isn't in our list yet, add it
+					if (isNull (_namespace getVariable [_UID, controlNull])) then {
 
-					// Fetch the item data of the first item inside of it
-					private _itemData = _containerData getVariable [format [MACRO_VARNAME_SLOT_X_Y, 1, 1], locationNull];
+						// Fetch the item data of the first item inside of it
+						private _itemData = _containerData getVariable [format [MACRO_VARNAME_SLOT_X_Y, 1, 1], locationNull];
 
-					// If the item data is not null, we passed all tests, so we create the new control
-					if (!isNull _itemData) then {
-						private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
-						private _category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
-						private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
+						// If the item data is not null, we passed all tests, so we create the new control
+						if (!isNull _itemData) then {
+							private _class = _itemData getVariable [MACRO_VARNAME_CLASS, ""];
+							private _category = _itemData getVariable [MACRO_VARNAME_CATEGORY, MACRO_ENUM_CATEGORY_INVALID];
+							private _slotSize = [_class, _category] call cre_fnc_cfg_getClassSlotSize;
 
-						// Create controls for the item
-						private _slotFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", -1, _groundCtrlGrp];
-						_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
+							// Create controls for the item
+							private _slotFrame = _inventory ctrlCreate ["Cre8ive_Inventory_ScriptedFrame", -1, _groundCtrlGrp];
+							_slotFrame ctrlSetBackgroundColor SQUARE(MACRO_COLOUR_ELEMENT_ACTIVE);
 
-						// Set the frame's pixel precision mode to off, disables rounding
-						_slotFrame ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
+							// Set the frame's pixel precision mode to off, disables rounding
+							_slotFrame ctrlSetPixelPrecision MACRO_GLOBAL_PIXELPRECISIONMODE;
 
-						// Resize the slot controls
-						_slotFrame ctrlSetPosition  [
-							0,
-							0,
-							_slotSizeW * (_slotSize select 0),
-							_slotSizeH * (_slotSize select 1)
-						];
-						_slotFrame ctrlCommit 0;
+							// Resize the slot controls
+							_slotFrame ctrlSetPosition  [
+								0,
+								0,
+								_slotSizeW * (_slotSize select 0),
+								_slotSizeH * (_slotSize select 1)
+							];
+							_slotFrame ctrlCommit 0;
 
-						// Add some event handlers to the slot controls
-						_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
-						_slotFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
-						_slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];
+							// Add some event handlers to the slot controls
+							_slotFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
+							_slotFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
+							_slotFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];
 
-						// Save some data onto the slot
-						_slotFrame setVariable [MACRO_VARNAME_CLASS, _class];
-						_slotFrame setVariable [MACRO_VARNAME_DATA, _itemData];
-						_slotFrame setVariable [MACRO_VARNAME_SLOTPOS, [0,0]];
-						_slotFrame setVariable [MACRO_VARNAME_CONTAINER, _container];
-						_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
+							// Save some data onto the slot
+							_slotFrame setVariable [MACRO_VARNAME_CLASS, _class];
+							_slotFrame setVariable [MACRO_VARNAME_DATA, _itemData];
+							_slotFrame setVariable [MACRO_VARNAME_SLOTPOS, [0,0]];
+							_slotFrame setVariable [MACRO_VARNAME_CONTAINER, _container];
+							_slotFrame setVariable [MACRO_VARNAME_SLOTSIZE, _slotSize];
 
-						// Raise the "Draw" event
-						private _eventArgs = [_itemData, _slotFrame, _inventory];
-						[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
+							// Raise the "Draw" event
+							private _eventArgs = [_itemData, _slotFrame, _inventory];
+							[STR(MACRO_ENUM_EVENT_DRAW), _eventArgs] call cre_fnc_IEH_raiseEvent;
 
-						// Calculate the position offsets for the child controls (so they get moved properly)
-						{
-							_x setVariable [MACRO_VARNAME_UI_OFFSET, ctrlPosition _x];
-						} forEach (_slotFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
+							// Calculate the position offsets for the child controls (so they get moved properly)
+							{
+								_x setVariable [MACRO_VARNAME_UI_OFFSET, ctrlPosition _x];
+							} forEach (_slotFrame getVariable [MACRO_VARNAME_UI_CHILDCONTROLS, []]);
 
-						// Save the slot control onto the namespace
-						_namespace setVariable [_UID, _slotFrame];
-						_groundHolderCtrls pushBack _slotFrame;
-						//systemChat format ["Added %1", _UID];
+							// Save the slot control onto the namespace
+							_namespace setVariable [_UID, _slotFrame];
+							_groundHolderCtrls pushBack _slotFrame;
+							//systemChat format ["Added %1", _UID];
 
-						_doUpdate = true;
+							_doUpdate = true;
+						};
 					};
 				};
-			};
-		} forEach (player nearObjects [_x, MACRO_GROUND_MAX_DISTANCE + 5]);
-	} forEach MACRO_CLASSES_GROUNDHOLDERS;
+			} forEach (player nearObjects [_x, MACRO_GROUND_MAX_DISTANCE + 5]);
+		} forEach MACRO_CLASSES_GROUNDHOLDERS;
+	};
 
 	// If anything changed in this execution, update the UI
 	if (_doUpdate) then {

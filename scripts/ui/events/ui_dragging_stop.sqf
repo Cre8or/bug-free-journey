@@ -32,9 +32,9 @@ case "ui_dragging_stop": {
 			_slotSize set [1, _widthTemp];
 		};
 
-		// If the item is going into a drop slot, skip the canFit checks
+		// If the item is going into a drop slot, skip the canFit check - but only allow this when not in a vehicle
 		_slotPos params ["_slotPosX", "_slotPosY"];
-		if (_slotPosX == MACRO_ENUM_SLOTPOS_DROP) then {
+		if (_slotPosX == MACRO_ENUM_SLOTPOS_DROP and {isNull objectParent player}) then {
 			_canMoveItem = true;
 
 			// Create the ground weapon holder for the dropped item

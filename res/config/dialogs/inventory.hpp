@@ -419,7 +419,7 @@ class MACRO_GUI_NAME {
 			x = _safeZoneX;
 			y = _safeZoneY;
 			w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - MACRO_POS_SPACER_X);
-			h = _safeZoneH;
+			h = _safeZoneH * (MACRO_POS_SEPARATOR_CONTAINER - MACRO_POS_SPACER_Y);
 
 			class controls {
 				// Focus frame
@@ -437,7 +437,7 @@ class MACRO_GUI_NAME {
 					x = 0;
 					y = 0;
 					w = _safeZoneW * (MACRO_POS_SEPARATOR_GROUND - MACRO_POS_SPACER_X);
-					h = _safeZoneH;
+					h = _safeZoneH * (MACRO_POS_SEPARATOR_CONTAINER - MACRO_POS_SPACER_Y);
 					colorBackground[] = CURLY(MACRO_COLOUR_INVISIBLE);
 				};
 			};

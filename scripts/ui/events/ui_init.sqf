@@ -32,8 +32,10 @@ case "ui_init": {
 				// Validate the active container object and write it onto the inventory display
 				if !(_activeContainerType in MACRO_CLASSES_GROUNDHOLDERS) then {
 
-					if (isNull (_activeContainer getVariable [MACRO_VARNAME_DATA, locationNull])) then {
-						[_activeContainer, _activeContainerType, MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] call cre_fnc_inv_generateContainerData;
+					if ([_activeContainer] call cre_fnc_inv_canHoldInventory) then {
+						if (isNull (_activeContainer getVariable [MACRO_VARNAME_DATA, locationNull])) then {
+							[_activeContainer, _activeContainerType, MACRO_ENUM_CONFIGTYPE_CFGVEHICLES] call cre_fnc_inv_generateContainerData;
+						};
 					};
 
 					_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER, _activeContainer];

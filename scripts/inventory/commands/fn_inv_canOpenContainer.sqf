@@ -2,6 +2,7 @@
 	Author:		Cre8or
 	Description:
 		Checks if a unit is within range of, and can open a specified container object.
+		If the object is a vehicle, and the player is inside of it, this function always returns true.
 	Arguments:
 		0:	<OBJECT>	The unit that wants to open something
 		1:	<OBJECT>	The container object the unit wants to open
@@ -24,6 +25,9 @@ if (!alive _unit or {isNull _container}) exitWith {false};
 
 
 
+// If the object is a vehicle, do an early check
+if (vehicle _unit == _container) exitWith {true};
+
 // Set up some variables
 private _canAccess = false;
 private _eyePos = eyePos _unit;
@@ -33,9 +37,7 @@ private _invPos = _container modelToWorldVisualWorld (_container selectionPositi
 private _invDistSqr = [configFile >> "CfgVehicles" >> _type, MACRO_VARNAME_CFG_INVDISTANCE, (sizeOf _type) min 15] call BIS_fnc_returnConfigEntry;
 
 // If the unit is close enough to the container's supply position, then the container can be accessed
-if (_eyePos distanceSqr _invPos <= _invDistSqr) then {
-	_canAccess = true;
-};
+if (_eyePos distanceSqr _invPos <= _invDistSqr) exitWith {true};
 
-// Return the result
-_canAccess;
+// Otherwise, return false
+false;
