@@ -34,7 +34,7 @@ private _eyePos = eyePos _unit;
 private _type = typeOf _container;
 private _memPoint = [configFile >> "CfgVehicles" >> _type, "memoryPointSupply", ""] call BIS_fnc_returnConfigEntry;
 private _invPos = _container modelToWorldVisualWorld (_container selectionPosition [_memPoint, "Memory"]);
-private _invDistSqr = [configFile >> "CfgVehicles" >> _type, MACRO_VARNAME_CFG_INVDISTANCE, (sizeOf _type) min 15] call BIS_fnc_returnConfigEntry;
+private _invDistSqr = [configFile >> "CfgVehicles" >> _type, MACRO_VARNAME_CFG_INVDISTANCE, ((sizeOf _type) min 15) max 4] call BIS_fnc_returnConfigEntry;
 
 // If the unit is close enough to the container's supply position, then the container can be accessed
 if (_eyePos distanceSqr _invPos <= _invDistSqr) exitWith {true};

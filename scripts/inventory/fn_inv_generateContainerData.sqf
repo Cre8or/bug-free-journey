@@ -326,6 +326,8 @@ if (_container isKindOf "Man") then {
 						default {MACRO_ENUM_CONFIGTYPE_INVALID};		// fallback value
 					};
 
+					systemChat format ["Config type: %1", _configType];
+
 					// Only continue if the class isn't blacklisted
 					if !(_class in _filteredClasses) then {
 
@@ -340,7 +342,7 @@ if (_container isKindOf "Man") then {
 						switch (_categoryX) do {
 							case MACRO_ENUM_CATEGORY_BINOCULARS;
 							case MACRO_ENUM_CATEGORY_WEAPON: {
-								_containerX addWeaponCargoGlobal [_class, 1];
+								_containerX addWeaponWithAttachmentsCargoGlobal [_x, 1];
 							};
 							case MACRO_ENUM_CATEGORY_MAGAZINE: {
 								_containerX addMagazineAmmoCargo [_class, 1, _x select 1];
@@ -379,7 +381,7 @@ if (_container isKindOf "Man") then {
 			locationNull;
 		};
 
-		// Otherwise, if the ground holder only has 1 item (as it should), generate its data
+		// Otherwise, if the ground holder only has 1 item (like it should), generate its data
 		// Fetch the item class
 		private _args = (_contents select _formatTypeItem) param [0, []];
 		private _class = _args;

@@ -46,7 +46,6 @@ case "ui_update_ground": {
 		// Rescale the controls group so that the container UI becomes visible
 		if !(_inventory getVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false]) then {
 			_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, true];
-			systemChat "Opening container UI";
 
 			// Rescale the ground controls group
 			private _pos = ctrlPosition _groundCtrlGrp;
@@ -78,7 +77,6 @@ case "ui_update_ground": {
 	} else {
 		if (_inventory getVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false]) then {
 			_inventory setVariable [MACRO_VARNAME_UI_ACTIVECONTAINER_VISIBLE, false];
-			systemChat "Closing container UI";
 
 			// Rescale the ground controls group
 			{
