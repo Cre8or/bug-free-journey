@@ -372,6 +372,8 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 		params ["_itemData", "_droppedBy", "_originContainer", "_originContainerData", "_targetContainer", "_targetContainerData", "_originSlotPos", "_targetSlotPos"];
 	MACRO_ENUM_EVENT_DRAW
 		params ["_itemData", "_ctrl", "_display"];
+	MACRO_ENUM_EVENT_DRAWCONTAINER
+		params ["_itemData", "_ctrlParent", "_display"];
 
 
 	MACRO_ENUM_EVENT_DRAWCONTAINER
@@ -427,8 +429,11 @@ This is because Arma's preprocessor trims spaces, but not tabs, meaning that if 
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONUP                       "EH_mouseButtonUp"
 	#define MACRO_VARNAME_UI_EH_MOUSEBUTTONDOWN                     "EH_mouseButtonDown"
 	#define MACRO_VARNAME_UI_EH_KEYDOWN                             "EH_keyDown"
-	#define MACRO_VARNAME_UI_EH_EACHFRAME                           "EH_eachFrame"
-	#define MACRO_VARNAME_UI_CTRL_HAS_EHS                           "ctrlHasEHs"
+	#define MACRO_VARNAME_UI_EH_EACHFRAME                           "cre8ive_inventory_EH_eachFrame"
+	#define MACRO_VARNAME_UI_INITIALISED                            "isInit"
+	#define MACRO_VARNAME_UI_LASTMOUSEPOS                           "cre8ive_inventory_lastMousePos"
+	#define MACRO_VARNAME_UI_LASTMOUSEPOS_LOADED                    "lastMousePos_loaded"
+
 
 	// Items and containers
 	#define MACRO_VARNAME_UID                                       "UID"

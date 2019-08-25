@@ -79,8 +79,8 @@ case "ui_update_weapons": {
 		};
 
 		// Add some event handlers for mouse entering/exiting the controls, and moving across it
-		if !(_ctrlFrame getVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, false]) then {
-			_ctrlFrame setVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, true];
+		if !(_ctrlFrame getVariable [MACRO_VARNAME_UI_INITIALISED, false]) then {
+			_ctrlFrame setVariable [MACRO_VARNAME_UI_INITIALISED, true];
 			_ctrlFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
 			_ctrlFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
 			_ctrlFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];

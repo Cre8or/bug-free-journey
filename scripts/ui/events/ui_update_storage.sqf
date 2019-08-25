@@ -288,8 +288,8 @@ case "ui_update_storage": {
 		_offsetY = _offsetY + _slotSizeH * (_containerSize select 1) + _safeZoneH * MACRO_POS_SPACER_Y * 2 + _sizeY;
 
 		// Add some event handlers to the container controls
-		if !(_containerFrame getVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, false]) then {
-			_containerFrame setVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, true];
+		if !(_containerFrame getVariable [MACRO_VARNAME_UI_INITIALISED, false]) then {
+			_containerFrame setVariable [MACRO_VARNAME_UI_INITIALISED, true];
 			_containerFrame ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
 			_containerFrame ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
 			_containerFrame ctrlAddEventHandler ["MouseButtonDown", {["ui_dragging_init", _this] call cre_fnc_ui_inventory}];

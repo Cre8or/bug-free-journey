@@ -13,14 +13,14 @@ case "ui_update_ground": {
 	private _activeContainerData = _activeContainer getVariable [MACRO_VARNAME_DATA, locationNull];
 
 	// Add some event handlers for mouse moving across the drop control, and exiting it
-	if !(_ctrlDrop getVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, false]) then {
+	if !(_ctrlDrop getVariable [MACRO_VARNAME_UI_INITIALISED, false]) then {
 		_ctrlDrop ctrlAddEventHandler ["MouseExit", {["ui_mouse_exit", _this] call cre_fnc_ui_inventory}];
 		_ctrlDrop ctrlAddEventHandler ["MouseMoving", {["ui_mouse_moving", _this] call cre_fnc_ui_inventory}];
 		_ctrlDrop ctrlAddEventHandler ["MouseButtonDown", {["ui_focus_reset", _this] call cre_fnc_ui_inventory}];
 
 		// Set up the control's slot position
 		_ctrlDrop setVariable [MACRO_VARNAME_SLOTPOS, [MACRO_ENUM_SLOTPOS_DROP, MACRO_ENUM_SLOTPOS_INVALID]];
-		_ctrlDrop setVariable [MACRO_VARNAME_UI_CTRL_HAS_EHS, true];
+		_ctrlDrop setVariable [MACRO_VARNAME_UI_INITIALISED, true];
 	};
 
 	// Determine some UI variables
@@ -72,6 +72,10 @@ case "ui_update_ground": {
 			_ctrlDrop ctrlSetPositionH (_heightNew max ((_highestPosY + MACRO_EMPTY_SLOTS_UNDER_GROUND_ITEMS) * _slotSizeH));
 			_ctrlDrop ctrlCommit 0;
 		};
+
+		// Raise the "DrawContnr" event
+		private _eventArgs = [_activeContainerData, _containerCtrlGrp, _inventory];
+		[STR(MACRO_ENUM_EVENT_DRAWCONTAINER), _eventArgs] call cre_fnc_IEH_raiseEvent;
 
 	// Otherwise, get rid of the container UI controls group
 	} else {

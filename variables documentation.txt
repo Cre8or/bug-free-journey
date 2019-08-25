@@ -44,7 +44,7 @@ SLOT CONTROLS:
 		MACRO_VARNAME_SLOTPOS				// Holds the position of the slot in format [posX,posY] (in slot counts)
 		MACRO_VARNAME_PARENTDATA			// Points to the data of the parent container the item is inside of
 		MACRO_VARNAME_UI_CHILDCONTROLS			// Returns a list of all child controls associated with the slot (weapon attachments, text, ammo bar, etc.)
-		MACRO_VARNAME_UI_CTRL_HAS_EHS			// Whether or not the slot control already has EHs applied to it (for dragging)
+		MACRO_VARNAME_UI_INITIALISED			// Whether or not the control has been initialised (used for executing code only once when setting up the control (e.g. adding event handlers))
 		MACRO_VARNAME_UI_CTRLICON			// Icon control of the slot (if there is an item, it's the class's previewIcon, otherwise it may be a specific default icon path). If a slot is occupied, this variable is usually checked to determine whether or not the slot control already has child controls
 		MACRO_VARNAME_UI_ISBEINGDRAGGED			// Whether the control is being dragged. Only used on the original control that was clicked on (which goes invisible upon starting dragging), NOT on the control that follows the cursor (that one can be fetched via MACRO_VARNAME_UI_DRAGGEDCTRL)!
 

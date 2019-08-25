@@ -21,4 +21,7 @@ case "ui_unload": {
 
 	// Remove the ground namespace
 	deleteLocation (_inventory getVariable [MACRO_VARNAME_UI_GROUND_NAMESPACE, locationNull]);
+
+	// Reset the mouse cursor position (so that other dialogs can modfiy it)
+	missionNamespace setVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, [999, 999]];
 };

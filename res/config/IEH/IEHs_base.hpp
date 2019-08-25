@@ -30,8 +30,8 @@ class MACRO_CLASSNAME_IEH {
 		class CfgVehicles {
 			class All {
 				class MACRO_ENUM_EVENT_DRAWCONTAINER {
-					function = "cre_fnc_IEH_default_drawContainer";
-					code = "systemChat '(IEH) Updated container!'; _this call cre_fnc_debug_printIEH";
+					function = "cre_fnc_IEH_drawContnr_box";
+					//code = "systemChat '(IEH) Updated container!'; _this call cre_fnc_debug_printIEH";
 				};
 
 				class MACRO_ENUM_EVENT_INIT {

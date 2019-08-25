@@ -27,14 +27,17 @@ cre_fnc_cfg_getWeapinMuzzles = compile preprocessFileLineNumbers "scripts\config
 
 // IEHs
 cre_fnc_IEH_raiseEvent = compile preprocessFileLineNumbers "scripts\IEH\fn_IEH_raiseEvent.sqf";
-cre_fnc_IEH_default_drawContainer = compile preprocessFileLineNumbers "scripts\IEH\fn_IEH_default_drawContainer.sqf";
-cre_fnc_IEH_man_drawContainer = compile preprocessFileLineNumbers "scripts\IEH\fn_IEH_man_drawContainer.sqf";
+//cre_fnc_IEH_default_drawContainer = compile preprocessFileLineNumbers "scripts\IEH\fn_IEH_default_drawContainer.sqf";
+//cre_fnc_IEH_man_drawContainer = compile preprocessFileLineNumbers "scripts\IEH\fn_IEH_man_drawContainer.sqf";
 
 	// Draw
 	cre_fnc_IEH_draw_item = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_item.sqf";
 	cre_fnc_IEH_draw_weapon = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_weapon.sqf";
 	cre_fnc_IEH_draw_magazine = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_magazine.sqf";
 	cre_fnc_IEH_draw_uniform = compile preprocessFileLineNumbers "scripts\IEH\onDraw\fn_IEH_draw_uniform.sqf";
+
+	// Draw Container
+	cre_fnc_IEH_drawContnr_box = compile preprocessFileLineNumbers "scripts\IEH\onDrawContnr\fn_IEH_drawContnr_box.sqf";
 
 // Inventory
 cre_fnc_inv_canFitItem = compile preprocessFileLineNumbers "scripts\inventory\fn_inv_canFitItem.sqf";

@@ -2,6 +2,10 @@
 case "ui_init": {
 	_eventExists = true;
 
+	//private _pos = [0, 0];
+	//missionNamespace setVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, _pos];
+	//setMousePosition _pos;
+
 	_args spawn {
 
 		// Fetch our params
@@ -152,6 +156,47 @@ case "ui_init": {
 							_inventory setVariable [MACRO_VARNAME_UI_NEXTUPDATE_GROUND, _time + MACRO_GROUND_UPDATE_DELAY];
 
 							["ui_update_ground"] call cre_fnc_ui_inventory;
+						};
+
+						private _curMousePos = getMousePosition;
+						private _lastMousePos = missionNamespace getVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, [999, 999]];
+
+						// Save the mouse position
+						if (_inventory getVariable [MACRO_VARNAME_UI_LASTMOUSEPOS_LOADED, false]) then {
+							if !(_curMousePos isEqualTo (missionNamespace getVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, [0.5, 0.5]])) then {
+								missionNamespace setVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, _curMousePos, false];
+								//systemChat format ["Saving: %1", _curMousePos];
+							};
+
+						// If the mouse position hasn't glitched out yet, wait for it to happen
+						} else {
+							if (_lastMousePos isEqualTo [999, 999]) then {
+								missionNamespace setVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, _curMousePos];
+							} else {
+								private _deltaX = (((_lastMousePos select 0) max 0) min 1) - 0.5;
+								private _deltaY = (((_lastMousePos select 1) max 0) min 1) - 0.5;
+								private _calcPos = [
+									0.5 + _deltaX * safeZoneW,
+									0.5 + _deltaY * safeZoneH
+								];
+								//systemChat format ["Calc: %1", _calcPos];
+
+								// Check if the cursor has jumped to the predicted position
+								if (_curMousePos distanceSqr _calcPos < 0.00001) then {		// pixelW ~= pixelH ~= 0.001 (1 pixel radius)
+									//systemChat format ["Offset: %1    dist: %2", _curMousePos, _curMousePos distance _calcPos];
+									//systemChat format ["Loading: %1", missionNamespace getVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, [0.5, 0.5]]];
+									setMousePosition (missionNamespace getVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, [0.5, 0.5]]);
+									_inventory setVariable [MACRO_VARNAME_UI_LASTMOUSEPOS_LOADED, true];
+
+								// Otherwise, check if the user has moved the cursor before it could jump
+								} else {
+									if (_curMousePos distanceSqr _lastMousePos > 0.01) then {
+										missionNamespace setVariable [MACRO_VARNAME_UI_LASTMOUSEPOS, _curMousePos, false];
+										//systemChat format ["Saving (override): %1", _curMousePos];
+										_inventory setVariable [MACRO_VARNAME_UI_LASTMOUSEPOS_LOADED, true];
+									};
+								};
+							};
 						};
 					}];
 					missionNamespace setVariable [MACRO_VARNAME_UI_EH_EACHFRAME, _EH, false];
